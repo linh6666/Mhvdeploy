@@ -1,0 +1,158 @@
+/* App.module.css */
+
+.container {
+box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 70px;
+  padding: 40px 20px; 
+ /* min-height:  85vh;  */
+ /* Keep relative to viewport height */
+
+ 
+}
+
+.mainContent {
+  position: relative;
+  /* flex: 1;  */
+  /* Allows mainContent to take available space */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Vertically center the image within mainContent */
+  /* width: 100%; */
+  /* Remove max-height and let aspect-ratio on image handle it, or use a percentage if constrained by parent */
+  /* max-height: 100%; <- This could conflict with aspect-ratio if not handled carefully */
+}
+
+.image {
+  width: 1000px;
+  /* height: 690px; Remove fixed height */
+  aspect-ratio: 16 / 9; /* ✅ Crucial: Defines the aspect ratio (e.g., 16:9 for widescreen) */
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+  /* Optional: Set a max-height to prevent it from becoming too tall on very wide screens,
+     but still allow it to shrink. This works well with aspect-ratio. */
+  max-height: 690px; /* Set a maximum height, but allow it to be smaller */
+}
+
+.sideNavOverlay {
+  position: absolute;
+  right: -1px;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  /* height: 690px; REMOVE FIXED HEIGHT */
+  /* Instead, make its height match the image or its container's dynamic height */
+  height: 100%; /* Make it fill the height of its positioned parent (.mainContent) */
+  max-height: 690px; /* Optional: If you want to cap its height at the same max as the image */
+  padding: 12px;
+  box-sizing: border-box; /* Ensures padding is included in the width/height */
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto; /* Allow height to adjust based on content */
+    padding: 8px;
+    gap: 10px;
+    align-items: center; /* Center items when stacked */
+  }
+
+  .mainContent {
+    flex-direction: column;
+    width: 100%;
+    height: auto; /* Allow height to adjust */
+    padding: 0;
+    align-items: center;
+    aspect-ratio: auto; /* Remove fixed aspect ratio for mobile if not desired or let image define it */
+  }
+
+  .image {
+    width: 100%;
+    max-height: 300px;
+    aspect-ratio: 16 / 9; /* Keep aspect ratio for mobile as well, adjust if needed */
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .sideNavOverlay {
+    position: relative;
+    top: auto;
+    right: auto;
+    z-index: auto;
+    width: 100%;
+    height: auto; /* Allow height to adjust based on content */
+    max-height: none; /* Remove max-height for mobile if it restricts too much */
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 8px;
+  }
+}
+
+/* ===== ✅ Drawer BÊN TRÁI - ở giữa màn hình (no changes needed for responsiveness of this part based on your request) ===== */
+.drawerToggle {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background-color: #294b61;
+  border-radius: 50%;
+  padding: 10px;
+  z-index: 1002;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.drawerToggle:hover {
+  background-color: #406c88;
+}
+
+.drawer {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 360px;
+  height: auto;
+  max-height: 90vh;
+  background-color: #294b61;
+  z-index: 1001;
+  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  animation: slideInLeftDrawer 0.3s ease-out forwards;
+  border-radius: 0 8px 8px 0;
+}
+
+@keyframes slideInLeftDrawer {
+  from {
+    transform: translate(-100%, -50%);
+  }
+  to {
+    transform: translate(0, -50%);
+  }
+}
+
+.drawerClose {
+  align-self: flex-end;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.openDrawer {
+  padding: 24px;
+  overflow-y: scroll;
+  flex: 1;
+  color: white;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.openDrawer::-webkit-scrollbar {
+  display: none;
+}

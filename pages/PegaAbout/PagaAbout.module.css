@@ -1,0 +1,588 @@
+/* === Hero Section === */
+.heroSection {
+  background-image: url("/background-pattern.png");
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  
+  
+}
+
+/* === Intro Section === */
+.introCard {
+  max-width: 64rem;
+  margin-left: auto;
+  margin-right: auto;
+  background-image: url("/background-pattern.png");
+  backdrop-filter: blur(4px);
+  padding: 2rem;
+  border-radius: 0.5rem;
+  margin-top: 100px;
+}
+
+.introTitle {
+  font-size: 40px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.introSubtitle {
+  font-size: 40px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.highlight {
+  color: #bb8d38;
+  font-weight: 600;
+}
+
+.introDescriptionWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.introDescription {
+  color: #374151;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2rem;
+}
+
+/* === Intro Section Buttons === */
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+.customButton {
+  background-color: #336683;
+  color: white;
+  font-weight: 500;
+  font-size: 16px;
+  border-radius: 10px;
+  padding-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.customButton:hover {
+  background-color: #2b5871;
+}
+
+.buttonNumber {
+  font-weight: 700;
+  margin-right: 8px;
+  font-size: 18px;
+  flex-shrink: 0;
+  padding-left: 10px;
+}
+
+.buttonText {
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.iconWrapper {
+  background-color: white;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #336683;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* === Body Section === */
+.body {
+  padding: 4rem 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  justify-content: center;
+}
+
+.leftPanel {
+  flex: 1;
+  min-width: 300px;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rightPanel {
+  flex: 1;
+  min-width: 300px;
+  max-width: 460px;
+  background-image: url("/hinhanh/CHI TIET_edited.avif");
+  color: white;
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.rightPanel h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.rightPanel p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.contactButton {
+  background-color: white;
+  color: #1a1a1a;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-block;
+  align-self: flex-end;
+  transition: background-color 0.3s ease;
+}
+
+.contactButton:hover {
+  background-color: #f0f0f0;
+}
+
+/* === Card Styles === */
+.card {
+  background-color: #f3f4f6;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  color: #1f2937;
+}
+
+.card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  background-color: white;
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.card p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* === Card Orange/Brown === */
+.cardOrangeBrown {
+  background-color: #b5853e;
+  color: white;
+}
+
+.cardOrangeBrown h3 {
+  background-color: white;
+  color: #b5853e;
+}
+
+/* === Logo Slider === */
+.logoSlider {
+  margin-top: 4rem;
+  background-color: white;
+  padding: 1.5rem 0;
+  overflow: hidden;
+}
+
+.logoTrack {
+  white-space: nowrap;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  padding: 0 2rem;
+  animation: scroll 20s linear infinite;
+}
+
+.logoItem {
+  position: relative;
+  height: 3rem;
+  width: 7.5rem;
+  flex-shrink: 0;
+}
+
+.logoImage {
+  object-fit: contain;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* === Clients Projects Section === */
+.clientsSection {
+  background-color: rgba(63, 106, 135, 0.95);
+  padding: 4rem 2rem;
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+  max-width: 30rem;
+  border-radius: 10px;
+  /* margin-left: auto;
+  margin-right: auto; */
+}
+
+.clientsContainer {
+ 
+  max-width: 72rem;
+  width: 100%;
+  gap: 2rem;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .clientsContainer {
+    flex-direction: row;
+  }
+}
+
+.clientsTitle {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+
+.clientsTitle h2 {
+  font-size: 1.500rem;
+  font-weight: 300;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+}
+
+.largeI {
+  color: #bb8d38;
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.clientsList {
+  flex: 2;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.clientsList span {
+  color: #bb8d38;
+  font-weight: 600;
+}
+
+/* === Domestic Section === */
+.domesticSection {
+  background-color: rgba(63, 106, 135, 0.95);
+  padding: 4rem 2rem;
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+  max-width: 30rem;
+  border-radius: 5px;
+  /* margin-left: auto;
+  margin-right: auto; */
+}
+
+.domesticContainer {
+  
+  max-width: 72rem;
+  width: 100%;
+  gap: 2rem;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .domesticContainer {
+    flex-direction: row;
+  }
+}
+
+.domesticLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+
+.domesticLeft h2 {
+  font-size: 1.500rem;
+  font-weight: 300;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.bigLetter {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #bb8d38;
+}
+
+.lightText {
+  color: #ffffff;
+  font-weight: 300;
+}
+
+.domesticRight {
+  flex: 2;
+}
+
+.domesticRight ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.domesticRight li {
+  color: #ffffff;
+}
+
+.domesticImageWrapper {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.domesticImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+.statsSection {
+    background-color: rgb(238, 236, 236);
+    padding: 60px 20px; /* Adjust padding as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+.statsContainer {
+    display: flex;
+    justify-content: space-around; /* Distributes items evenly */
+    gap: 40px; /* Space between stat items */
+    max-width: 900px; /* Max width for the content */
+    width: 100%;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+}
+
+.statItem {
+    flex: 1; /* Allows items to grow and shrink */
+    min-width: 180px; /* Minimum width before wrapping */
+    color: var(--dark-text);
+    font-family: 'Inter', sans-serif; /* Ensure consistent font */
+}
+
+.statNumber {
+    font-size: 3.5rem; /* Large number size */
+    font-weight: 700; /* Bold */
+    margin-bottom: 10px;
+    line-height: 1; /* Compact line height */
+}
+
+.statDescription {
+    font-size: 1.1rem; /* Description text size */
+    font-weight: 400; /* Regular weight */
+    color: #666666; /* Slightly lighter text for description */
+}
+.clientsWrapper {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 4rem;
+  padding: 0 1rem;
+}
+@media (max-width: 1024px) {
+  .clientsWrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    padding: 0 2rem;
+  }
+
+  .clientsSection,
+  .domesticSection {
+    width: 100%;
+  }
+}
+
+/* Mobile (≤ 768px) */
+@media (max-width: 768px) {
+  .clientsWrapper {
+    padding: 0 1rem;
+  }
+
+  .clientsTitle h2,
+  .domesticLeft h2 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .clientsList,
+  .domesticRight ul {
+    padding-left: 1rem;
+    font-size: 0.95rem;
+  }
+}
+
+
+/* Đảm bảo mỗi section co giãn đúng */
+.clientsSection,
+.domesticSection {
+  flex: 1 1 480px; /* Chiếm 1 phần đều, và responsive khi thu hẹp */
+  /* max-width: 600px; */
+  width: 100%;
+}
+.visionSection {
+    background-color: var(--background-color);
+    padding: 60px 20px; /* Adjust padding as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    /* This section looks like it might have a slight top border or separation from previous sections */
+    /* border-top: 1px solid #e0e0e0; */
+}
+
+.visionContainer {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    gap: 40px; /* Space between text and image */
+    max-width: 1000px;
+    width: 100%;
+    align-items: center; /* Vertically align items in the middle */
+}
+
+.visionContent {
+    flex: 1; /* Allows content to take available space */
+    min-width: 300px; /* Minimum width before wrapping */
+    padding-right: 20px; /* Add some space between text and image if they are side-by-side */
+}
+
+.visionHeadingContainer {
+    display: inline-block; /* Makes the background fit the text */
+    background-color: rgba(75, 69, 69, 0.301);
+    padding: 10px 25px;
+    border-radius: 5px;
+    margin-bottom: 30px; /* Space below the heading */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.visionHeading {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--button-text);
+    margin: 0; /* Remove default margin */
+}
+
+.quoteBlock {
+    position: relative;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    line-height: 1.8;
+    padding-left: 50px; /* Space for the large quote icon */
+    margin-bottom: 25px;
+}
+
+.quoteBlock::before {
+    content: "“"; /* Left quote icon */
+    font-family: serif; /* Use a serif font for classic quote look */
+    font-size: 6rem; /* Large size */
+    color: #bb8d38;
+    position: absolute;
+    left: 0;
+    top: -20px; /* Adjust vertical position */
+    line-height: 1;
+    /* Make it subtle */
+}
+
+.quoteBlock::after {
+    content: "”"; /* Right quote icon */
+    font-family: serif;
+    font-size: 6rem;
+    color: #bb8d38;
+    position: absolute;
+    right: 0; /* Adjust positioning for the right quote */
+    bottom: -60px; /* Adjust vertical position */
+    line-height: 1;
+ 
+}
+
+
+.quoteText {
+    margin-bottom: 20px;
+    font-size: 1.05rem;
+}
+
+.quoteText span {
+    font-weight: 700; /* Bold for specific words */
+}
+
+
+.visionImage {
+    flex: 1.5; /* Image takes more space */
+    min-width: 400px; /* Minimum width for the image container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.visionImage img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px; /* Slightly rounded corners for the image */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+@media (max-width: 768px) {
+  .buttonGroup {
+         margin: auto;
+  }
+}

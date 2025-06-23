@@ -1,0 +1,161 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.paper {
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+}
+
+.stack {
+  width: 100%;
+  text-align: center;
+}
+
+.title {
+  color: #294b61;
+  margin-bottom: 8px;
+  text-align: center;
+  font-size: 23px;
+}
+
+.logo {
+  object-fit: contain;
+  margin-bottom: 1rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 200px;
+}
+
+.description {
+  color: #294b61;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.registerLink {
+  color: #bb8d38;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.registerLink:hover {
+  text-decoration: underline;
+}
+
+.customInput {
+  border: 1px solid #294b61;
+  padding: 12px;
+  width: 450px;
+  color: #294b61;
+  background-color: #f9f9f9;
+  transition: border 0.2s ease-in-out;
+}
+
+.button {
+  transition: all 0.2s ease-in-out;
+  height: 45px;
+  padding: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-align: center;
+  border: 2px solid #294b61;
+  background-color: #294b61;
+  color: #bb8d38;
+}
+
+.button:hover {
+  background-color: #bb8d38;
+  color: #fff;
+  border-color: #bb8d38;
+  cursor: pointer;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.forgotText {
+  color: #888;
+  margin-top: -0.5rem;
+  margin-bottom: 3px;
+}
+
+.forgotText:hover {
+  color: #294b61;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.termsText {
+  margin-top: 1rem;
+  font-size: 16px;
+  color: #294b61;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.phoneNumber {
+  color: #bb8d38;
+  font-weight: bold;
+}
+
+/* 🔄 Responsive design */
+@media (max-width: 768px) {
+  .customInput {
+    width: 100%;
+  }
+
+  .button {
+    width: 100%;
+  }
+
+  .logo {
+    width: 180px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .termsText {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .customInput {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .logo {
+    width: 150px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .description {
+    font-size: 13px;
+  }
+
+  .button {
+    font-size: 14px;
+    padding: 0.8rem;
+  }
+
+  .termsText {
+    font-size: 13px;
+  }
+}

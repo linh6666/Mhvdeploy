@@ -1,0 +1,109 @@
+/* ShoppingCart.module.css */
+
+.section {
+  background-color: #f1f1f1cb;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.container {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 3rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  font-family: 'NunitoSans-Regular', sans-serif;
+}
+
+.firstLetter {
+  font-size: 4rem;
+  color: #2c3e50;
+}
+
+.restText {
+  font-size: 2.25rem;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 3.75rem;
+  }
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 474px;
+  aspect-ratio: 3 / 2;
+  border-radius: 10px;
+  margin: 0 auto;
+  transition: transform 0.3s ease;
+}
+
+.card:nth-child(even) {
+  margin-top: 40px;
+}
+
+.card:nth-child(odd) {
+  margin-bottom: 40px;
+}
+
+.image {
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 16px;
+  padding: 8px 16px;
+  color: white;
+  font-size: 0.9rem;
+  /* font-weight: 600; */
+  font-family: 'NunitoSans-Regular', sans-serif;
+  background: rgba(66, 101, 131, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.card:nth-child(even) .overlay {
+  right: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 0;
+}
+
+.card:nth-child(odd) .overlay {
+  left: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 8px;
+}
+
+.card:hover .overlay {
+  background-color: rgba(66, 101, 131, 0.95);
+}

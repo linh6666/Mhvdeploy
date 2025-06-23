@@ -1,0 +1,30 @@
+.card {
+  padding: var(--mantine-spacing-lg);
+  border-radius: var(--mantine-radius-md);
+  border: 1px solid var(--mantine-color-gray-3);
+  box-shadow: var(--mantine-shadow-sm);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+.available {
+  background-color: var(--mantine-color-blue-1);
+}
+
+.deposit {
+  background-color: var(--mantine-color-orange-1);
+}
+
+.sold {
+  background-color: var(--mantine-color-red-1);
+}
+
+.unknown {
+  background-color: var(--mantine-color-gray-1);
+}

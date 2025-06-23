@@ -1,0 +1,98 @@
+.container {
+  max-width: 1280px;
+  margin: 100px  auto;
+  padding: 1rem;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.searchFilters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (min-width: 640px) {
+  .searchFilters {
+    flex-direction: row;
+  }
+}
+
+.searchBox {
+  position: relative;
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .searchBox {
+    width: 16rem;
+  }
+}
+
+.searchInput {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  padding-left: 2.5rem; /* Thêm dòng này để icon không bị đè */
+}
+
+
+.searchButton {
+  padding: 0 0.75rem;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .actionButtons {
+    width: auto;
+  }
+}
+
+.compareButton {
+  padding: 0 1.5rem;
+  background-color: #406C88;
+
+  flex: 1;
+}
+
+.emailButton {
+  padding: 0 1rem;
+    background-color: #406C88;
+  flex: 1;
+}
+
+@media (min-width: 640px) {
+  .compareButton,
+  .emailButton {
+    flex: none;
+  }
+}
+
+.listings {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .listings {
+    padding: 1.5rem;
+  }
+}
+

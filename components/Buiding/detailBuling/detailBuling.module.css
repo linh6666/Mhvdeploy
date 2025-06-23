@@ -1,0 +1,149 @@
+.container {
+  display: flex;
+  width: 20rem; /* tương đương w-80 */
+  flex-direction: column;
+  background-color: #f0f5e5;
+  padding: 0rem 1rem; /* px-4 py-8 */
+  position: relative;
+}
+
+.logoWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logoImage {
+  height: 13rem;
+  width: 13rem;
+  object-fit: contain;
+}
+
+.title {
+  text-align: center;
+  font-family: serif;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #4a5c2f;
+}
+
+.location {
+  text-align: center;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #4a5c2f;
+}
+
+.mainHeading {
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+      font-weight: bold;
+  color: #4a5c2f;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start; /* ✅ Đảm bảo button chỉ dài theo nội dung */
+      display: flex
+;
+   
+    align-items: center;
+
+}
+
+.button {
+  background: #8B994A;
+  color: white;
+   border-radius:370px 5px;
+ /* ✅ Giữ padding trái/phải để có khoảng cách chữ */
+  font-weight: 500;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  transition: opacity 0.3s ease;
+  width: fit-content; /* ✅ Đảm bảo không giãn toàn chiều ngang */
+}
+
+.button:hover {
+  opacity: 0.9;
+    background-color: #616732;
+}
+
+.bottomButtons {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  display: flex;
+  gap: 0.5rem;
+  transform: translateX(-50%);
+}
+
+.bottomButton {
+  background: #8B994A;
+  color: white;
+  width: 90px;
+  border-radius:200px 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: opacity 0.3s ease;
+}
+
+.bottomButton:hover {
+  opacity: 1;
+  background-color: #616732;
+}
+
+.nightButton {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 768px) {
+  .buttonGroup {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 cột */
+    gap: 0.75rem;
+    justify-items: stretch;
+  }
+
+  .button {
+    width: 100%;             /* full chiều ngang */
+    text-align: center;      /* căn giữa chữ */
+    font-size: 0.60rem;      /* 👈 chữ nhỏ lại */
+    padding: 0.5rem 0.75rem; /* padding nhỏ hơn */
+  }
+}
+@media (max-width: 768px) {
+  .logoImage {
+    width: 8rem;   /* nhỏ hơn so với 13rem gốc */
+    height: 8rem;  /* giữ tỉ lệ vuông */
+  }
+}
+@media (max-width: 768px) {
+  .bottomButtons {
+    position: static;       /* Bỏ fixed/absolute */
+    margin-top: 1rem;       /* Tạo khoảng cách trên */
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+        padding-top: 30px;
+    
+       /* Cho phép xuống dòng nếu cần */
+  }
+}
+@media (max-width: 768px) {
+  .container {
+  margin: auto;
+    /* nếu muốn container cao hơn để căn giữa theo chiều dọc */
+ /* hoặc giá trị phù hợp */
+  }
+}

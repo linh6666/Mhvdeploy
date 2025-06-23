@@ -1,0 +1,53 @@
+.container {
+  display: flex;
+  justify-content: center; /* Căn giữa ngang */
+  align-items: center;     /* Căn giữa dọc nếu cần */
+  padding: 40px 20px;
+  box-sizing: border-box;
+  margin-top: 70px;
+}
+
+.section {
+  width: 100%;
+  max-width: 1000px;      /* ✅ Chiều rộng tối đa */
+  margin: 0 auto;         /* ✅ Căn giữa nếu không dùng flex cha */
+}
+
+.videoWrapper {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.25rem;
+  text-align: center;
+  color: #d4a64a;
+  letter-spacing: 0.5rem;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+.videoContainer {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
+}
+
+.iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 1rem;
+    letter-spacing: 0.3rem;
+  }
+}

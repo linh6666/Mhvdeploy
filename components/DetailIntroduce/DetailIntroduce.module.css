@@ -1,0 +1,17 @@
+.button {
+  background: #8B994A;
+  color: white;
+   border-radius:300px 5px;
+ /* ✅ Giữ padding trái/phải để có khoảng cách chữ */
+  font-weight: 500;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  transition: opacity 0.3s ease;
+  width: 80px; /* ✅ Đảm bảo không giãn toàn chiều ngang */
+}
+.button:hover {
+  opacity: 0.9;
+    color: white;
+    background-color: #616732;
+}

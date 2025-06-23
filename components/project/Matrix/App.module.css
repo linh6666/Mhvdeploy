@@ -1,0 +1,14 @@
+.section {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  color: var(--mantine-color-gray-8);
+}
+
+.apartmentList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* tương đương 8px */
+  margin-top: 0.5rem;
+}

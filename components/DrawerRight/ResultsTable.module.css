@@ -1,0 +1,15 @@
+.tableBorder {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+}
+
+.tableBorder th,
+.tableBorder td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+/* .tableBorder thead {
+  background-color: #f9f9f9;
+} */

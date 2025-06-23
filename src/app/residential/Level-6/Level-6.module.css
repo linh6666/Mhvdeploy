@@ -1,0 +1,393 @@
+/* --- Giao diện Desktop --- */
+.simpleGrid {
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 3fr 0.7fr 1fr;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.image {
+  height: 625px;
+  object-fit: contain;
+  display: block;
+  width: 100%;
+  z-index: 1;
+}
+
+.svgOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.floorPolygon {
+  fill: #819b96;
+  fill-opacity: 0.5;
+  stroke: #123d47;
+  stroke-width: 1;
+  cursor: pointer;
+  pointer-events: all;
+  transition: fill-opacity 0.3s ease;
+}
+
+.hoverImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  opacity: 0;
+  z-index: 3;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.floorPolygon:hover ~ .hoverImage {
+  opacity: 1;
+}
+
+.floorOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.floorOverlay.show {
+  opacity: 1;
+}
+
+.floorOverlay img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.overlayText {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  color: #123d47;
+  pointer-events: none;
+  z-index: 3;
+  transition: all 0.3s ease-in-out;
+}
+
+.keyAreas {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.keyAreasTitle {
+  color: #123d47;
+  font-size: 35px;
+  margin-bottom: 16px;
+}
+
+.keyAreaList {
+  overflow-y: auto;
+  max-height: 540px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(18, 61, 71, 0.4) transparent;
+}
+
+.keyAreaList::-webkit-scrollbar {
+  width: 3px;
+}
+
+.keyAreaList::-webkit-scrollbar-thumb {
+  background-color: rgba(18, 61, 71, 0.4);
+  border-radius: 8px;
+}
+
+.keyAreaList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.keyAreaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.keyAreaItemText {
+  font-size: 25px;
+  color: #123d47;
+  transition: color 0.3s ease;
+}
+
+.keyAreaItem:hover .keyAreaItemText,
+.keyAreaItem:active .keyAreaItemText {
+  color: #bb8d38;
+}
+
+/* ✅ Status - Phần Status */
+.statusWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: #f6f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.statusTitle {
+  color: #123d47;
+  font-size: 35px;
+  margin-bottom: 16px;
+}
+
+.statusContent {
+  position: relative;
+  padding-left: 35px;
+  font-size: 25px;
+  color: #123d47;
+  margin-bottom: 12px;
+}
+
+.statusContent::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 22px;
+  height: 22px;
+  background-color: #123d47; /* fallback */
+  border-radius: 2px;
+}
+
+/* 🎯 Màu hình thoi cho Status */
+.available::before {
+  background-color: #5c7f99;
+}
+
+.interested::before {
+  background-color: #0f2e4d;
+}
+
+.deposit::before {
+  background-color: #c76b39;
+}
+
+.sold::before {
+  background-color: #a7392f;
+}
+
+/* ---------- MÀU THEO LOẠI PHÒNG ---------- */
+.bed1::before {
+  background-color: #e5964a;
+}
+
+.bed2::before {
+  background-color: #e5d9ac;
+}
+
+.bed3::before {
+  background-color: #6c9c99;
+}
+
+/* --- Giao diện Mobile --- */
+@media (max-width: 768px) {
+  .simpleGrid {
+    padding: 20px;
+    gap: 20px;
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  .image {
+    height: 350px;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .keyAreas {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    align-items: flex-start;
+    justify-items: flex-start;
+    text-align: left;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .keyAreasTitle {
+    grid-column: span 3;
+    font-size: 35px;
+    margin-bottom: 12px;
+  }
+
+  .keyAreaList {
+    grid-column: span 3;
+    display: contents;
+    overflow: visible;
+    max-height: none;
+  }
+
+  .keyAreaItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+  }
+
+  .keyAreaItemText {
+    font-size: 18px;
+    color: #123d47;
+  }
+
+  .overlayText {
+    font-size: 18px;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .statusWrapper {
+    padding: 12px;
+  }
+
+  .statusTitle {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .statusContent {
+    font-size: 18px;
+    padding-left: 24px;
+  }
+
+  .statusContent::before {
+    width: 14px;
+    height: 14px;
+  }
+
+  .keyAreass {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    width: 100%;
+  }
+
+  .keyAreass > div {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .keyAreaItemText {
+    font-size: 16px;
+  }
+
+  .statusTitle {
+    font-size: 22px;
+  }
+
+  .statusContent {
+    font-size: 14px;
+    padding-left: 20px;
+  }
+
+  .statusWrapper {
+    padding: 10px;
+  }
+
+  .statusContent::before {
+    width: 8px;
+    height: 8px;
+  }
+}
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 800px; /* Kích thước ảnh, có thể thay đổi */
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.svgContainer {
+opacity: .6;
+    pointer-events: none;
+    width: 45.5%;
+    height: auto;
+    position: absolute;
+    top: 27%;
+    left: 54%;
+}
+.svgContainerr {
+
+      pointer-events: none;
+      width: 65.5%;
+      height: auto;
+      position: absolute;
+      top: 5%;
+      left: 34%;
+  }
+  .svgContainer2 {
+
+    pointer-events: none;
+    width: 33%;
+    height: auto;
+    position: absolute;
+    top: 9%;
+    
+}
+.svgContainer3 {
+
+      pointer-events: none;
+      width: 30%;
+      height: auto;
+      position: absolute;
+      top: 43%;
+      left: 24%;
+  }
+  .diamondShape {
+  width: 20px;
+  height: 20px;
+border: 1px solid #0f2e4d;
+  transform: rotate(45deg);  /* Quay hình thành hình thoi */
+  margin-right: 10px;  /* Khoảng cách giữa hình thoi và văn bản */
+  margin-left: 10px;
+}
+.currentLevel {
+  color: #bb8d38;
+}

@@ -1,0 +1,189 @@
+.simpleGrid {
+  padding: 40px;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.image {
+  height: 625px;
+  object-fit: contain;
+  display: block;
+  width: 100%;
+}
+
+.floorOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.floorOverlay.show {
+  opacity: 1;
+}
+
+.floorOverlay img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ✅ Hiển thị text ở giữa chiều cao, căn trái trong ảnh */
+.overlayText {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  color: #123d47;
+
+  pointer-events: none;
+  z-index: 3;
+  transition: all 0.3s ease-in-out;
+}
+
+/* ✅ Khu vực danh sách tầng */
+.keyAreas {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 100%;
+  margin: 0 auto;
+}
+
+/* ✅ Tiêu đề luôn hiển thị */
+.keyAreasTitle {
+  color: #123d47;
+  font-size: 35px;
+  margin-bottom: 16px;
+}
+
+/* ✅ Danh sách các tầng có scroll riêng */
+.keyAreaList {
+  overflow-y: auto;
+  max-height: 540px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(18, 61, 71, 0.4) transparent; /* Firefox */
+}
+
+.keyAreaList::-webkit-scrollbar {
+  width: 3px;
+}
+
+.keyAreaList::-webkit-scrollbar-thumb {
+  background-color: rgba(18, 61, 71, 0.4);
+  border-radius: 8px;
+}
+
+.keyAreaList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.keyAreaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.keyAreaItemText {
+  font-size: 25px;
+  color: #123d47;
+  transition: color 0.3s ease;
+}
+
+.keyAreaItem:hover .keyAreaItemText,
+.keyAreaItem:active .keyAreaItemText {
+  color: #bb8d38;
+}
+
+/* ✅ MOBILE STYLE - 3 cột cho các level */
+@media (max-width: 768px) {
+  .simpleGrid {
+    padding: 20px;
+    gap: 20px;
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  .image {
+    height: 350px;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .keyAreas {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    align-items: flex-start;
+    justify-items: flex-start;
+    text-align: left;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .keyAreasTitle {
+    grid-column: span 3;
+    font-size: 35px;
+  }
+
+  .keyAreaList {
+    grid-column: span 3;
+    display: contents;
+    overflow: visible;
+    max-height: none;
+  }
+
+  .keyAreaItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+  }
+
+  .keyAreaItemText {
+    font-size: 18px;
+    color: #123d47;
+  }
+
+  .overlayText {
+    font-size: 18px;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+@media (max-width: 480px) {
+  .keyAreaItemText {
+    font-size: 16px;
+  }
+}
+  .diamondShape {
+  width: 20px;
+  height: 20px;
+border: 1px solid #0f2e4d;
+  transform: rotate(45deg);  /* Quay hình thành hình thoi */
+  margin-right: 10px;  /* Khoảng cách giữa hình thoi và văn bản */
+  margin-left: 10px;
+}

@@ -1,0 +1,191 @@
+.simpleGrid {
+  padding: 40px;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.image {
+  height: 625px;
+  object-fit: contain;
+  display: block;
+  width: 100%;
+}
+
+.floorOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.floorOverlay.show {
+  opacity: 1;
+}
+
+.floorOverlay img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.overlayText {
+  position: absolute;
+  font-size: 20px;
+  font-weight: bold;
+  color: #123d47;
+  pointer-events: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.overlayText1,
+.overlayText2 {
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.keyAreas {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  margin: 0 auto;
+  transition: transform 0.3s ease;
+}
+
+.keyAreasTitle {
+  color: #123d47;
+  font-size: 35px;
+}
+
+.keyAreaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.keyAreaItemText {
+  font-size: 25px;
+  color: #123d47;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.keyAreaItem:hover .keyAreaItemText,
+.keyAreaItem:active .keyAreaItemText {
+  color: #bb8d38;
+}
+
+.diamondShape {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #0f2e4d;
+  transform: rotate(45deg);
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+/* Drawer */
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 700px;
+  height: 100vh;
+  background-color: rgb(35 66 87 / var(--tw-bg-opacity, 1));
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.drawerToggle {
+  position: fixed;
+  top: 40%;
+  left: 0;
+  background-color: rgb(35 66 87 / var(--tw-bg-opacity, 1));
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1000;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.drawerClose {
+  position: absolute;
+  top: 155px;
+  left: 16px;
+  cursor: pointer;
+}
+
+.openDrawer {
+  margin-top: 130px;
+}
+
+/* Dịch chuyển sang trái khi Drawer mở */
+.shiftLeft {
+  transform: translateX(300px);
+  transition: transform 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .simpleGrid {
+    display: block;
+    padding: 20px;
+  }
+
+  .keyAreas {
+    align-items: center;
+    text-align: center;
+  }
+
+  .keyAreaItem {
+    justify-content: center;
+  }
+
+  .keyAreaItemText {
+    font-size: 18px;
+  }
+
+  .image {
+    height: 350px;
+    margin: 0 auto 20px auto;
+  }
+
+  .overlayText1,
+  .overlayText2 {
+    font-size: 14px;
+  }
+
+  .drawer {
+    width: 100vw;
+    z-index: 2000;
+  }
+
+  .drawerClose {
+    top: 20px;
+    left: 16px;
+  }
+
+  .imageWrapper {
+    z-index: 1;
+  }
+
+  .openDrawer {
+    margin-top: 0;
+  }
+}
