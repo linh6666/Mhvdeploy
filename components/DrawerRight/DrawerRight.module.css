@@ -69,7 +69,7 @@
   .statusBtn {
     color: white;
     width: 100%;
-    padding: 12px;
+    padding: 6px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.3);
   }
@@ -139,3 +139,16 @@
     .searchBtn:hover{
       background-color: #bb8d38;
     }
+    .minMaxRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.minMaxInput {
+  flex: 1;
+}
+
+.to {
+  font-weight: bold;
+}

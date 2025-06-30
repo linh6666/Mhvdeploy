@@ -1,69 +1,130 @@
-import React, { useState } from "react";
-import { Input, Button } from "@mantine/core";
+"use client";
+import React, { useState, useEffect } from "react";
+import { Input, Button, RangeSlider } from "@mantine/core";
 import styles from "./DrawerRight.module.css";
 import { apifilter } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
 import ResultsTable from "./ResultsTable";
 
+interface FilterTypeResponse {
+  status: string[];
+  bedroom: (number | string)[];
+  direction: string[];
+  price: number[];
+}
+
 export default function FilterForm() {
-  const [selectedStatus, setSelectedStatus] = useState<string>(""); // Không mặc định
-  const [selectedBedrooms, setSelectedBedrooms] = useState<string>(""); // Không mặc định
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [statusOptions, setStatusOptions] = useState<string[]>([]);
+  const [bedroomOptions, setBedroomOptions] = useState<string[]>([]);
+  const [directionOptions, setDirectionOptions] = useState<string[]>([]);
+  const [priceBounds, setPriceBounds] = useState<[number, number] | null>(null);
+
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [selectedBedrooms, setSelectedBedrooms] = useState<string>("");
+  const [direction, setDirection] = useState<string>("");
+
+  const [manualKeyword, setManualKeyword] = useState<string>("");
+  const [filterSummary, setFilterSummary] = useState<string>("");
+
+  const [minPrice, setMinPrice] = useState<string>("");
+  const [maxPrice, setMaxPrice] = useState<string>("");
+
+  const [rangeValue, setRangeValue] = useState<[number, number]>([0, 10000000000]);
   const [results, setResults] = useState<any[]>([]);
   const [showResults, setShowResults] = useState(false);
 
-  const updateSearchKeyword = (status: string, bedroom: string) => {
-    const parts = [];
-    if (status) parts.push(status);
-    if (bedroom) parts.push(`${bedroom} phòng ngủ`);
-    setSearchKeyword(parts.join(" - "));
+  // Gọi API lấy dữ liệu filter
+  useEffect(() => {
+    apifilter.get<FilterTypeResponse>(API_ROUTE.GET_FILTER_TYPE)
+      .then(res => {
+        const d = res.data;
+        setStatusOptions(d.status || []);
+        setDirectionOptions(d.direction || []);
+        setBedroomOptions((d.bedroom || []).map(b => b.toString()));
+        if (d.price?.length >= 2) {
+          const nums = d.price.filter(n => !isNaN(n)).sort((a, b) => a - b);
+          setPriceBounds([nums[0], nums[nums.length - 1]]);
+          setRangeValue([nums[0], nums[nums.length - 1]]);
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    if (priceBounds) {
+      setMinPrice(rangeValue[0].toString());
+      setMaxPrice(rangeValue[1].toString());
+    }
+  }, [rangeValue, priceBounds]);
+
+  // Tạo mô tả filter
+  useEffect(() => {
+    const parts: string[] = [];
+    if (selectedStatus) parts.push(selectedStatus);
+    if (selectedBedrooms) parts.push(`${selectedBedrooms} phòng ngủ`);
+    if (direction) parts.push(`Hướng ${direction}`);
+    if (minPrice && maxPrice) parts.push(`${formatPrice(minPrice)} - ${formatPrice(maxPrice)}`);
+    setFilterSummary(parts.join(" - "));
+  }, [selectedStatus, selectedBedrooms, direction, minPrice, maxPrice]);
+
+  const formatPrice = (numStr: string) => {
+    const num = Number(numStr);
+    if (num >= 1_000_000_000) return `${num / 1_000_000_000} tỉ`;
+    if (num >= 1_000_000) return `${num / 1_000_000} triệu`;
+    return `${num} đ`;
   };
 
-  const handleStatusClick = (status: string) => {
-    const newStatus = status === selectedStatus ? "" : status;
-    setSelectedStatus(newStatus);
-    updateSearchKeyword(newStatus, selectedBedrooms);
+  const handleStatusClick = (st: string) => {
+    setSelectedStatus(st === selectedStatus ? "" : st);
   };
 
-  const handleBedroomsClick = (bedroom: string) => {
-    const newBedroom = bedroom === selectedBedrooms ? "" : bedroom;
-    setSelectedBedrooms(newBedroom);
-    updateSearchKeyword(selectedStatus, newBedroom);
+  const handleBedroomsClick = (b: string) => {
+    setSelectedBedrooms(b === selectedBedrooms ? "" : b);
+  };
+
+  const handleDirectionClick = (d: string) => {
+    setDirection(d === direction ? "" : d);
   };
 
   const handleClear = () => {
     setSelectedStatus("");
     setSelectedBedrooms("");
-    setSearchKeyword("");
+    setDirection("");
+    setRangeValue(priceBounds || [0, 10000000000]);
+    setManualKeyword("");
+    setFilterSummary("");
     setResults([]);
     setShowResults(false);
   };
 
   const handleSearch = async () => {
-    const payload: Record<string, string> = {};
+    const payload: Record<string, any> = {};
 
     if (selectedStatus) payload.status = selectedStatus;
-    if (selectedBedrooms) payload.bedroom = selectedBedrooms;
+    if (selectedBedrooms && selectedBedrooms !== "NaN") {
+      const bedNum = parseInt(selectedBedrooms);
+      if (!isNaN(bedNum)) payload.bedroom = bedNum;
+    }
+    if (direction) payload.direction = direction;
 
-    if (
-      searchKeyword.trim() !== "" &&
-      !searchKeyword.includes(selectedStatus) &&
-      !searchKeyword.includes(selectedBedrooms)
-    ) {
-      payload.apartment_number = searchKeyword.trim();
+    const min = Number(minPrice);
+    const max = Number(maxPrice);
+    if (!isNaN(min)) payload.min_price = min;
+    if (!isNaN(max)) payload.max_price = max;
+
+    const filterValues = [selectedStatus, selectedBedrooms, direction].join(" ");
+    if (manualKeyword && !filterValues.includes(manualKeyword)) {
+      payload.apartment_number = manualKeyword.trim();
     }
 
     try {
-      const response = await apifilter.post(API_ROUTE.GET_FILTER, payload);
-      const data = response.data;
-
-      if (Array.isArray(data)) setResults(data);
-      else if (data) setResults([data]);
-      else setResults([]);
-
+      const resp = await apifilter.post(API_ROUTE.GET_FILTER, payload);
+      const data = resp.data;
+      setResults(Array.isArray(data) ? data : data ? [data] : []);
       setShowResults(true);
-    } catch (error: any) {
-      console.error("Lỗi khi gọi API filter:", error?.response?.data || error.message);
+    } catch (e: any) {
+      console.error("Lỗi khi gọi filter API:", e);
+      alert("Dữ liệu này không có !!");
     }
   };
 
@@ -71,42 +132,99 @@ export default function FilterForm() {
     <div className={styles.container}>
       {!showResults ? (
         <div className={styles.content}>
-          {/* Ô input tìm kiếm */}
           <div className={styles.searchWrapper}>
             <Input
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.currentTarget.value)}
-              classNames={{
-                wrapper: styles.inputWrapper,
-                input: styles.searchInput
-              }}
+              value={filterSummary || manualKeyword}
+              onChange={e => setManualKeyword(e.currentTarget.value)}
+              classNames={{ wrapper: styles.inputWrapper, input: styles.searchInput }}
               placeholder="Search Apartment Number ..."
             />
           </div>
 
-          {/* Bộ lọc trạng thái */}
           <div className={styles.section}>
             <div className={styles.label}>Status:</div>
             <div className={styles.buttonRow}>
-              <StatusButton label="Đã bán" isSelected={selectedStatus === "Đã bán"} onClick={() => handleStatusClick("Đã bán")} bgColor="bg1" />
-              <StatusButton label="Đang bán" isSelected={selectedStatus === "Đang bán"} onClick={() => handleStatusClick("Đang bán")} bgColor="bg2" />
-            </div>
-            <div className={styles.buttonRow}>
-              <StatusButton label="Đã đặt cọc" isSelected={selectedStatus === "Đã đặt cọc"} onClick={() => handleStatusClick("Đã đặt cọc")} bgColor="bg3" />
+              {statusOptions.map((st, i) => (
+                <StatusButton
+                  key={st}
+                  label={st}
+                  isSelected={selectedStatus === st}
+                  onClick={() => handleStatusClick(st)}
+                  bgColor={`bg${(i % 3) + 1}`}
+                />
+              ))}
             </div>
           </div>
 
-          {/* Bộ lọc phòng ngủ */}
           <div className={styles.section}>
             <div className={styles.label}>Bedrooms:</div>
             <div className={styles.diamondRow}>
-              <DiamondButton label="1" isSelected={selectedBedrooms === "1.0"} onClick={() => handleBedroomsClick("1.0")} />
-              <DiamondButton label="2" isSelected={selectedBedrooms === "2.0"} onClick={() => handleBedroomsClick("2.0")} />
-              <DiamondButton label="3" isSelected={selectedBedrooms === "3.0"} onClick={() => handleBedroomsClick("3.0")} />
+              {bedroomOptions
+  .filter(b => b !== "0" && b !== "0.0") // lọc ra giá trị khác "0"
+  .map(b => (
+    <DiamondButton
+      key={b}
+      label={b.replace(".0", "")}
+      isSelected={selectedBedrooms === b}
+      onClick={() => handleBedroomsClick(b)}
+    />
+))}
             </div>
           </div>
 
-          {/* Nút hành động */}
+          <div className={styles.section}>
+            <div className={styles.label}>Price:</div>
+            <RangeSlider
+              min={priceBounds ? priceBounds[0] : 0}
+              max={priceBounds ? priceBounds[1] : 10000000000}
+              step={Math.max(1_000_000, priceBounds ? Math.round((priceBounds[1] - priceBounds[0]) / 100) : 1_000_000)}
+              value={rangeValue}
+              onChange={setRangeValue}
+              label={v =>
+                v >= 1_000_000_000
+                  ? `${v / 1_000_000_000} tỉ`
+                  : `${v / 1_000_000} triệu`
+              }
+              styles={{
+                track: { backgroundColor: "#e0e0e0" },
+                bar: { backgroundColor: "#bb8d38" },
+                thumb: { backgroundColor: "#bb8d38", border: "2px solid white" },
+              }}
+            />
+          </div>
+{/* 
+          <div className={styles.priceInputs}>
+            <input
+              type="text"
+              value={minPrice}
+              readOnly
+              placeholder="Min Price"
+              className={styles.priceInput}
+            />
+            <input
+              type="text"
+              value={maxPrice}
+              readOnly
+              placeholder="Max Price"
+              className={styles.priceInput}
+            />
+          </div> */}
+
+          <div className={styles.section}>
+            <div className={styles.label}>Direction:</div>
+            <div className={styles.buttonRow}>
+              {directionOptions.map((d, i) => (
+                <StatusButton
+                  key={d}
+                  label={d}
+                  isSelected={direction === d}
+                  onClick={() => handleDirectionClick(d)}
+                  bgColor={`bg${(i % 3) + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+
           <div className={styles.actionButtons}>
             <Button variant="outline" className={styles.clearBtn} onClick={handleClear}>
               Clear
@@ -123,13 +241,13 @@ export default function FilterForm() {
   );
 }
 
-// === Components phụ ===
+// ========== Components phụ ==========
 
 const StatusButton = ({
   label,
   isSelected,
   onClick,
-  bgColor
+  bgColor,
 }: {
   label: string;
   isSelected: boolean;
@@ -137,7 +255,7 @@ const StatusButton = ({
   bgColor: string;
 }) => (
   <button
-    className={`${styles.statusBtn} ${styles[bgColor]} ${isSelected ? styles.selected : ''}`}
+    className={`${styles.statusBtn} ${styles[bgColor]} ${isSelected ? styles.selected : ""}`}
     onClick={onClick}
   >
     {label}
@@ -147,14 +265,14 @@ const StatusButton = ({
 const DiamondButton = ({
   label,
   isSelected,
-  onClick
+  onClick,
 }: {
   label: string;
-  isSelected: boolean;
+  isSelected: boolean
   onClick: () => void;
 }) => (
   <button
-    className={`${styles.diamond} ${isSelected ? styles.selectedDiamond : ''}`}
+    className={`${styles.diamond} ${isSelected ? styles.selectedDiamond : ""}`}
     onClick={onClick}
   >
     <span className={styles.diamondText}>{label}</span>

@@ -1,14 +1,117 @@
-.section {
-  margin-bottom: 1.5rem;
+.wrapper {
+  padding-top: 20px;
 }
 
-.title {
-  color: var(--mantine-color-gray-8);
+.buildingGroup {
+  margin-bottom: 24px;
 }
 
-.apartmentList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem; /* tương đương 8px */
-  margin-top: 0.5rem;
+.buildingTypeTitle {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color:#406c88;
+  color: white;
+}
+
+.buildingName {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;                /* Khoảng cách giữa icon và text */
+  font-weight: 500;
+  font-size: 15px;
+  color: #406c88;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.buildingNameIcon {
+  color: #406c88;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.buildingName:hover {
+  color: #406c88;          /* Màu chữ đổi khi hover */
+}
+
+.buildingName:hover .buildingNameIcon {
+  transform: scale(1.1);   /* Icon phóng to nhẹ */
+  color:#406c88;          /* Màu icon đậm hơn */
+}
+
+.button {
+  padding: 4px 10px;
+  cursor: pointer;
+  /* border: 1px solid #aaa; */
+  border-radius: 4px;
+  /* background-color: #f5f5f5; */
+  font-size: 14px;
+    text-decoration: underline;
+}
+
+/* Hover effect */
+.button:hover {
+  /* background-color: #e0e0e0; */
+}
+
+/* ===== Responsive Styling ===== */
+
+/* Mobile (width < 600px) */
+@media (max-width: 600px) {
+  .table {
+    font-size: 13px;
+  }
+
+  .table th,
+  .table td {
+    padding: 6px;
+  }
+
+  .buildingName {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .button {
+    font-size: 13px;
+    padding: 4px 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Tablet (width < 900px) */
+@media (max-width: 900px) {
+  .table {
+    font-size: 14px;
+  }
+
+  .table th,
+  .table td {
+    padding: 6px 10px;
+  }
+
+  .button {
+    font-size: 13.5px;
+  }
+
+  .buildingTypeTitle {
+    font-size: 15px;
+  }
 }

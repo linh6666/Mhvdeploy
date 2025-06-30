@@ -1,51 +1,86 @@
-import React from "react";
-import { Card, Text } from "@mantine/core";
-import styles from "./ApartmentCard.module.css";
+"use client";
+import React, { useEffect, useState } from "react";
+import { Modal, Text, Loader } from "@mantine/core";
+import { apiarea } from "../../../../library/axios";
+import { API_ROUTE } from "../../../../const/apiRouter";
 
-export interface ApartmentProps {
-  id: string;
-  floor: number;
-  bedrooms: number;
-  bathrooms: number;
-  price: number | string;
-  status: "available" | "deposit" | "sold";
+interface BuildingDetail {
+  zone_name: string;
+  building_name: string;
+  building_type: string;
+  amenity: string;
+  amenity_type: string;
 }
 
-const formatPrice = (price: number | string) => {
-  if (typeof price === "number" && price > 1) {
-    return price.toLocaleString();
-  }
-  return price;
-};
+interface BuildingDetailModalProps {
+  opened: boolean;
+  onClose: () => void;
+  selected: BuildingDetail | null;
+}
 
-const ApartmentCard: React.FC<ApartmentProps> = ({
-  id,
-  bedrooms,
-  bathrooms,
-  price,
-  status,
-}) => {
-  const statusClass = styles[status] || styles.unknown;
+export default function BuildingDetailModal({
+  opened,
+  onClose,
+  selected,
+}: BuildingDetailModalProps) {
+  const [detail, setDetail] = useState<BuildingDetail | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!opened || !selected?.building_type || !selected?.zone_name) return;
+
+    const fetchDetail = async () => {
+      try {
+        setLoading(true);
+        const res = await apiarea.get(
+          API_ROUTE.GET_AREA_DETAIL_BY_TYPE(selected.zone_name, selected.building_type)
+        );
+
+        const records = res.data?.records;
+
+        if (Array.isArray(records) && records.length > 0) {
+          const found = records.find(
+            (item: BuildingDetail) =>
+              item.building_name === selected.building_name
+          );
+          setDetail(found || null);
+        } else {
+          setDetail(null);
+        }
+      } catch (error) {
+        console.error("Lỗi khi fetch detail:", error);
+        setDetail(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetail();
+  }, [opened, selected]);
 
   return (
-    <Card className={`${styles.card} ${statusClass}`}>
-      <div className={styles.content}>
-        <Text size="lg" fw={500}>
-          {id}
-        </Text>
-        <Text size="sm">
-          Bedroom: {bedrooms} | Bathroom: {bathrooms}
-        </Text>
-        <Text size="sm">Price: {formatPrice(price)}</Text>
-        <Text size="sm" style={{ textTransform: "capitalize" }}>
-          Status: {status}
-        </Text>
-      </div>
-    </Card>
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={`Thông Tin Nhà: ${selected?.building_name ?? "Không xác định"}`}
+    >
+      {loading ? (
+        <Loader size="sm" />
+      ) : detail ? (
+        <>
+          <Text>Khu vực: {detail.zone_name}</Text>
+          <Text>Loại tòa nhà : {detail.building_type}</Text>
+          <Text>Tên: {detail.
+building_name}</Text>
+          
+        </>
+      ) : (
+        <Text>Không có dữ liệu</Text>
+      )}
+    </Modal>
   );
-};
+}
 
-export default ApartmentCard;
 
 
 

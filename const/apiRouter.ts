@@ -44,5 +44,6 @@ GET_UTILITIES:"/192.168.100.101/amenity/ti",
 PUT_VIDEO:"/192.168.100.101/eff/7/1",
   ////FILTER/////
   GET_FILTER:"/filter",
+  GET_FILTER_TYPE:"/filter_type",
 
   };

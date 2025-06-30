@@ -117,7 +117,7 @@ box-sizing: border-box;
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  width: 360px;
+  width: 365px;
   height: auto;
   max-height: 90vh;
   background-color: #294b61;
@@ -145,7 +145,7 @@ box-sizing: border-box;
 }
 
 .openDrawer {
-  padding: 24px;
+  /* padding: 24px; */
   overflow-y: scroll;
   flex: 1;
   color: white;

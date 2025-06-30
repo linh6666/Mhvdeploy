@@ -1,15 +1,39 @@
-.tableBorder {
+.scrollableTableWrapper {
+  max-height: 550px;
+  overflow-y: auto;
+  
   border: 1px solid #ccc;
+  border-radius: 4px;
+
+  /* Ẩn scrollbar */
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE & Edge */
+}
+
+.scrollableTableWrapper::-webkit-scrollbar {
+  display: none;               /* Chrome, Safari */
+}
+
+/* Bảng chính */
+.tableBorder {
+  width: 100%;
   border-collapse: collapse;
 }
 
 .tableBorder th,
 .tableBorder td {
   border: 1px solid #ccc;
-  padding: 8px;
+     padding: 3px;
+    font-size: 12px;
   text-align: left;
 }
 
-/* .tableBorder thead {
-  background-color: #f9f9f9;
-} */
+/* Cố định phần header */
+.tableBorder thead th {
+  position: sticky;
+  top: 0;
+  background-color: #294b61;
+  color: white;
+  z-index: 1;
+  border-bottom: 1px solid #ccc;
+}

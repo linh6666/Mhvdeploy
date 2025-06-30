@@ -1,12 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  images: {
-    unoptimized: true, 
-  },
+ unoptimized: true,  // 👈 Quan trọng để build dạng static
 }
 
 module.exports = nextConfig;
+
 
 
 

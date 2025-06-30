@@ -42,7 +42,7 @@ export default function App() {
       {/* Card Grid */}
       <div className={styles.cardGrid}>
         {/* Card 1 */}
-        <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
+        {/* <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image
             src="https://img.heroui.chat/image/places?w=800&h=400&u=1"
             height={160}
@@ -57,7 +57,7 @@ export default function App() {
           <Button className={`${styles.baseButton} ${styles.primaryButton}`}>
             Request Access
           </Button>
-        </Card>
+        </Card> */}
 
         {/* Card 2 */}
         <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
@@ -83,7 +83,7 @@ export default function App() {
         </Card>
 
         {/* Card 3 */}
-        <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
+        {/* <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image
             src="https://img.heroui.chat/image/places?w=800&h=400&u=3"
             height={160}
@@ -98,10 +98,10 @@ export default function App() {
           <Button className={`${styles.baseButton} ${styles.primaryButton}`}>
             Go To Project
           </Button>
-        </Card>
+        </Card> */}
 
         {/* Card 4 */}
-        <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
+        {/* <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image
             src="https://img.heroui.chat/image/places?w=800&h=400&u=4"
             height={160}
@@ -116,7 +116,7 @@ export default function App() {
           <Button disabled className={`${styles.baseButton} ${styles.disabledButton}`}>
             Wait for approval
           </Button>
-        </Card>
+        </Card> */}
       </div>
     </div>
   );
