@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Button, Image, Stack, Text, Grid } from "@mantine/core"; // Đảm bảo import Col từ Mantine
+import { Card, Button, Image, Text,  } from "@mantine/core"; // Đảm bảo import Col từ Mantine
 import { IconInfoCircle } from "@tabler/icons-react"; // Import đúng Icon từ Tabler
 import Link from "next/link";
 import styles from "./Available.module.css"; // Đảm bảo đường dẫn đúng

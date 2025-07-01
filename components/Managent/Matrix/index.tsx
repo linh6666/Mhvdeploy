@@ -1,11 +1,12 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { Tabs } from "@mantine/core";
 import { apiarea } from "../../../library/axios";
 import { API_ROUTE } from "../../../const/apiRouter";
-import BuildingDetailModal from "./ApartmentCard";
 import { IconHome } from "@tabler/icons-react";
-import styles from "./App.module.css"; // 👈 import css module
+import { useRouter } from "next/navigation";
+import styles from "./App.module.css";
 
 interface RecordItem {
   id: number;
@@ -22,11 +23,10 @@ interface ZoneTabContentProps {
   activeTab: string | null;
 }
 
-export default function ZoneTabContent({ zoneNames, activeTab }: ZoneTabContentProps) {
+export default function ZoneTabContent({ zoneNames }: ZoneTabContentProps) {
   const [allData, setAllData] = useState<RecordItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [opened, setOpened] = useState(false);
-  const [selected, setSelected] = useState<RecordItem | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -51,29 +51,22 @@ export default function ZoneTabContent({ zoneNames, activeTab }: ZoneTabContentP
     fetchAllData();
   }, []);
 
-  const handleOpenModal = (buildingName: string) => {
-    const detail = allData.find((item) => item.building_name === buildingName);
-    if (detail) {
-      setSelected(detail);
-      setOpened(true);
-    }
+  const handleGoToDetailPage = (buildingName: string) => {
+    const encodedName = encodeURIComponent(buildingName);
+    router.push(`/apartment/${encodedName}`); // ✅ đổi sang route mới
   };
 
   return (
     <>
       {zoneNames.map((zone) => {
         const zoneData = allData.filter((item) => item.zone_name.startsWith(zone));
-
         const groupedData: { [key: string]: Set<string> } = {};
 
         zoneData.forEach((item) => {
           const type = item.building_type;
           const name = item.building_name;
-
-          if (type && type !== "null" && type !== "NaN" && type !== "" && !Number.isNaN(type)) {
-            if (!groupedData[type]) {
-              groupedData[type] = new Set();
-            }
+          if (type && type !== "null" && type !== "NaN" && type !== "") {
+            if (!groupedData[type]) groupedData[type] = new Set();
             if (name && name !== "null" && name !== "NaN" && name !== "") {
               groupedData[type].add(name);
             }
@@ -90,7 +83,6 @@ export default function ZoneTabContent({ zoneNames, activeTab }: ZoneTabContentP
                   {Object.entries(groupedData).map(([type, nameSet]) => (
                     <div key={type} className={styles.buildingGroup}>
                       <strong className={styles.buildingTypeTitle}>{type}</strong>
-
                       <table className={styles.table}>
                         <thead>
                           <tr>
@@ -104,14 +96,14 @@ export default function ZoneTabContent({ zoneNames, activeTab }: ZoneTabContentP
                             <tr key={idx}>
                               <td>{idx + 1}</td>
                               <td>
-                            <span className={styles.buildingName}>
-  <IconHome size={18} className={styles.buildingNameIcon} />
-  {name}
-</span>
+                                <span className={styles.buildingName}>
+                                  <IconHome size={18} className={styles.buildingNameIcon} />
+                                  {name}
+                                </span>
                               </td>
                               <td>
                                 <button
-                                  onClick={() => handleOpenModal(name)}
+                                  onClick={() => handleGoToDetailPage(name)}
                                   className={styles.button}
                                 >
                                   Xem chi tiết
@@ -131,12 +123,6 @@ export default function ZoneTabContent({ zoneNames, activeTab }: ZoneTabContentP
           </Tabs.Panel>
         );
       })}
-
-      <BuildingDetailModal
-        opened={opened}
-        onClose={() => setOpened(false)}
-        selected={selected}
-      />
     </>
   );
 }

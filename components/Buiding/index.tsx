@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 
 import { SideNavigation } from "./detailBuling/index";
 import styles from "./App.module.css";
+import Image from "next/image";
 
 const zoneImages: Record<string, string> = {
   "Phân Khu 1": "/assets/Project/phan_khu_1.png",
@@ -30,7 +31,7 @@ export default function App() {
     <div className={styles.container}>
       <div className={styles.mainContent}>
         {imageUrl && (
-          <img
+          <Image
             className={styles.image}
             src={imageUrl}
             alt={`Hình ảnh ${zoneParam}`}

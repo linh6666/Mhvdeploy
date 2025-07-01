@@ -4,8 +4,8 @@
 import React, { useRef } from "react";
 import Image from "next/image";
 import styles from "./PagaAbout.module.css";
-import { Card, Button, SimpleGrid } from "@mantine/core";
-import { IconChevronDown, IconChevronRight } from "@tabler/icons-react";
+import {  SimpleGrid } from "@mantine/core";
+import { IconChevronDown } from "@tabler/icons-react";
 import AppContainer from "../../common/AppContainer";
 
 const logos = [

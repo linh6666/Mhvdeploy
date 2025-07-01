@@ -14,6 +14,7 @@ import {
 import styles from "./SideNavigation.module.css";
 import { API_ROUTE } from "../../../const/apiRouter";
 import { apiarea } from "../../../library/axios";
+import Image from "next/image";
 
 interface SideNavigationProps {
   className?: string;
@@ -53,7 +54,7 @@ const SideNavigationInner = ({ className }: SideNavigationProps) => {
   return (
     <div className={`${styles.container} ${className || ""}`}>
       <div className={styles.logoWrapper}>
-        <img src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
+        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
       </div>
 
       <h2 className={styles.mainHeading}>TRANG CHỦ</h2>

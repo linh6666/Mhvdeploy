@@ -49,9 +49,8 @@
   }
 
   /* Tabs: stack dạng dọc nếu cần (chưa apply trực tiếp trong JS) */
-  :global(.mantine-Tabs-tabList) {
+   .tabListWrapper :global(.mantine-Tabs-tabList) {
     flex-wrap: wrap;
     gap: 8px;
-    justify-content: center;
   }
 }

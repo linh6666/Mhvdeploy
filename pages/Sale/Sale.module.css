@@ -69,10 +69,10 @@
   background-color: white; /* Màu nền trắng */
   color: #228be6; /* Màu chữ xanh */
 }
-
 .primaryButton {
   background-color: #228be6; /* Màu nền chính */
   color: white; /* Màu chữ trắng */
+
 }
 
 .primaryButton:hover {

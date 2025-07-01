@@ -7,6 +7,7 @@ import { IconChevronsLeft } from "@tabler/icons-react";
 import styles from "./HouseType.module.css";
 import { apiarea } from "../../../library/axios";
 import { API_ROUTE } from "../../../const/apiRouter";
+import Image from "next/image";
 
 interface BuildingDetail {
   id?: string;
@@ -127,7 +128,7 @@ const HouseTypePage: React.FC<HouseTypePageProps> = ({ zoneParam, onSelectType, 
   return (
     <div className={`${styles.container} ${className || ""}`} >
       <div className={styles.logoWrapper}>
-        <img src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
+        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
       </div>
 
       {detailLoading ? (

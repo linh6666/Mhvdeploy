@@ -8,6 +8,7 @@ import styles from "./sideArea.module.css";
 
 import { apiarea } from "../../../library/axios";
 import { API_ROUTE } from "../../../const/apiRouter";
+import Image from "next/image";
 
 // Interface cho props
 interface SideNavigationProps {
@@ -76,7 +77,7 @@ export const SideNavigation = ({ className }: SideNavigationProps) => {
       // style={{ position: "relative" }}
     >
       <div className={styles.logoWrapper}>
-        <img src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
+        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
       </div>
 
       <h2 className={styles.mainHeading}>Phân Khu</h2>

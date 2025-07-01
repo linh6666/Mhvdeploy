@@ -1,6 +1,6 @@
 "use client";
 import { Image, SimpleGrid, Text, Stack } from "@mantine/core";
-import { IconDiamonds } from "@tabler/icons-react";
+
 import React from "react";
 import Link from "next/link";
 

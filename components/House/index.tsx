@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import HouseTypePage from "./HouseType/index";
 import styles from "./House.module.css";
 import { slugify } from "../../library/slugify";
+import Image from "next/image";
 
 export default function App() {
   const params = useParams();
@@ -27,7 +28,7 @@ export default function App() {
   return (
     <div className={styles.container}>
       <div className={styles.mainContent}>
-        <img
+        <Image
           className={styles.image}
           src={imageUrl}
           alt={`Hình ảnh ${zoneParam} - ${displayType}`}

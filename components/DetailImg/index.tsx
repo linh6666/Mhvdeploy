@@ -5,6 +5,7 @@ import { IconChevronsLeft } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import styles from './Detailimg.module.css';
+import Image from 'next/image';
 
 type VideoItem = {
   id: number;
@@ -128,7 +129,7 @@ export default function VideoCard() {
           <Loader />
         ) : (
           videos.map((video) => (
-            <img
+            <Image
               key={video.id}
               src={thumbnails[video.id]}
               alt={video.label}

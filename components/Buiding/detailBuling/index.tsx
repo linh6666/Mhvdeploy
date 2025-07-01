@@ -7,6 +7,7 @@ import { IconChevronsLeft } from "@tabler/icons-react";
 import styles from "./detailBuling.module.css";
 import { apiarea } from "../../../library/axios";
 import { API_ROUTE } from "../../../const/apiRouter";
+import Image from "next/image";
 
 interface NavigationButtonProps {
   label: string;
@@ -123,7 +124,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ zoneParam, class
   return (
     <div className={`${styles.container} ${className || ""}`} >
       <div className={styles.logoWrapper}>
-        <img src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
+        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
       </div>
 
       {loading ? (

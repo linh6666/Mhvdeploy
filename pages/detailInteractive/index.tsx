@@ -2,7 +2,7 @@ import { Card, Image, Stack, Text, Button, TextInput, Select } from "@mantine/co
 import { IconMapPin, IconBuilding, IconSearch } from '@tabler/icons-react';
 import styles from "./DetailInteractive.module.css";
 import AppContainer from "../../common/AppContainer";
-import Link from "next/link";
+
 
 export default function DetailInteractive () {
   return (

@@ -8,6 +8,7 @@ import { API_ROUTE } from "../../../const/apiRouter";
 import { apiarea } from "../../../library/axios";
 import styles from "./EffecrMenu.module.css";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 // ✅ Wrapper nhận props className
 export const SideNavigation = ({ className }: { className?: string }) => {
@@ -50,7 +51,7 @@ const SideNavigationInner = ({ className }: { className?: string }) => {
   return (
     <div className={`${styles.container} ${className ?? ""}`}>
       <div className={styles.logoWrapper}>
-        <img src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
+        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
       </div>
 
       <h2 className={styles.mainHeading}>Hiệu ứng</h2>

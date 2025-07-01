@@ -8,6 +8,7 @@ import styles from "./DetailUtilities.module.css";
 
 import { apiarea } from "../../../library/axios";
 import { API_ROUTE } from "../../../const/apiRouter";
+import Image from "next/image";
 
 interface MenuItem {
   amenity_type: string;
@@ -104,7 +105,7 @@ export const SideNavigation = ({ className }: SideNavigationProps) => {
   return (
     <div className={`${styles.container} ${className ?? ""}`} >
       <div className={styles.logoWrapper}>
-        <img src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
+        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
       </div>
 
       <h2 className={styles.mainHeading}>Tiện Ích</h2>

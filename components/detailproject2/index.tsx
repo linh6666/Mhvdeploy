@@ -8,6 +8,7 @@ import { API_ROUTE } from "../../const/apiRouter";
 import { IconChevronsRight, IconX } from "@tabler/icons-react";
 import DrawerRight from "../DrawerRight/DrawerRight";
 import AppContainer from "../../common/AppContainer";
+import Image from "next/image";
 
 export default function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -49,7 +50,7 @@ export default function App() {
       <IconChevronsRight size={24} color="white" />
     </div>
   )}
-  <img
+  <Image
     className={styles.image}
     src="/assets/Project/home.jpg"
     alt="Eco Retreat Long An Aerial View"

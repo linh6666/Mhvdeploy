@@ -92,7 +92,7 @@ export default function ImageGallery() {
       {/* Thumbnails */}
       <Group mt="md" align="center" style={{ width: '100%', overflowX: 'auto' }}>
         {images.map((image) => (
-          <img
+          <Image
             key={image.id}
             src={image.src}
             alt={image.label}

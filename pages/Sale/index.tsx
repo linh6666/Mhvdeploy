@@ -1,7 +1,7 @@
 import { Card, Image, Stack, Text, Button, TextInput, Select } from "@mantine/core";
 import { IconMapPin, IconBuilding, IconSearch } from '@tabler/icons-react';
 import styles from "./Sale.module.css";
-import Link from "next/link";
+
 
 export default function App() {
   return (

@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
- unoptimized: true,  // 👈 Quan trọng để build dạng static
+  images: {
+    unoptimized: true, // ✅ đúng vị trí
+  },
 }
 
 module.exports = nextConfig;

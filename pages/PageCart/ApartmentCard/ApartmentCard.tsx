@@ -2,11 +2,12 @@ import React from "react";
 import { Button } from "@mantine/core";
 import { IconVideo } from "@tabler/icons-react";
 import styles from "./ApartmentCard.module.css"; // ✅ Import module CSS
+import Image from "next/image";
 
 interface ApartmentCardProps {
   aptNo: string;
   status: string;
-  statusColor: "primary" | "secondary" | "success" | "warning" | "danger";
+  // statusColor: "primary" | "secondary" | "success" | "warning" | "danger";
   bedrooms: number;
   bathrooms: number;
   aspect: string;
@@ -17,7 +18,7 @@ interface ApartmentCardProps {
 const ApartmentCard: React.FC<ApartmentCardProps> = ({
   aptNo,
   status,
-  statusColor,
+  // statusColor,
   bedrooms,
   bathrooms,
   aspect,
@@ -29,7 +30,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
       <div className={styles.cardWrapper}>
         {/* Image section on mobile (top) */}
         <div className={styles.mobileImageWrapper}>
-          <img src={imageUrl} alt={`Apartment ${aptNo}`} className={styles.imageMobile} />
+          <Image src={imageUrl} alt={`Apartment ${aptNo}`} className={styles.imageMobile} />
           <Button variant="default" size="xs" radius="xl" className={styles.videoButton}>
             <IconVideo size={20} />
           </Button>
@@ -84,7 +85,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
 
         {/* Right section - Image (desktop only) */}
         <div className={styles.desktopImageWrapper}>
-          <img src={imageUrl} alt={`Apartment ${aptNo}`} className={styles.imageDesktop} />
+          <Image src={imageUrl} alt={`Apartment ${aptNo}`} className={styles.imageDesktop} />
           <Button variant="default" size="xs" radius="xl" className={styles.videoButton}>
             <IconVideo size={20} />
           </Button>
