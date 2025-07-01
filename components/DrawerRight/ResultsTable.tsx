@@ -18,8 +18,31 @@ const formatCurrency = (value: number | string) => {
   });
 };
 
+// Hàm kiểm tra giá trị hợp lệ (không null, undefined, NaN)
+const isValid = (value: any) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === "number" && (isNaN(value) || !isFinite(value))) return false;
+  if (typeof value === "string" && (value.trim() === "" || value.toLowerCase() === "nan")) return false;
+  return true;
+};
+
+// Kiểm tra toàn bộ dòng có đủ dữ liệu không
+const isRowValid = (item: any) => {
+  return (
+    isValid(item.building_name) &&
+    isValid(item.zone_name) &&
+    isValid(item.bedroom) &&
+    isValid(item.status) &&
+    isValid(item.price) &&
+    isValid(item.direction)
+  );
+};
+
 export default function ResultsTable({ data, onBack }: Props) {
-  if (!data.length)
+  // Lọc các dòng hợp lệ
+  const filteredData = data.filter(isRowValid);
+
+  if (!filteredData.length)
     return (
       <div style={{ textAlign: "center", marginTop: "40px" }}>
         <p>Không có kết quả</p>
@@ -44,7 +67,7 @@ export default function ResultsTable({ data, onBack }: Props) {
           <thead>
             <tr>
               <th>Tên</th>
-              <th>khu vực</th>
+              <th>Khu vực</th>
               <th>Phòng</th>
               <th>Trạng thái</th>
               <th>Giá</th>
@@ -52,15 +75,14 @@ export default function ResultsTable({ data, onBack }: Props) {
             </tr>
           </thead>
           <tbody>
-            {data.map((item, idx) => (
+            {filteredData.map((item, idx) => (
               <tr key={idx}>
-
-             <td>{item.building_name || "--"}</td>
-                <td>{item.zone_name || "--"}</td>
-                <td>{item.bedroom || "--"}</td>
-              <td>{item.status || "--"}</td>
-                <td>{item.price ? formatCurrency(item.price) : "--"}</td>
-                <td>{item.direction || "--"}</td>
+                <td>{item.building_name}</td>
+                <td>{item.zone_name}</td>
+                <td>{item.bedroom}</td>
+                <td>{item.status}</td>
+                <td>{formatCurrency(item.price)}</td>
+                <td>{item.direction}</td>
               </tr>
             ))}
           </tbody>
@@ -78,3 +100,4 @@ export default function ResultsTable({ data, onBack }: Props) {
     </div>
   );
 }
+

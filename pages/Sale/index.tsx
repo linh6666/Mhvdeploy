@@ -64,13 +64,13 @@ export default function App() {
           <Image
             src="https://img.heroui.chat/image/places?w=800&h=400&u=2"
             height={160}
-            alt="Ecopark"
+            alt="ECO RETREAT"
             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-            <Text fw={500}>Ecopark</Text>
-            <Text size="sm" c="dimmed">Van Giang, Hung Yen, Vietnam</Text>
-            <Text size="sm" c="dimmed">8%</Text>
+            <Text fw={500}>ECO RETREAT</Text>
+            <Text size="sm" c="dimmed">Long An</Text>
+            <Text size="sm" c="dimmed">100%</Text>
           </Stack>
             <Button
       component="a"
