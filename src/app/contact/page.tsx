@@ -1,6 +1,6 @@
 
 import React from "react";
-import PageContact from "../../../pages/PageContact";
+import PageContact from "../../../components/PageContact";
 import { Metadata } from "next";
 
 

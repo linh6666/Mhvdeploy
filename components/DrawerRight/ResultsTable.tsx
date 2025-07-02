@@ -2,13 +2,22 @@ import React from "react";
 import { Table, Button } from "@mantine/core";
 import styles from "./ResultsTable.module.css";
 
+interface ResultItem {
+  building_name: string;
+  zone_name: string;
+  bedroom: string | number;
+  status: string;
+  price: number | string;
+  direction: string;
+}
+
 interface Props {
-  data: any[];
+  data: ResultItem[];
   onBack: () => void;
 }
 
 // Hàm định dạng giá bán thành dạng tiền tệ VNĐ
-const formatCurrency = (value: number | string) => {
+const formatCurrency = (value: number | string): string => {
   const number = typeof value === "string" ? parseFloat(value) : value;
   if (isNaN(number)) return "--";
   return number.toLocaleString("vi-VN", {
@@ -19,7 +28,7 @@ const formatCurrency = (value: number | string) => {
 };
 
 // Hàm kiểm tra giá trị hợp lệ (không null, undefined, NaN)
-const isValid = (value: any) => {
+const isValid = (value: unknown): boolean => {
   if (value === null || value === undefined) return false;
   if (typeof value === "number" && (isNaN(value) || !isFinite(value))) return false;
   if (typeof value === "string" && (value.trim() === "" || value.toLowerCase() === "nan")) return false;
@@ -27,7 +36,7 @@ const isValid = (value: any) => {
 };
 
 // Kiểm tra toàn bộ dòng có đủ dữ liệu không
-const isRowValid = (item: any) => {
+const isRowValid = (item: ResultItem): boolean => {
   return (
     isValid(item.building_name) &&
     isValid(item.zone_name) &&
@@ -39,7 +48,6 @@ const isRowValid = (item: any) => {
 };
 
 export default function ResultsTable({ data, onBack }: Props) {
-  // Lọc các dòng hợp lệ
   const filteredData = data.filter(isRowValid);
 
   if (!filteredData.length)
@@ -100,4 +108,3 @@ export default function ResultsTable({ data, onBack }: Props) {
     </div>
   );
 }
-

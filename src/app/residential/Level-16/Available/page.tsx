@@ -1,12 +1,11 @@
 import React from "react";
-import { Card, Button, Image, Text,  } from "@mantine/core"; // Đảm bảo import Col từ Mantine
-import { IconInfoCircle } from "@tabler/icons-react"; // Import đúng Icon từ Tabler
+import { Card, Button, Image, Text } from "@mantine/core"; 
+import { IconInfoCircle } from "@tabler/icons-react"; 
 import Link from "next/link";
-import styles from "./Available.module.css"; // Đảm bảo đường dẫn đúng
+import styles from "./Available.module.css"; 
 
-// Định nghĩa component KeyAreaItem
 const KeyAreaItem = ({ level, link }: { level: number; link: string }) => {
-  const isCurrentLevel = level === 16; // Kiểm tra nếu là tầng 16
+  const isCurrentLevel = level === 16; 
 
   return (
     <Link
@@ -25,7 +24,6 @@ const KeyAreaItem = ({ level, link }: { level: number; link: string }) => {
     </Link>
   );
 };
-
 
 function ApartmentCard() {
   const levels = [
@@ -53,7 +51,6 @@ function ApartmentCard() {
     <div className={styles.container}>
       <Card className={styles.card}>
         <div className={styles.gridContainer}>
-          {/* Left side */}
           <div className={styles.sectionLeft}>
             <div className="flex items-center gap-3">
               <div className={styles.iconBox}>
@@ -94,50 +91,46 @@ function ApartmentCard() {
             <div className={styles.descContainer}>
               <h3 className={styles.descLabel}>Describe:</h3>
               <p className={styles.descText}>
-                The living room's largest piece of furniture is a big, white couch that sits behind
+                The living room&apos;s largest piece of furniture is a big, white couch that sits behind
                 the table and harmonizes well with the cream-colored walls, painted according to my
-                mother's fondness for pastel hues...
+                mother&apos;s fondness for pastel hues...
               </p>
             </div>
 
             <div className={styles.buttonWrapper}>
-  <Link href="/login">
-    <Button color="blue" className={styles.customButton}>
-      MORE INFO
-    </Button>
-  </Link>
-</div>
+              <Link href="/login">
+                <Button color="blue" className={styles.customButton}>
+                  MORE INFO
+                </Button>
+              </Link>
+            </div>
           </div>
 
-          {/* Right side */}
-         <div className={styles.rightSection}>
-  {/* Bọc hai ảnh trong một div */}
-  <div className={styles.imageContainer}>
-    <Image
-      alt="Living room with large windows"
-      className={styles.image}
-      src="https://img.heroui.chat/image/places?w=800&h=500&u=apt-living"
-    />
-    <Image
-      alt="Modern kitchen with windows"
-      className={styles.image}
-      src="https://img.heroui.chat/image/places?w=800&h=500&u=apt-kitchen"
-    />
-  </div>
+          <div className={styles.rightSection}>
+            <div className={styles.imageContainer}>
+              <Image
+                alt="Living room with large windows"
+                className={styles.image}
+                src="https://img.heroui.chat/image/places?w=800&h=500&u=apt-living"
+              />
+              <Image
+                alt="Modern kitchen with windows"
+                className={styles.image}
+                src="https://img.heroui.chat/image/places?w=800&h=500&u=apt-kitchen"
+              />
+            </div>
 
-  {/* Đặt Stack ngay bên cạnh */}
-  <div className={styles.keyAreas}>
-    <Text fw={500} className={styles.keyAreasTitle}>
-      Level
-    </Text>
-    <div className={styles.keyAreaList}>
-      {levels.map(({ level, link }) => (
-        <KeyAreaItem key={level} level={level} link={link} />
-      ))}
-    </div>
-  </div>
-</div>
-          
+            <div className={styles.keyAreas}>
+              <Text fw={500} className={styles.keyAreasTitle}>
+                Level
+              </Text>
+              <div className={styles.keyAreaList}>
+                {levels.map(({ level, link }) => (
+                  <KeyAreaItem key={level} level={level} link={link} />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </Card>
     </div>

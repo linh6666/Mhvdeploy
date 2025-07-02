@@ -12,12 +12,12 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
-import { sendPasswordResetEmail } from "../../../api/apiSendemail"; // Nhập hàm gửi email
+import { sendPasswordResetEmail } from "../../../api/apiSendemail"; // ✅ Đã dùng đúng
 import styles from "./forgotPassword.module.css";
 
 export default function ForgotPassword() {
-  const [loading, setLoading] = useState(false); // Quản lý loading
-  const [message, setMessage] = useState(""); // Hiển thị thông báo
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   const form = useForm({
     initialValues: {
@@ -36,12 +36,11 @@ export default function ForgotPassword() {
     setMessage("");
 
     try {
-      const response = await sendPasswordResetEmail(values.email);
+      // ✅ Gửi email thực sự
+      await sendPasswordResetEmail(values.email);
 
-      // ✅ Cập nhật thông báo thành công
+      // ✅ Nếu thành công
       setMessage("Email sent successfully! Please check your email inbox.");
-
-      // ✅ Xóa toàn bộ dữ liệu trong form
       form.reset();
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -108,7 +107,7 @@ export default function ForgotPassword() {
           {message && (
             <Text
               size="sm"
-              color={message.startsWith("Failed") ? "red" : "green"}
+              color={message.toLowerCase().includes("fail") ? "red" : "green"}
               mt="sm"
             >
               {message}

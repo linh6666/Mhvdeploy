@@ -1,8 +1,9 @@
-// src/hooks/AuthProvider.tsx
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
-import { loginUser } from "../../../api/apiLogin";  // Cập nhật đúng đường dẫn API nếu cần
-import {  getUserInfo } from "../../../api/apiLoginusename";
+
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { loginUser } from "../../../api/apiLogin";
+import { getUserInfo } from "../../../api/apiLoginusename";
+
 interface User {
   full_name: string;
   email: string;
@@ -20,7 +21,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const userData = await getUserInfo(token);
       setUser(userData);
-    } catch (err) {
+    } catch {
       setError("Failed to fetch user data");
     }
   };
@@ -46,7 +47,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem("access_token", access_token);
       setIsLoggedIn(true);
       await fetchUserData(access_token);
-    } catch (err) {
+    } catch {
       setError("Login failed");
     }
   };
@@ -66,6 +67,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
   return context;
 };

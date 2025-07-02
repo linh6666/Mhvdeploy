@@ -7,7 +7,7 @@ import { apiarea } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
 import { IconChevronsRight, IconX } from "@tabler/icons-react";
 import DrawerRight from "../DrawerRight/DrawerRight";
-import AppContainer from "../../common/AppContainer";
+
 import Image from "next/image";
 
 export default function App() {

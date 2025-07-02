@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { Button } from "@mantine/core";
-import { IconChevronsLeft } from "@tabler/icons-react";
-import styles from "./HouseType.module.css";
-import { apiarea } from "../../../library/axios";
-import { API_ROUTE } from "../../../const/apiRouter";
-import Image from "next/image";
+import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { Button } from '@mantine/core';
+import { IconChevronsLeft } from '@tabler/icons-react';
+import styles from './HouseType.module.css';
+import { apiarea } from '../../../library/axios';
+import { API_ROUTE } from '../../../const/apiRouter';
+import Image from 'next/image';
 
 interface BuildingDetail {
   id?: string;
@@ -17,85 +17,87 @@ interface BuildingDetail {
   zone_name?: string;
   amenity?: string;
   amenity_type?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface HouseTypePageProps {
   zoneParam: string;
   onSelectType?: (type: string) => void;
-  className?: string; // ✅ Thêm prop className vào đây
+  className?: string;
 }
 
-const HouseTypePage: React.FC<HouseTypePageProps> = ({ zoneParam, onSelectType, className }) => {
+const HouseTypePage: React.FC<HouseTypePageProps> = ({
+  zoneParam,
+  onSelectType,
+  className,
+}) => {
   const params = useParams();
   const router = useRouter();
 
-  const typeRaw = params?.type ?? "";
+  const typeRaw = params?.type ?? '';
   const typeFromURL = decodeURIComponent(Array.isArray(typeRaw) ? typeRaw[0] : typeRaw);
 
   const [buildingDetails, setBuildingDetails] = useState<BuildingDetail[]>([]);
   const [detailLoading, setDetailLoading] = useState<boolean>(false);
-  const [detailError, setDetailError] = useState<string>("");
+  const [detailError, setDetailError] = useState<string>('');
   const [selectedType, setSelectedType] = useState<string>(typeFromURL);
-  const [houseDetail, setHouseDetail] = useState<any>(null);
 
   const handleGoBack = () => {
     router.push(`/building-type/${encodeURIComponent(zoneParam)}`);
   };
 
-  const fetchHouseDetail = async (detail: BuildingDetail) => {
+  const fetchHouseDetail = async (detail: BuildingDetail): Promise<void> => {
     const url = API_ROUTE.GET_HOUSE_DETAIL(
-      detail.zone || "",
-      detail.zone_name || "",
-      detail.building_type || "",
-      detail.building_name || ""
+      detail.zone || '',
+      detail.zone_name || '',
+      detail.building_type || '',
+      detail.building_name || ''
     );
 
     try {
       const res = await apiarea.get(url);
-      console.log("Chi tiết nhà:", res.data);
-      setHouseDetail(res.data);
+      console.log('Chi tiết nhà:', res.data);
     } catch (err) {
-      console.error("Lỗi chi tiết nhà:", err);
+      console.error('Lỗi chi tiết nhà:', err);
     }
   };
 
-  const handleSelectType = (selected: string) => {
+  const handleSelectType = (selected: string): void => {
     setSelectedType(selected);
     onSelectType?.(selected);
 
     const detail = buildingDetails.find(
-      (d) => (d.building_name?.trim() || "Không rõ loại nhà") === selected
+      (d) => (d.building_name?.trim() || 'Không rõ loại nhà') === selected
     );
     if (detail) {
       fetchHouseDetail(detail);
     }
   };
 
-  function groupByBuildingName(details: BuildingDetail[]): BuildingDetail[] {
+  const groupByBuildingName = (details: BuildingDetail[]): BuildingDetail[] => {
     const uniqueMap = new Map<string, BuildingDetail>();
 
     for (const detail of details) {
-      const key = detail.building_name?.trim() || "Không rõ loại nhà";
+      const key = detail.building_name?.trim() || 'Không rõ loại nhà';
       if (!uniqueMap.has(key)) {
         uniqueMap.set(key, detail);
       }
     }
 
     return Array.from(uniqueMap.values());
-  }
+  };
 
   useEffect(() => {
-    async function fetchDetail(zone: string, typeName: string) {
+    const fetchDetail = async (zone: string, typeName: string) => {
       if (!zone || !typeName) {
-        setDetailError("Thiếu tham số phân khu hoặc loại nhà");
+        setDetailError('Thiếu tham số phân khu hoặc loại nhà');
         setBuildingDetails([]);
         return;
       }
 
       try {
         setDetailLoading(true);
-        setDetailError("");
+        setDetailError('');
         setBuildingDetails([]);
 
         const apiUrl = API_ROUTE.GET_AREA_DETAIL_BY_TYPE(zone, typeName);
@@ -105,51 +107,49 @@ const HouseTypePage: React.FC<HouseTypePageProps> = ({ zoneParam, onSelectType, 
           const groupedDetails = groupByBuildingName(res.data.records);
           setBuildingDetails(groupedDetails);
         } else {
-          setDetailError("Không tìm thấy dữ liệu cho loại nhà này");
-          setBuildingDetails([]);
+          setDetailError('Không tìm thấy dữ liệu cho loại nhà này');
         }
-      } catch (error) {
-        console.error("Lỗi khi tải chi tiết:", error);
-        setDetailError("Lỗi tải chi tiết");
-        setBuildingDetails([]);
+      } catch (err) {
+        console.error('Lỗi khi tải chi tiết:', err);
+        setDetailError('Lỗi tải chi tiết');
       } finally {
         setDetailLoading(false);
       }
-    }
+    };
 
     if (typeFromURL) {
       fetchDetail(zoneParam, typeFromURL);
     } else {
       setBuildingDetails([]);
-      setDetailError("");
+      setDetailError('');
     }
   }, [zoneParam, typeFromURL]);
 
   return (
-    <div className={`${styles.container} ${className || ""}`} >
+    <div className={`${styles.container} ${className || ''}`}>
       <div className={styles.logoWrapper}>
-        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
+        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} width={120} height={50} />
       </div>
 
       {detailLoading ? (
         <p>Đang tải chi tiết...</p>
       ) : detailError ? (
-        <p style={{ color: "red" }}>{detailError}</p>
+        <p style={{ color: 'red' }}>{detailError}</p>
       ) : buildingDetails.length === 0 && typeFromURL ? (
         <p>Không có loại nhà nào</p>
       ) : (
         <>
-          <h2 className={styles.mainHeading}>{typeFromURL || "Chọn loại nhà"}</h2>
+          <h2 className={styles.mainHeading}>{typeFromURL || 'Chọn loại nhà'}</h2>
           <div className={styles.scrollContainer}>
             <div className={styles.buttonGroup}>
               {buildingDetails.map((detail) => {
-                const buildingType = detail.building_name?.trim() || "Không rõ loại nhà";
+                const buildingType = detail.building_name?.trim() || 'Không rõ loại nhà';
                 const isActive = selectedType === buildingType;
 
                 return (
                   <Button
                     key={detail.id || buildingType}
-                    className={`${styles.button} ${isActive ? styles.active : ""}`}
+                    className={`${styles.button} ${isActive ? styles.active : ''}`}
                     title={detail.building_name}
                     onClick={() => handleSelectType(buildingType)}
                   >

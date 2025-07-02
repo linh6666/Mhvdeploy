@@ -44,7 +44,7 @@ export default function App() {
           <ApartmentCard
             aptNo="1601"
             status="Available"
-            statusColor="primary"
+            // statusColor="primary"
             bedrooms={2}
             bathrooms={2}
             aspect="SE"

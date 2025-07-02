@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import { Button } from "@mantine/core";
@@ -9,6 +9,9 @@ import { apiarea } from "../../../library/axios";
 import styles from "./EffecrMenu.module.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+
+// ✅ Khai báo kiểu cho các key ánh sáng
+type LightingKeys = `POST_LIGHYING_${1 | 2 | 3 | 4 | 5}`;
 
 // ✅ Wrapper nhận props className
 export const SideNavigation = ({ className }: { className?: string }) => {
@@ -30,18 +33,28 @@ const SideNavigationInner = ({ className }: { className?: string }) => {
       await apiarea.post(url);
       setSelectedEffect(label); // ✅ Đánh dấu nút đang được chọn
       showNotification({
-        title: 'Thành công',
+        title: "Thành công",
         message: `${label} đã được kích hoạt`,
-        color: 'green',
+        color: "green",
         icon: <IconCheck size={18} />,
         autoClose: 900,
       });
-    } catch (err: any) {
-      console.error("Gọi hiệu ứng thất bại:", err?.response?.data || err.message || err);
+    } catch (err: unknown) {
+      // ✅ Xử lý err đúng kiểu `unknown` thay vì `any`
+      let message = "Không thể kích hoạt hiệu ứng";
+      if (typeof err === "object" && err && "response" in err) {
+        const e = err as { response?: { data?: { detail?: string } } };
+        message = e.response?.data?.detail ?? message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+
+      console.error("Gọi hiệu ứng thất bại:", err);
+
       showNotification({
-        title: 'Lỗi',
-        message: err?.response?.data?.detail || err.message || 'Không thể kích hoạt hiệu ứng',
-        color: 'red',
+        title: "Lỗi",
+        message,
+        color: "red",
         icon: <IconX size={18} />,
         autoClose: 5000,
       });
@@ -51,7 +64,13 @@ const SideNavigationInner = ({ className }: { className?: string }) => {
   return (
     <div className={`${styles.container} ${className ?? ""}`}>
       <div className={styles.logoWrapper}>
-        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
+        <Image
+          src="/logo.png"
+          alt="Eco Retreat Logo"
+          className={styles.logoImage}
+          width={100}
+          height={100}
+        />
       </div>
 
       <h2 className={styles.mainHeading}>Hiệu ứng</h2>
@@ -59,7 +78,8 @@ const SideNavigationInner = ({ className }: { className?: string }) => {
       <div className={styles.buttonGroup}>
         {Array.from({ length: 5 }, (_, i) => {
           const label = `Hiệu ứng ánh sáng ${i + 1}`;
-          const route = (API_ROUTE as any)[`POST_LIGHYING_${i + 1}`];
+          const key = `POST_LIGHYING_${i + 1}` as LightingKeys;
+          const route = API_ROUTE[key];
           return (
             <NavigationButton
               key={label}
@@ -72,7 +92,11 @@ const SideNavigationInner = ({ className }: { className?: string }) => {
       </div>
 
       <div className={styles.bottomButtons}>
-        <Button className={styles.button1} variant="outline" onClick={() => router.back()}>
+        <Button
+          className={styles.button1}
+          variant="outline"
+          onClick={() => router.back()}
+        >
           <IconChevronsLeft size={20} />
         </Button>
       </div>
@@ -88,7 +112,12 @@ interface NavigationButtonProps {
   className?: string;
 }
 
-const NavigationButton = ({ label, isActive, onClick, className }: NavigationButtonProps) => {
+const NavigationButton = ({
+  label,
+  isActive,
+  onClick,
+  className,
+}: NavigationButtonProps) => {
   return (
     <Button
       className={`${styles.button} ${isActive ? styles.active : ""} ${className ?? ""}`}

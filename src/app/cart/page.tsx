@@ -1,4 +1,4 @@
-import Cart from "../../../pages/PageCart";
+import Cart from "../../../components/PageCart";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

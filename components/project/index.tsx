@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Tabs } from '@mantine/core';
-import { IconPhoto, IconMessageCircle, IconSettings } from '@tabler/icons-react';
+
 import Matrix from "./Matrix";
 import Notes from "./Notes";
 
@@ -42,7 +42,7 @@ export default function Managent() {  // Dùng default export
         Settings tab content
       </Tabs.Panel>
        <Tabs.Panel value="Price List">
-      "Price List
+      Price List
       </Tabs.Panel>
        <Tabs.Panel value="CRM">
        CRM

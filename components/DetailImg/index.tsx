@@ -3,7 +3,7 @@
 import { Button, Card, Group, Loader } from '@mantine/core';
 import { IconChevronsLeft } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import styles from './Detailimg.module.css';
 import Image from 'next/image';
 
@@ -16,7 +16,7 @@ type VideoItem = {
 export default function VideoCard() {
   const router = useRouter();
 
-  const videos: VideoItem[] = [
+  const videos: VideoItem[] = useMemo(() => [
     {
       id: 1,
       src: '/video/gioi_thieu_du_an.mp4',
@@ -27,7 +27,7 @@ export default function VideoCard() {
       src: '/video/teaser_sk.mp4',
       label: 'Video 2',
     },
-  ];
+  ], []);
 
   const [currentVideo, setCurrentVideo] = useState(videos[0].src);
   const [thumbnails, setThumbnails] = useState<{ [id: number]: string }>({});
@@ -50,7 +50,6 @@ export default function VideoCard() {
       videoEl.crossOrigin = 'anonymous';
 
       const onLoadedMetadata = () => {
-        // Đặt currentTime sau khi metadata đã load để tránh lỗi
         videoEl.currentTime = 0.8;
       };
 
@@ -97,12 +96,10 @@ export default function VideoCard() {
     };
   }, [videos, thumbnails]);
 
-  // Khi currentVideo thay đổi, tự động play video
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch(() => {
-        // Nếu trình duyệt chặn autoplay, bạn có thể xử lý ở đây
-        // Ví dụ: show nút "Bật video"
+        // Trình duyệt chặn autoplay
       });
     }
   }, [currentVideo]);

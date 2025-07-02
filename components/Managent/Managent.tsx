@@ -4,7 +4,7 @@ import { Tabs } from "@mantine/core";
 import { apiarea } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
 import ZoneTabContent from "./Matrix";
-import styles from "./App.module.css"; // ✅ import CSS module
+import styles from "./App.module.css";
 
 interface RecordItem {
   id: number;
@@ -58,6 +58,16 @@ export default function Managent() {
 
   return (
     <div className={styles.container}>
+      <h1 className={styles.title}>Kho hàng</h1>
+      {records.length > 0 && (
+        <ul>
+          {records.map(record => (
+            <li key={record.id}>
+              {record.building_name} - {record.zone_name}
+            </li>
+          ))}
+        </ul>
+      )}
       <Tabs
         variant="outline"
         radius="xs"
@@ -65,8 +75,6 @@ export default function Managent() {
         onChange={setActiveTab}
         className={styles.tabList}
       >
-        <h1 className={styles.title}>Kho hàng</h1>
-
         <Tabs.List>
           {zoneNames.map((zoneName) => (
             <Tabs.Tab key={zoneName} value={zoneName}>
@@ -80,7 +88,6 @@ export default function Managent() {
     </div>
   );
 }
-
 
 
 

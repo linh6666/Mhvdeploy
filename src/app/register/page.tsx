@@ -65,7 +65,6 @@ export default function RegisterPage() {
           ? "Passwords do not match"
           : null,
     }
-    
   });
 
   const handleSubmit = async (values: typeof form.values) => {
@@ -79,7 +78,6 @@ export default function RegisterPage() {
       );
       console.log("Registration successful:", res);
 
-      // ✅ Hiển thị thông báo thành công
       showNotification({
         title: "Thông báo",
         message: "Đăng ký thành công!",
@@ -87,18 +85,18 @@ export default function RegisterPage() {
         icon: <span>✔️</span>,
       });
 
-      form.reset(); // ✅ Xóa dữ liệu form
+      form.reset(); 
 
       setTimeout(() => {
-        router.push("/login"); // ✅ Chuyển về trang login
+        router.push("/login");
       }, 1500);
-    } catch (error: any) {
-      console.error("Registration failed:", error.message);
+    } catch (error: unknown) {
+      const errorMessage = (error as Error).message || "Đăng ký thất bại!";
+      console.error("Registration failed:", errorMessage);
 
-      // ✅ Hiển thị thông báo lỗi
       showNotification({
         title: "Lỗi",
-        message: error.message || "Đăng ký thất bại!",
+        message: errorMessage,
         color: "red",
       });
     }

@@ -5,15 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Image } from "@mantine/core";
 import { IconShoppingCart } from "@tabler/icons-react";
-import Search from "../SearchBar/SearchBar";
+
 import LoginButton from "../LoginButton/LoginButton";
 import styles from "./Header.module.css";
 
 export default function Header() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchOpen, setSearchOpen] = useState(false);
+  // const [searchQuery, setSearchQuery] = useState("");
 
   const navLinks = [
     { label: "HOME", href: "/", highlight: true },

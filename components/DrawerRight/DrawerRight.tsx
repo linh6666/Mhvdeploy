@@ -6,11 +6,23 @@ import { apifilter } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
 import ResultsTable from "./ResultsTable";
 
+// Interface cho response filter
 interface FilterTypeResponse {
   status: string[];
   bedroom: (number | string)[];
   direction: string[];
   price: number[];
+}
+
+// Interface cho kết quả lọc
+interface ResultItem {
+  building_name: string;
+  zone_name: string;
+  bedroom: number;
+  status: string;
+  direction: string;
+  price: number;
+  // Nếu có thêm trường nào từ API, bạn thêm vào đây
 }
 
 export default function FilterForm() {
@@ -30,19 +42,19 @@ export default function FilterForm() {
   const [maxPrice, setMaxPrice] = useState<string>("");
 
   const [rangeValue, setRangeValue] = useState<[number, number]>([0, 10000000000]);
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<ResultItem[]>([]);
   const [showResults, setShowResults] = useState(false);
 
-  // Gọi API lấy dữ liệu filter
   useEffect(() => {
-    apifilter.get<FilterTypeResponse>(API_ROUTE.GET_FILTER_TYPE)
-      .then(res => {
+    apifilter
+      .get<FilterTypeResponse>(API_ROUTE.GET_FILTER_TYPE)
+      .then((res) => {
         const d = res.data;
         setStatusOptions(d.status || []);
         setDirectionOptions(d.direction || []);
-        setBedroomOptions((d.bedroom || []).map(b => b.toString()));
+        setBedroomOptions((d.bedroom || []).map((b) => b.toString()));
         if (d.price?.length >= 2) {
-          const nums = d.price.filter(n => !isNaN(n)).sort((a, b) => a - b);
+          const nums = d.price.filter((n) => !isNaN(n)).sort((a, b) => a - b);
           setPriceBounds([nums[0], nums[nums.length - 1]]);
           setRangeValue([nums[0], nums[nums.length - 1]]);
         }
@@ -57,7 +69,6 @@ export default function FilterForm() {
     }
   }, [rangeValue, priceBounds]);
 
-  // Tạo mô tả filter
   useEffect(() => {
     const parts: string[] = [];
     if (selectedStatus) parts.push(selectedStatus);
@@ -98,7 +109,7 @@ export default function FilterForm() {
   };
 
   const handleSearch = async () => {
-    const payload: Record<string, any> = {};
+    const payload: Record<string, unknown> = {};
 
     if (selectedStatus) payload.status = selectedStatus;
     if (selectedBedrooms && selectedBedrooms !== "NaN") {
@@ -120,10 +131,14 @@ export default function FilterForm() {
     try {
       const resp = await apifilter.post(API_ROUTE.GET_FILTER, payload);
       const data = resp.data;
-      setResults(Array.isArray(data) ? data : data ? [data] : []);
+      setResults(Array.isArray(data) ? (data as ResultItem[]) : data ? [data as ResultItem] : []);
       setShowResults(true);
-    } catch (e: any) {
-      console.error("Lỗi khi gọi filter API:", e);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        console.error("Lỗi khi gọi filter API:", e.message);
+      } else {
+        console.error("Lỗi không xác định khi gọi filter API:", e);
+      }
       alert("Dữ liệu này không có !!");
     }
   };
@@ -135,7 +150,7 @@ export default function FilterForm() {
           <div className={styles.searchWrapper}>
             <Input
               value={filterSummary || manualKeyword}
-              onChange={e => setManualKeyword(e.currentTarget.value)}
+              onChange={(e) => setManualKeyword(e.currentTarget.value)}
               classNames={{ wrapper: styles.inputWrapper, input: styles.searchInput }}
               placeholder="Search Apartment Number ..."
             />
@@ -160,15 +175,15 @@ export default function FilterForm() {
             <div className={styles.label}>Bedrooms:</div>
             <div className={styles.diamondRow}>
               {bedroomOptions
-  .filter(b => b !== "0" && b !== "0.0") // lọc ra giá trị khác "0"
-  .map(b => (
-    <DiamondButton
-      key={b}
-      label={b.replace(".0", "")}
-      isSelected={selectedBedrooms === b}
-      onClick={() => handleBedroomsClick(b)}
-    />
-))}
+                .filter((b) => b !== "0" && b !== "0.0")
+                .map((b) => (
+                  <DiamondButton
+                    key={b}
+                    label={b.replace(".0", "")}
+                    isSelected={selectedBedrooms === b}
+                    onClick={() => handleBedroomsClick(b)}
+                  />
+                ))}
             </div>
           </div>
 
@@ -177,13 +192,14 @@ export default function FilterForm() {
             <RangeSlider
               min={priceBounds ? priceBounds[0] : 0}
               max={priceBounds ? priceBounds[1] : 10000000000}
-              step={Math.max(1_000_000, priceBounds ? Math.round((priceBounds[1] - priceBounds[0]) / 100) : 1_000_000)}
+              step={Math.max(
+                1_000_000,
+                priceBounds ? Math.round((priceBounds[1] - priceBounds[0]) / 100) : 1_000_000
+              )}
               value={rangeValue}
               onChange={setRangeValue}
-              label={v =>
-                v >= 1_000_000_000
-                  ? `${v / 1_000_000_000} tỉ`
-                  : `${v / 1_000_000} triệu`
+              label={(v) =>
+                v >= 1_000_000_000 ? `${v / 1_000_000_000} tỉ` : `${v / 1_000_000} triệu`
               }
               styles={{
                 track: { backgroundColor: "#e0e0e0" },
@@ -192,23 +208,6 @@ export default function FilterForm() {
               }}
             />
           </div>
-{/* 
-          <div className={styles.priceInputs}>
-            <input
-              type="text"
-              value={minPrice}
-              readOnly
-              placeholder="Min Price"
-              className={styles.priceInput}
-            />
-            <input
-              type="text"
-              value={maxPrice}
-              readOnly
-              placeholder="Max Price"
-              className={styles.priceInput}
-            />
-          </div> */}
 
           <div className={styles.section}>
             <div className={styles.label}>Direction:</div>
@@ -268,7 +267,7 @@ const DiamondButton = ({
   onClick,
 }: {
   label: string;
-  isSelected: boolean
+  isSelected: boolean;
   onClick: () => void;
 }) => (
   <button

@@ -1,8 +1,8 @@
 
 import React from "react";
-import ModelInteractive from "../../../pages/ModelInteractive";
+
 import { Metadata } from "next";
-import DetailInteractive from "../../../pages/detailInteractive";
+import DetailInteractive from "../../../components/detailInteractive";
 
 export const metadata: Metadata = {
   title: "Tương tác mô hình 3D - Mô Hình Việt",

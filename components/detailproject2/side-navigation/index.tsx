@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@mantine/core";
-import { showNotification, Notifications } from '@mantine/notifications';
+import { showNotification, Notifications } from "@mantine/notifications";
 import {
   IconCheck,
   IconX,
@@ -22,27 +22,35 @@ interface SideNavigationProps {
 
 const SideNavigationInner = ({ className }: SideNavigationProps) => {
   const router = useRouter();
-  const [loadingEffect, setLoadingEffect] = useState<null | string>(null);
-  const [activeButton, setActiveButton] = useState<string | null>("sunset"); // 👈 Mặc định là sunset
+  const [loadingEffect, setLoadingEffect] = useState<string | null>(null);
+  const [activeButton, setActiveButton] = useState<string | null>("sunset");
 
   const handleEffect = async (url: string, key: string) => {
     try {
       setLoadingEffect(url);
       setActiveButton(key);
-      const res = await apiarea.post(url);
+      await apiarea.post(url); // ❌ res không dùng → xoá
       showNotification({
-        title: 'Thành công',
-        message: 'Nút bật thành công!',
-        color: 'green',
+        title: "Thành công",
+        message: "Nút bật thành công!",
+        color: "green",
         icon: <IconCheck size={18} />,
         autoClose: 1000,
       });
-    } catch (err: any) {
-      console.error("Gọi hiệu ứng thất bại:", err?.response?.data || err.message || err);
+    } catch (err: unknown) {
+      const error = err as {
+        response?: { data?: { detail?: string } };
+        message?: string;
+      };
+
+      console.error("Gọi hiệu ứng thất bại:", error?.response?.data || error?.message || err);
       showNotification({
-        title: 'Lỗi',
-        message: err?.response?.data?.detail || err.message || 'Lỗi không xác định',
-        color: 'red',
+        title: "Lỗi",
+        message:
+          error?.response?.data?.detail ||
+          error?.message ||
+          "Lỗi không xác định",
+        color: "red",
         icon: <IconX size={18} />,
         autoClose: 5000,
       });
@@ -54,7 +62,11 @@ const SideNavigationInner = ({ className }: SideNavigationProps) => {
   return (
     <div className={`${styles.container} ${className || ""}`}>
       <div className={styles.logoWrapper}>
-        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
+        <Image
+          src="/logo.png"
+          alt="Eco Retreat Logo"
+          className={styles.logoImage}
+        />
       </div>
 
       <h2 className={styles.mainHeading}>TRANG CHỦ</h2>
@@ -67,39 +79,47 @@ const SideNavigationInner = ({ className }: SideNavigationProps) => {
         <NavigationButton label="THƯ VIỆN HÌNH ẢNH" href="/thu-vien-hinh-anh" />
         <NavigationButton label="THƯ VIỆN VIDEO" href="/thu-vien-video" />
         <NavigationButton label="TRỢ GIÚP" href="/tro-giup" />
-      <NavigationButton label="THOÁT" onClick={() => router.push("/interactive")} />
-
+        <NavigationButton
+          label="THOÁT"
+          onClick={() => router.push("/interactive")}
+        />
       </div>
 
       <div className={styles.bottomButtons}>
         <Button
           variant="filled"
           className={styles.bottomButton}
-          onClick={() => handleEffect(API_ROUTE.PUT_SUN, 'sun')}
+          onClick={() => handleEffect(API_ROUTE.PUT_SUN, "sun")}
           loading={loadingEffect === API_ROUTE.PUT_SUN}
         >
           <IconSun size={17} />
-          {activeButton === 'sun' && <span className={styles.buttonText}>SUN</span>}
+          {activeButton === "sun" && (
+            <span className={styles.buttonText}>SUN</span>
+          )}
         </Button>
 
         <Button
           variant="filled"
           className={styles.bottomButton}
-          onClick={() => handleEffect(API_ROUTE.PUT_SUN_SET, 'sunset')}
+          onClick={() => handleEffect(API_ROUTE.PUT_SUN_SET, "sunset")}
           loading={loadingEffect === API_ROUTE.PUT_SUN_SET}
         >
           <IconSunset2 size={17} />
-          {activeButton === 'sunset' && <span className={styles.buttonText}>SUNSET</span>}
+          {activeButton === "sunset" && (
+            <span className={styles.buttonText}>SUNSET</span>
+          )}
         </Button>
 
         <Button
           variant="filled"
           className={`${styles.bottomButton} ${styles.nightButton}`}
-          onClick={() => handleEffect(API_ROUTE.PUT_NIGHT, 'night')}
+          onClick={() => handleEffect(API_ROUTE.PUT_NIGHT, "night")}
           loading={loadingEffect === API_ROUTE.PUT_NIGHT}
         >
           <IconMoon size={17} />
-          {activeButton === 'night' && <span className={styles.buttonText}>NIGHT</span>}
+          {activeButton === "night" && (
+            <span className={styles.buttonText}>NIGHT</span>
+          )}
         </Button>
       </div>
     </div>

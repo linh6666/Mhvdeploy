@@ -14,12 +14,12 @@ import {
 import { useForm } from "@mantine/form";
 import { loginUser } from "../../../api/apiLogin";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation"; // Xóa dòng này nếu không sử dụng
 
 import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
-  const router = useRouter();
+  // const router = useRouter(); // Xóa dòng này nếu không sử dụng
 
   const form = useForm({
     initialValues: {
@@ -129,5 +129,3 @@ export default function LoginPage() {
     </Box>
   );
 }
-
-
