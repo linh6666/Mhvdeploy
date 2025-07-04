@@ -59,15 +59,18 @@
 }
 
 .baseButton {
-  height: 40px; /* Chiều cao cố định cho nút */
-  width: 90%; /* Để nút rộng đầy đủ */
+  width: 80%;
   border-radius: var(--mantine-radius-md);
   margin: var(--mantine-spacing-md) auto;
-  padding: var(--mantine-spacing-sm) 0;
-  font-weight: 500;
-  border: 1px solid #228be6; /* Thêm viền */
-  background-color: white; /* Màu nền trắng */
-  color: #228be6; /* Màu chữ xanh */
+           /* tăng chiều cao theo chiều dọc hơn nữa */
+  font-weight: 600;           /* đậm hơn một chút */
+  line-height: 1.6;           /* thoáng hơn để tránh bị che */
+  font-size: 18px;            /* tăng cỡ chữ rõ ràng hơn */
+   /* dày hơn cho nút nổi bật */
+  background-color: white;
+  color: #228be6;
+  text-align: center;
+  display: block;             /* đảm bảo chiếm toàn bộ chiều rộng cha */
 }
 
 .primaryButton {
@@ -76,7 +79,7 @@
 }
 
 .primaryButton:hover {
-  background-color: #294b61; /* Màu nền khi hover */
+  background-color: #bb8d38; /* Màu nền khi hover */
 }
 
 .disabledButton {

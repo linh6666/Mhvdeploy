@@ -54,3 +54,15 @@
     gap: 8px;
   }
 }
+.customTab {
+  color: #406c88;
+  font-weight: 500;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+}
+
+.customTab[data-active] {
+  background-color: #406c88;
+  color: white;
+  /* border-radius: px; */
+}

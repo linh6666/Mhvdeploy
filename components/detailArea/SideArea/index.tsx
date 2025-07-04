@@ -77,7 +77,10 @@ export const SideNavigation = ({ className }: SideNavigationProps) => {
       // style={{ position: "relative" }}
     >
       <div className={styles.logoWrapper}>
-        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
+        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage}  width={128} // 8rem = 128px
+  height={128}
+        />
+
       </div>
 
       <h2 className={styles.mainHeading}>Phân Khu</h2>

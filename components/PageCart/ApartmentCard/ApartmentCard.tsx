@@ -1,13 +1,14 @@
+'use client';
+
 import React from "react";
 import { Button } from "@mantine/core";
 import { IconVideo } from "@tabler/icons-react";
-import styles from "./ApartmentCard.module.css"; // ✅ Import module CSS
 import Image from "next/image";
+import styles from "./ApartmentCard.module.css";
 
 interface ApartmentCardProps {
   aptNo: string;
   status: string;
-  // statusColor: "primary" | "secondary" | "success" | "warning" | "danger";
   bedrooms: number;
   bathrooms: number;
   aspect: string;
@@ -18,25 +19,39 @@ interface ApartmentCardProps {
 const ApartmentCard: React.FC<ApartmentCardProps> = ({
   aptNo,
   status,
-  // statusColor,
   bedrooms,
   bathrooms,
   aspect,
   description,
   imageUrl,
 }) => {
+  // ✅ Xử lý rút gọn mô tả khi trên mobile
+  const isMobile =
+    typeof window !== "undefined" && window.innerWidth < 768;
+
+  const shortDescription =
+    description.length > 150 && isMobile
+      ? `${description.substring(0, 150)}...`
+      : description;
+
   return (
     <div className={styles.cardContainer}>
       <div className={styles.cardWrapper}>
-        {/* Image section on mobile (top) */}
+        {/* ✅ Mobile image section */}
         <div className={styles.mobileImageWrapper}>
-          <Image src={imageUrl} alt={`Apartment ${aptNo}`} className={styles.imageMobile} />
+          <Image
+            src={imageUrl}
+            alt={`Apartment ${aptNo}`}
+            width={400}
+            height={300}
+            className={styles.imageMobile}
+          />
           <Button variant="default" size="xs" radius="xl" className={styles.videoButton}>
             <IconVideo size={20} />
           </Button>
         </div>
 
-        {/* Left section - Details */}
+        {/* ✅ Apartment details */}
         <div className={styles.details}>
           <div className={styles.topInfo}>
             <div className={styles.infoBlock}>
@@ -75,17 +90,19 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
 
           <div className={styles.descriptionBlock}>
             <span className={styles.label}>Describe:</span>
-            <p className={styles.descriptionText}>
-              {description.length > 150 && typeof window !== "undefined" && window.innerWidth < 768
-                ? `${description.substring(0, 150)}...`
-                : description}
-            </p>
+            <p className={styles.descriptionText}>{shortDescription}</p>
           </div>
         </div>
 
-        {/* Right section - Image (desktop only) */}
+        {/* ✅ Desktop image section */}
         <div className={styles.desktopImageWrapper}>
-          <Image src={imageUrl} alt={`Apartment ${aptNo}`} className={styles.imageDesktop} />
+          <Image
+            src={imageUrl}
+            alt={`Apartment ${aptNo}`}
+            width={400}
+            height={300}
+            className={styles.imageDesktop}
+          />
           <Button variant="default" size="xs" radius="xl" className={styles.videoButton}>
             <IconVideo size={20} />
           </Button>
@@ -96,3 +113,4 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
 };
 
 export default ApartmentCard;
+

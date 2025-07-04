@@ -17,6 +17,8 @@ export default function App() {
           className={styles.image}
           src="/assets/giaodien/chung/he_thong_tien_ich.jpg"
           alt="Eco Retreat Long An Aerial View"
+            width={1000}
+  height={690}
         />
             <SideNavigation className={styles.sideNavOverlay} />
       </div>

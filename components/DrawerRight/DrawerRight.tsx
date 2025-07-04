@@ -209,20 +209,20 @@ export default function FilterForm() {
             />
           </div>
 
-          <div className={styles.section}>
-            <div className={styles.label}>Direction:</div>
-            <div className={styles.buttonRow}>
-              {directionOptions.map((d, i) => (
-                <StatusButton
-                  key={d}
-                  label={d}
-                  isSelected={direction === d}
-                  onClick={() => handleDirectionClick(d)}
-                  bgColor={`bg${(i % 3) + 1}`}
-                />
-              ))}
-            </div>
-          </div>
+       <div className={styles.section}>
+  <div className={styles.label}>Direction:</div>
+  <div className={styles.buttonRow}>
+    {directionOptions.map((d) => (
+      <StatusButton
+        key={d}
+        label={d}
+        isSelected={direction === d}
+        onClick={() => handleDirectionClick(d)}
+        // ❌ Không truyền bgColor nữa
+      />
+    ))}
+  </div>
+</div>
 
           <div className={styles.actionButtons}>
             <Button variant="outline" className={styles.clearBtn} onClick={handleClear}>
@@ -251,14 +251,15 @@ const StatusButton = ({
   label: string;
   isSelected: boolean;
   onClick: () => void;
-  bgColor: string;
+  bgColor?: string;
 }) => (
   <button
-    className={`${styles.statusBtn} ${styles[bgColor]} ${isSelected ? styles.selected : ""}`}
-    onClick={onClick}
-  >
-    {label}
-  </button>
+  className={`${styles.statusBtn} ${bgColor ? styles[bgColor as keyof typeof styles] : ""} ${isSelected ? styles.selected : ""}`}
+  onClick={onClick}
+>
+  {label}
+</button>
+
 );
 
 const DiamondButton = ({
@@ -270,10 +271,11 @@ const DiamondButton = ({
   isSelected: boolean;
   onClick: () => void;
 }) => (
-  <button
-    className={`${styles.diamond} ${isSelected ? styles.selectedDiamond : ""}`}
-    onClick={onClick}
-  >
-    <span className={styles.diamondText}>{label}</span>
-  </button>
+ <button
+  className={`${styles.diamond} ${isSelected ? styles.selectedDiamond : ""}`}
+  onClick={onClick}
+>
+  <span className={styles.diamondText}>{label}</span>
+</button>
+
 );

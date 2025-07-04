@@ -105,7 +105,8 @@ export const SideNavigation = ({ className }: SideNavigationProps) => {
   return (
     <div className={`${styles.container} ${className ?? ""}`} >
       <div className={styles.logoWrapper}>
-        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage} />
+        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage}  width={128} // 8rem = 128px
+  height={128}/>
       </div>
 
       <h2 className={styles.mainHeading}>Tiện Ích</h2>

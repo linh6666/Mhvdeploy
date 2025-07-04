@@ -115,3 +115,9 @@
     font-size: 15px;
   }
 }
+/* Hover effect for table row */
+.table tbody tr:hover {
+  background-color: #54575a3a; /* Màu nền nhẹ khi hover */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}

@@ -35,6 +35,8 @@ export default function App() {
             className={styles.image}
             src={imageUrl}
             alt={`Hình ảnh ${zoneParam}`}
+              width={1000}
+  height={690}
           />
         )}
          <SideNavigation  className={styles.sideNavOverlay} zoneParam={zoneParam} />

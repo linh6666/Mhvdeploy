@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import { Input, Button } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
@@ -5,7 +7,7 @@ import ApartmentCard from "../PageCart/ApartmentCard/ApartmentCard";
 import styles from "./Cart.module.css"; // ✅ Import module CSS
 import Link from "next/link";
 
-export default function App() {
+export default function Cart() {
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -21,21 +23,22 @@ export default function App() {
                 input: styles.searchInput,
               }}
             />
-            <Button variant="light" color="gray" radius="md" className={styles.searchButton}>
+            <Button
+              variant="light"
+              color="gray"
+              radius="md"
+              className={styles.searchButton}
+            >
               <IconSearch size={20} />
             </Button>
           </div>
 
           {/* Buttons */}
           <div className={styles.actionButtons}>
-          <Link href="/compare" >
-      <Button className={styles.compareButton}>
-        Compare
-      </Button>
-    </Link>
-            <Button  className={styles.emailButton} >
-              Send to email
-            </Button>
+            <Link href="/compare">
+              <Button className={styles.compareButton}>Compare</Button>
+            </Link>
+            <Button className={styles.emailButton}>Send to email</Button>
           </div>
         </div>
 
@@ -44,7 +47,6 @@ export default function App() {
           <ApartmentCard
             aptNo="1601"
             status="Available"
-            // statusColor="primary"
             bedrooms={2}
             bathrooms={2}
             aspect="SE"

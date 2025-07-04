@@ -31,6 +31,8 @@ export default function App() {
         <Image
           className={styles.image}
           src={imageUrl}
+            width={1000}
+  height={690}
           alt={`Hình ảnh ${zoneParam} - ${displayType}`}
           onError={(e) => {
             const target = e.currentTarget;

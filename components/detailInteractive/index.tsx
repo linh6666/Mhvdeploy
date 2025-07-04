@@ -79,8 +79,8 @@ export default function DetailInteractive () {
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
             <Text fw={500}>ECO RETREAT</Text>
-            <Text size="sm" c="dimmed">West Melbourne 2023</Text>
-            <Text size="sm" c="dimmed">6%, including 24 floors, Beach front view</Text>
+            <Text size="sm" c="dimmed">Long An</Text>
+            <Text size="sm" c="dimmed">100%</Text>
           </Stack>
           <Button 
                component="a"

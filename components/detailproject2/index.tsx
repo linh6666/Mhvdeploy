@@ -50,11 +50,14 @@ export default function App() {
       <IconChevronsRight size={24} color="white" />
     </div>
   )}
-  <Image
-    className={styles.image}
-    src="/assets/Project/home.jpg"
-    alt="Eco Retreat Long An Aerial View"
-  />
+<Image
+  className={styles.image}
+  src="/assets/Project/home.jpg"
+  alt="Eco Retreat Long An Aerial View"
+  width={1000}
+  height={690}
+/>
+
   <SideNavigation className={styles.sideNavOverlay} />
 </div>
     </div>
