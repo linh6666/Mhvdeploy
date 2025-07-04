@@ -20,12 +20,12 @@
 .table th,
 .table td {
   border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
+  padding: 2px;
+  text-align: center; /* ✅ Đã chỉnh từ 'left' thành 'center' */
 }
 
 .table th {
-  background-color:#406c88;
+  background-color: #406c88;
   color: white;
 }
 
@@ -51,7 +51,7 @@
 
 .buildingName:hover .buildingNameIcon {
   transform: scale(1.1);   /* Icon phóng to nhẹ */
-  color:#406c88;          /* Màu icon đậm hơn */
+  color: #406c88;          /* Màu icon đậm hơn */
 }
 
 .button {
@@ -61,7 +61,7 @@
   border-radius: 4px;
   /* background-color: #f5f5f5; */
   font-size: 14px;
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Hover effect */
@@ -115,6 +115,7 @@
     font-size: 15px;
   }
 }
+
 /* Hover effect for table row */
 .table tbody tr:hover {
   background-color: #54575a3a; /* Màu nền nhẹ khi hover */

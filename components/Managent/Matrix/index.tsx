@@ -92,7 +92,7 @@ export default function ZoneTabContent({ zoneNames }: ZoneTabContentProps) {
                       <table className={styles.table}>
                         <thead>
                           <tr>
-                            <th>#</th>
+                            <th>STT</th>
                             <th>Tên tòa nhà</th>
                             <th>Trạng Thái</th>
                             <th>Hành động</th>
