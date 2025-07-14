@@ -98,7 +98,7 @@ function ApartmentCard() {
             </div>
 
             <div className={styles.buttonWrapper}>
-              <Link href="/login">
+              <Link href="/dang-nhap">
                 <Button color="blue" className={styles.customButton}>
                   MORE INFO
                 </Button>

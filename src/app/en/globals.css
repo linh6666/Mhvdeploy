@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/* ✅ Font-face (nếu dùng Google Fonts qua <link>, không cần @font-face ở đây) */
+/* Nhưng nếu bạn cần tự host font thì phải dùng @font-face */
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --font-sans: "Nunito Sans", sans-serif;
+  --font-mono: var(--font-geist-mono);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* ✅ Gán font mặc định cho toàn bộ trang */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--clr-bg-primary-gray);
+}
+
+/* ✅ Class bổ sung */
+.body {
+  font-family: var(--font-sans);
+  background-color: var(--clr-bg-primary-gray);
+}
+
+a {
+  text-decoration: none;
+}
+
+.noScroll {
+  overflow: hidden;
+}
+@media only screen and (min-width: 801px) {
+  .noScroll {
+    overflow: scroll;
+  }
+}

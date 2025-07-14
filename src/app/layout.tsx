@@ -1,14 +1,12 @@
 // app/layout.tsx
 import "./globals.css";
 import { ReactNode } from "react";
-import { MantineProvider, Box } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import AppContainer from "../../common/AppContainer";
 import { AuthProvider } from "./hooks/AuthProvider";
+import LayoutContent from "./LayoutContent"; // 👈 import file con
 
 export const metadata = {
   title: "Mô Hình Việt",
@@ -22,19 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <MantineProvider>
           <Notifications position="top-right" />
           <AuthProvider>
-            <Box
-              style={{
-                minHeight: "100vh",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <Header />
-              <Box component="main" style={{ flex: 1 }}>
-                <AppContainer>{children}</AppContainer>
-              </Box>
-              <Footer />
-            </Box>
+            <LayoutContent>{children}</LayoutContent>
           </AuthProvider>
         </MantineProvider>
       </body>

@@ -1,0 +1,148 @@
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.details {
+  flex: 1;
+  padding-right: 20px;
+  min-width: 320px;
+}
+
+.details h1 {
+  font-size: 24px;
+  color: #406c88;
+  margin-bottom: 15px;
+}
+
+.details ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.details li {
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.details li strong {
+  display: inline-block;
+  width: 140px;
+  color: #1d3557;
+  font-weight: 600;
+}
+
+.imageContainer {
+  flex-shrink: 0;
+  width: 420px;
+  max-width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.backButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background-color: #406c88;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.backButton:hover {
+  background-color: #bb8d38;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.backButton:active {
+  transform: scale(0.95);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .details {
+    padding-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .details h1 {
+    font-size: 20px;
+  }
+
+  .details li {
+    font-size: 14px;
+  }
+
+  .details li strong {
+    width: auto;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .imageContainer {
+    width: 100%;
+  }
+
+  .backButton {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.border {
+  margin-top: 80px;
+}
+

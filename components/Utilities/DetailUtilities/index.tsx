@@ -111,7 +111,8 @@ export const SideNavigation = ({ className }: SideNavigationProps) => {
 
       <h2 className={styles.mainHeading}>Tiện Ích</h2>
 
-      <div className={styles.buttonGroup}>
+<div className={styles.box}>
+  <div className={styles.buttonGroup}>
         {loading && <div>Đang tải...</div>}
         {error && <div style={{ color: "red" }}>{error}</div>}
         {!loading && !error &&
@@ -127,6 +128,9 @@ export const SideNavigation = ({ className }: SideNavigationProps) => {
             />
           ))}
       </div>
+
+</div>
+      
 
       <div className={styles.bottomButtons}>
         <Button

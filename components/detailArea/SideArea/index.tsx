@@ -84,29 +84,31 @@ export const SideNavigation = ({ className }: SideNavigationProps) => {
       </div>
 
       <h2 className={styles.mainHeading}>Phân Khu</h2>
+<div className={styles.box}>
+  <div className={styles.buttonGroup}>
+    {loading && <div>Đang tải...</div>}
+    {error && <div style={{ color: "red" }}>{error}</div>}
+    {!loading && !error &&
+      menuItems.map((item, idx) => (
+        <NavigationButton
+          key={`${item.zone_name}-${idx}`}
+          label={item.zone_name}
+          href={item.href}
+        />
+      ))}
+  </div>
+</div>
 
-      <div className={styles.buttonGroup}>
-        {loading && <div>Đang tải...</div>}
-        {error && <div style={{ color: "red" }}>{error}</div>}
-        {!loading && !error &&
-          menuItems.map((item, idx) => (
-            <NavigationButton
-              key={`${item.zone_name}-${idx}`}
-              label={item.zone_name}
-              href={item.href}
-            />
-          ))}
-      </div>
-
-      <div className={styles.bottomButtons}>
-        <Button
-          variant="filled"
-          className={styles.bottomButton}
-          onClick={handleGoBack}
-        >
-          <IconChevronsLeft size={20} />
-        </Button>
-      </div>
+{/* Di chuyển ra ngoài box */}
+<div className={styles.bottomButtons}>
+  <Button
+    variant="filled"
+    className={styles.bottomButton}
+    onClick={handleGoBack}
+  >
+    <IconChevronsLeft size={20} />
+  </Button>
+</div>
     </div>
   );
 };

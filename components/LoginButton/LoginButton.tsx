@@ -9,48 +9,48 @@ interface LoginButtonProps {
 }
 
 export default function LoginButton({ isMobile = false }: LoginButtonProps) {
-  const { user, isLoggedIn, logout, error } = useAuth(); // Lấy thông tin người dùng từ hook
+  const { user, isLoggedIn, logout, error } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleMenu = () => setIsOpen(prev => !prev);
+  const toggleMenu = () => setIsOpen((prev) => !prev);
 
   const handleLogout = async () => {
-    await logout(); // Gọi hàm logout
-    window.alert("Logout thành công"); // Hiển thị thông báo alert
+    await logout();
+    window.alert("Đăng xuất thành công");
   };
 
   return (
     <>
-      {isLoggedIn && user ? ( // Kiểm tra trạng thái đăng nhập
+      {isLoggedIn && user ? (
         <div className="relative inline-block text-left">
           <button
             type="button"
             onClick={toggleMenu}
-            className={
-              isMobile
-                ? "flex items-center gap-2 text-white bg-[#bb8d38] hover:bg-[#e09e09] px-4 py-2 text-sm font-medium rounded-full"
-                : "hidden md:inline-flex items-center gap-2 text-white bg-[#bb8d38] hover:bg-[#e09e09] focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-[45px] text-sm px-4 py-3 text-center"
-            }
+            className={`loginButton flex items-center gap-2 ${
+              isMobile ? "" : "hidden md:inline-flex"
+            }`}
           >
-            <IconUser />
-            {user.full_name} {/* Hiển thị tên người dùng */}
+            <IconUser size={20} />
+            <span>{user.full_name}</span>
           </button>
 
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
               <ul className="py-1 text-sm text-gray-700">
                 <li>
-                  <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100">
-                    My Profile
+                  <Link
+                    href="/profile"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    Hồ sơ cá nhân
                   </Link>
                 </li>
-                
                 <li>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100"
                   >
-                    Log Out
+                    Đăng xuất
                   </button>
                 </li>
               </ul>
@@ -58,21 +58,25 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
           )}
         </div>
       ) : (
-        <Link href="/login">
-          <button
-            type="button"
-            className={
-              isMobile
-                ? "text-white bg-[#bb8d38] hover:bg-[#e09e09] px-6 py-2 text-xs font-medium rounded-full"
-                : "hidden md:inline-block text-white bg-[#bb8d38] hover:bg-[#e09e09] focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-[45px] text-xs px-2 py-1 text-center"
-            }
-          >
-            Log In
-          </button>
-        </Link>
+      <Link href="/dang-nhap">
+ <button
+  type="button"
+  className={
+    isMobile
+      ? "bg-white text-[#d4a64a] p-2 rounded-full flex items-center justify-center transition duration-300"
+      : "hidden md:flex items-center justify-center bg-[#d4a64a] text-white p-1 text-xs font-medium rounded-full transition duration-300"
+  }
+>
+  <IconUser size={20} />
+</button>
+
+
+</Link>
+
+
+
       )}
 
-      {/* Hiển thị thông báo lỗi nếu có lỗi trong khi lấy thông tin người dùng */}
       {error && (
         <div className="text-red-500 text-sm mt-2">
           <p>{error}</p>
@@ -81,4 +85,3 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
     </>
   );
 }
-

@@ -29,7 +29,7 @@ export default function ContactUs() {
       <div className="container mx-auto px-4 max-w-[1000px] mt-[100px]">
         <div className="text-center mb-10">
           <h2 className="text-[1.75rem] font-bold text-center text-[#294b61]">
-            CONTACT US
+            LIÊN HỆ
           </h2>
         </div>
         <div className="flex flex-col md:flex-row gap-8">
@@ -39,7 +39,7 @@ export default function ContactUs() {
               <input
                 type="text"
                 name="name"
-                placeholder="Your Name"
+                placeholder="Nhập tên"
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -48,7 +48,7 @@ export default function ContactUs() {
               <input
                 type="text"
                 name="phone"
-                placeholder="Phone Number"
+                placeholder="Nhập số điện thoại"
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -56,7 +56,7 @@ export default function ContactUs() {
               <input
                 type="email"
                 name="email"
-                placeholder="Your Email"
+                placeholder="Nhập Email"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -64,7 +64,7 @@ export default function ContactUs() {
               />
               <textarea
                 name="message"
-                placeholder="Your Message"
+                placeholder="Nhập ghi chú"
                 rows={6}
                 value={formData.message}
                 onChange={handleChange}
@@ -74,7 +74,7 @@ export default function ContactUs() {
                 type="submit"
                 className="bg-[#bb8d38] hover:bg-[#a87f30] text-white px-6 py-2 rounded transition duration-200"
               >
-                SEND
+                Gửi
               </button>
             </form>
           </div>

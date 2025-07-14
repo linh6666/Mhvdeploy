@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -27,7 +28,7 @@ export default function ContactUs() {
      <div className="max-w-[1000px] mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-[1.75rem] font-bold text-[#a87f30]">
-            CONTACT US
+            LIÊN HỆ
           </h2>
         </div>
 
@@ -39,7 +40,7 @@ export default function ContactUs() {
               <input
                 type="text"
                 name="name"
-                placeholder="Your Name"
+                placeholder="Nhập Tên"
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -48,7 +49,7 @@ export default function ContactUs() {
               <input
                 type="text"
                 name="phone"
-                placeholder="Phone Number"
+                placeholder="Số điện thoại"
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -56,7 +57,7 @@ export default function ContactUs() {
               <input
                 type="email"
                 name="email"
-                placeholder="Your Email"
+                placeholder="Nhập Email"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -64,7 +65,7 @@ export default function ContactUs() {
               />
               <textarea
                 name="message"
-                placeholder="Your Message"
+                placeholder="Nhập ghi chú"
                 rows={6}
                 value={formData.message}
                 onChange={handleChange}
@@ -74,7 +75,7 @@ export default function ContactUs() {
                 type="submit"
                 className="bg-[#bb8d38] hover:bg-[#a87f30] text-white px-6 py-2 rounded transition duration-200"
               >
-                SEND
+                Gửi
               </button>
             </form>
           </div>

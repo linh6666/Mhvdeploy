@@ -81,7 +81,7 @@
     flex-direction: row;
     margin-top: 0;
     /* padding: 0; */
-    gap: 0.5rem;
+    /* gap: 0.5rem; */
     border: none;
   }
 }
@@ -101,7 +101,7 @@
 }
 
 .navHighlight {
-  color: #bb8d38;
+  color:#fff;
 }
 
 .navHighlight:hover {
@@ -158,6 +158,224 @@
 }
 @media (min-width: 768px) {
   .mobileToggle {
+    display: none;
+  }
+}
+.extraImages {
+  display: flex;
+  gap: 0.5rem;
+ /* margin-bottom: -25px; */
+}
+
+.extraImages img {
+  width: 30px;
+  height: 20px;
+  object-fit: cover;
+  /* border: 1px solid red; */
+}
+
+.extraImages img:hover {
+  transform: scale(1.05);
+}
+/* ✅ Cờ hiển thị ngang hàng logo ở mobile */
+.logoWithFlags {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logoWithFlags .mobileFlags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mobileFlags img {
+  width: 24px;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.mobileFlags img:hover {
+  transform: scale(1.05);
+}
+
+/* 👉 Ẩn cờ ở mobile nếu không dùng trong mobile header */
+.mobileFlags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mobileFlags img {
+  width: 24px;
+  height: 16px;
+    object-fit: cover; 
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.mobileFlags img:hover {
+  transform: scale(1.05);
+}
+
+.mobileFlags img {
+  width: 24px;
+  height: 16px;
+
+}
+
+@media (max-width: 767px) {
+  .mobileFlags img {
+    width: 20px;
+    height: 14px;
+  }
+}
+/* ✅ Hiển thị 2 lá cờ chỉ ở mobile */
+.mobileOnlyFlags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mobileOnlyFlags img {
+  width: 20px;
+  height: 14px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.mobileOnlyFlags img:hover {
+  transform: scale(1.05);
+}
+
+@media (min-width: 768px) {
+  .mobileOnlyFlags {
+    display: none;
+  }
+}
+.loginLangBlock {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .loginLangBlock {
+    display: flex;
+    /* flex-direction: column; */
+    align-items: flex-end;
+    gap: 2px;
+  }
+}
+.flagImage {
+  width: 20px;
+  height: 14px;
+  object-fit: contain;
+}
+.flagWrapper {
+  position: relative;
+  display: inline-block;
+  width: 40px;     /* 👈 Tăng vùng ngang */
+  height: 30px;    /* 👈 Tăng vùng dọc */
+  padding: 4px;
+  border-radius: 4px;
+}
+
+
+.flag {
+  width: 30px;           /* hoặc 28px tuỳ bạn */
+  height: 20px;
+  object-fit: cover;     /* đảm bảo không bị méo */
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.flag:hover {
+  transform: scale(1.1);
+}
+
+.flagDropdown {
+  display: none;
+  position: absolute;
+  top: 36px;
+  right: 0;
+  background: white;
+  padding: 6px 8px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 120px;
+}
+
+.flagItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+
+.flagItem:hover {
+  background-color: #f2f2f2;
+}
+
+.langTextEn {
+  color: #000;
+  font-weight: 500;
+}
+
+.langTextVi {
+  color: #406c88; /* màu tím giống hình */
+  font-weight: 500;
+}
+.flagDropdown {
+  display: none;
+  position: absolute;
+  top: 31px;         /* 👈 lùi xuống thêm */
+  right: 0;          /* hoặc left: 0 nếu bạn muốn dropdown trôi về trái */
+  background: white;
+  padding: 4px 6px;
+   width: 150px;        /* 👈 chiều ngang */
+  max-height: 120px;   /* 👈 chiều dọc tối đa nếu cần */
+  overflow-y: auto;    /* 👈 cuộn nếu nội dung vượt quá */
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+  flex-direction: column;
+  gap: 4px;
+}
+
+
+
+.flagDropdown a {
+  /* display: block; */
+  padding: 2px;
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+.flagDropdown a:hover {
+  background-color: #f2f2f2;
+}
+
+.flagWrapper:hover .flagDropdown,
+.flagDropdown:hover {
+  display: flex;
+}
+
+.flagIcon {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  .flagWrapper {
     display: none;
   }
 }

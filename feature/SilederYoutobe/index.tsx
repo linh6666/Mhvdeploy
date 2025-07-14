@@ -6,7 +6,7 @@ export default function SilederYoutobe() {
     <div className={classes.container}>
       <div className={classes.section}>
         <div className={classes.videoWrapper}>
-          <h3 className={classes.title}>PREMIUM MODELCRAFT IN VIET NAM</h3>
+          <h3 className={classes.title}>NHÀ SẢN XUẤT MÔ HÌNH CAO CẤP TẠI VIỆT NAM</h3>
           <div className={classes.videoContainer}>
           <iframe
   className={classes.iframe}

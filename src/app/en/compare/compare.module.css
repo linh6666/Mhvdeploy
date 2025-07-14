@@ -1,0 +1,108 @@
+/* Cart.module.css */
+.container {
+    
+    padding: 16px;
+  }
+  
+  .cardWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+  
+  .card {
+    width: 100%;
+    max-width: 24rem;
+    background-color: #294b61;
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+  }
+  
+  .cardHeader {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .cardContent {
+    margin-top: 12px;
+  }
+  
+  .inputGroup {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  
+  .label {
+    font-size: 0.75rem;
+    color: white;
+  }
+  
+  .inputField {
+    width: 50%;
+    border-radius: 8px;
+    border: 1px solid black;
+    background-color: white;
+    padding: 4px 8px;
+    font-size: 0.875rem;
+  }
+  
+  .actionButtons {
+    display: flex;
+    flex-direction: column; /* Để nút dọc */
+    gap: 8px;
+    height: 100%; /* Hoặc tự co theo nội dung */
+  }
+  
+  .button {
+    background-color: #294b61;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .buttonIcon {
+    height: 12px;
+    width: 12px;
+    margin-right: 4px;
+  }
+  @media (max-width: 768px) {
+  .actionButtons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .button {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 140px;
+    padding: 10px;
+    font-size: 0.875rem;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #3a5d7c;
+    transition: background-color 0.3s ease;
+  }
+
+  .button:hover {
+    background-color: #4e7597;
+  }
+
+  .buttonIcon {
+    width: 14px;
+    height: 14px;
+  }
+}

@@ -83,12 +83,13 @@ const ShoppingCart = () => {
   return (
     <section className={styles.section}>
       <Container size="lg" className={styles.container}>
-    <Title className={styles.title}>
-  <span className={styles.firstLetter}>W</span>
-  <span className={styles.restText}>hat We Do</span>
-</Title>
+    <h2 className={styles.title}>
 
-        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xl">
+    <span className={styles.firstLetter}>C</span>
+  <span className={styles.restText}>húng tôi làm gì</span>
+</h2>
+
+        <SimpleGrid cols={{ base: 1, sm: 2 }} >
           {services.map((service) => (
             <div key={service.id} className={styles.card}>
               <Image

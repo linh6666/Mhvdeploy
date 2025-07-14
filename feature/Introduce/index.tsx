@@ -1,3 +1,4 @@
+
 import React from "react";
 // Import Next.js Image component để tối ưu hóa hình ảnh
 import Image from "next/image";
@@ -28,7 +29,7 @@ export default function Introduce() {
       <div className="max-w-[1000px] mx-auto px-4">
         {/* Tiêu đề - Giữ nguyên theo code bạn đã gửi */}
         <h2 className={classes.title}>
-          <span>R</span>esource
+          <span>N</span>guồn lực
         </h2>
 
         {/* Wrapper cho các card cá nhân */}
@@ -57,7 +58,7 @@ export default function Introduce() {
         {/* Nút - Giữ nguyên theo code bạn đã gửi */}
         <div>
           <button className={classes.button}>
-          Great leadership makes great team
+          Lãnh đạo tuyệt vời xây dựng đội ngũ tuyệt vời
           </button>
         </div>
       </div>

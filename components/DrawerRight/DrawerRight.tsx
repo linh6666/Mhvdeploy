@@ -159,13 +159,13 @@ export default function FilterForm() {
           <div className={styles.section}>
             <div className={styles.label}>Status:</div>
             <div className={styles.buttonRow}>
-              {statusOptions.map((st, i) => (
+              {statusOptions.map((st) => (
                 <StatusButton
                   key={st}
                   label={st}
                   isSelected={selectedStatus === st}
                   onClick={() => handleStatusClick(st)}
-                  bgColor={`bg${(i % 3) + 1}`}
+                  // bgColor={`bg${(i % 3) + 1}`}
                 />
               ))}
             </div>

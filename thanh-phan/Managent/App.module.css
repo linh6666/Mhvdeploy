@@ -1,0 +1,68 @@
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.title {
+  font-size: 1.5rem; /* tương đương text-2xl */
+  font-weight: 600;   /* tương đương font-semibold */
+  margin-bottom: 1.5rem;
+  color: #294b61;
+}
+
+.tabList {
+  margin-top: 100px;
+}
+
+/* 🌐 Responsive - Tablet */
+@media (max-width: 768px) {
+  .container {
+    max-width: 90%;
+    padding: 0 12px;
+  }
+
+  .title {
+    font-size: 1.25rem; /* giảm font trên tablet */
+    text-align: center;
+  }
+
+  .tabList {
+    margin-top: 60px;
+  }
+}
+
+/* 📱 Responsive - Mobile */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  .title {
+    font-size: 1.125rem;
+    text-align: center;
+  }
+
+  .tabList {
+    margin-top: 40px;
+  }
+
+  /* Tabs: stack dạng dọc nếu cần (chưa apply trực tiếp trong JS) */
+   .tabListWrapper :global(.mantine-Tabs-tabList) {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+.customTab {
+  color: #406c88;
+  font-weight: 500;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+}
+
+.customTab[data-active] {
+  background-color: #406c88;
+  color: white;
+  /* border-radius: px; */
+}

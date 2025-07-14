@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useRef } from "react";
@@ -37,41 +38,50 @@ const logos = [
 
 const clients = [
   {
-    name: "Nikken Sekkei Civil Engineering, Japan",
-    desc: "Yen Binh Masterplan - Nong Ping Master Plan - Duong Dong, An Thoi Master Plan.",
+    name: "Nikken Sekkei Civil Engineering, Nhật Bản",
+    desc: " Quy hoạch tổng thể Nong Ping - Dương Đông - Vientiane - Sayaboury. ",
   },
   {
-    name: "Nikken Sekkei Head Office, Japan",
-    desc: "Hochiminh City People Committee - Viettel Head Office.",
+    name: "Nikken Sekkei Head Office, Nhật Bản",
+    desc: "Ủy ban nhân dân thành phố Hồ Chí Minh.",
   },
   {
-    name: "Aedas, England",
-    desc: "Minh Khai Plaza.",
+    name: "Aedas, Anh",
+    desc: "Trung tâm thương mại Minh Khai.",
   },
   {
-    name: "Nihon Sekkei, Japan",
-    desc: "Viettel Head Office - Vietcom Bank Head Office.",
+    name: "Nihon Sekkei, Nhật Bản",
+    desc: "Trụ sở Viettel - Trụ sở Vietcom Bank.",
   },
   {
-    name: "Kume Sekkei",
-    desc: "Ecopark Apartments - The Manor Central Park Apartments.",
-  },
-  {
-    name: "GMP, Germany",
-    desc: "Viettel Head Office.",
-  },
-  {
-    name: "Venture International Property, Dubai UAE",
-    desc: "Royal palaces - Royal Tower.",
+    name: "Venture International Property, Dubai UAE ",
+    desc: " Cung điện hoàng gia - Royal Tower.",
   },
   {
     name: "TAHG, Dubai UAE",
-    desc: "Seaview Villas.",
+    desc: "Biệt thự trên biển.",
   },
   {
     name: "Thurlow Corp, Melbourne Australia",
-    desc: "Elisian Tower.",
+    desc: "Tòa tháp Elysian.",
   },
+  {
+    name: "Canopy Sands Development",
+    desc: "Bay of Lights",
+  },
+  {
+    name: "VKC",
+    desc: " Urban Living Lab Diorama - MP Diorama",
+  },
+  {
+    name: "Gensler Singapore Inc.",
+    desc: "108 Storey Financial Tower - UOB Headquarter in HCMC",
+  },
+    {
+    name: "Layan Best View Co., Ltd",
+    desc: " Layan Verde Phuket",
+  },
+
 ];
 
 const AboutUs = () => {
@@ -85,14 +95,14 @@ const AboutUs = () => {
         <div className={styles.introSection}>
           <div className={styles.introCard}>
             <div className={styles.introContent}>
-              <h1 className={styles.introTitle}>Viet Model</h1>
+              <h1 className={styles.introTitle}>Mô hình Việt</h1>
               <h2 className={styles.introSubtitle}>
-                Ingenious <span className={styles.highlight}>Pioneer journey</span>
+                Hành trình <span className={styles.highlight}>Tiên phong Sáng tạo</span>
               </h2>
               <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl" className={styles.introGrid}>
                 <div className={styles.introDescriptionWrapper}>
                   <p className={styles.introDescription}>
-                    Established in 2001, Viet Model is proud to be one of the most prestigious professional architectural scale model manufacturers in Viet Nam, particularly as the pioneer in bringing Viet (Vietnam) models to the international market.
+                   Được khởi đầu từ năm 2001, Mô hình Việt tự hào là một trong những công ty sản xuất mô hình chuyên nghiệp, uy tín nhất tại Việt Nam, và là đơn vị tiên phong mang mô hình Việt Nam ra thị trường thế giới
                   </p>
                 </div>
 
@@ -103,7 +113,7 @@ const AboutUs = () => {
                       onClick={() => aboutRef.current?.scrollIntoView({ behavior: "smooth" })}
                     >
                       <span className={styles.buttonNumber}>01</span>
-                      <span className={styles.buttonText}>About us</span>
+                      <span className={styles.buttonText}>Về chúng tôi</span>
                       <IconChevronDown className={styles.iconWrapper} size={16} />
                     </div>
                   </div>
@@ -114,7 +124,7 @@ const AboutUs = () => {
                       onClick={() => clientsRef.current?.scrollIntoView({ behavior: "smooth" })}
                     >
                       <span className={styles.buttonNumber}>02</span>
-                      <span className={styles.buttonText}>Clients</span>
+                      <span className={styles.buttonText}>Khách hàng</span>
                       <IconChevronDown className={styles.iconWrapper} size={16} />
                     </div>
                   </div>
@@ -125,7 +135,7 @@ const AboutUs = () => {
                       onClick={() => visionRef.current?.scrollIntoView({ behavior: "smooth" })}
                     >
                       <span className={styles.buttonNumber}>03</span>
-                      <span className={styles.buttonText}>Vision</span>
+                      <span className={styles.buttonText}>Tầm nhìn</span>
                       <IconChevronDown className={styles.iconWrapper} size={16} />
                     </div>
                   </div>
@@ -139,23 +149,23 @@ const AboutUs = () => {
           <div className={styles.container}>
             <div className={styles.leftPanel}>
               <div className={styles.card}>
-                <h3>Team and Technology</h3>
+                <h3>Đội Ngũ và Công Nghệ</h3>
                 <p>
-                  With a well-trained, skillful and hardworking technical team, State-Of-The-Art Laser Cutting, 3D Printing application, high-quality materials and above all, a professional and systematic management, Viet Model enthusiastically brings ingenious solutions to create effective models at a global level to serve our discerning clients.
+                 Với đội ngũ kỹ thuật viên chuyên nghiệp, trách nhiệm, cùng công nghệ cắt laser tiên tiến nhất và quy trình sản xuất, tuyển chọn vật liệu kỹ lưỡng, chúng tôi tâm huyết mang tới các giải pháp tiên phong sáng tạo để tạo ra ngày càng nhiều các mô hình kiến trúc hiệu quả, đẳng cấp thế giới phục vụ khách hàng.
                 </p>
               </div>
 
               <div className={styles.card}>
-                <h3>Collaboration and Reputation</h3>
+                <h3>Hợp Tác và Uy Tín</h3>
                 <p>
-                  Being associated with number of well-known Property Developers in Vietnam such as BIM Group, Ecopark, VinGroup, Bitexco Group, Gamuda, Ciputra, SunShine Group as well as global class Architectural Consultants such as Nikken Sekkei, Adeas, SOM, PTW, DWP and so many others. We have been honoured to bring clients our experience and liability for many years and for years ahead.
+                  Hợp tác với nhiều nhà phát triển bất động sản tên tuổi tại Việt Nam như BIM Group, Ecopark, VinGroup, Bitexco, Gamuda, Ciputra, Sunshine Group cũng như nhiều nhà tư vấn kiến trúc đẳng cấp thế giới: Nikken Sekkei, Aedas, SOM, PTW, DWP và rất nhiều đối tác nổi tiếng khác. Chúng tôi vinh dự mang đến cho khách hàng kinh nghiệm, sự tin cậy trong nhiều năm qua và cả trong những năm tới.
                 </p>
               </div>
 
               <div className={`${styles.card} ${styles.cardOrangeBrown}`}>
-                <h3>Creativity and Responsibility</h3>
+                <h3>Sáng Tạo và Trách Nhiệm</h3>
                 <p>
-                  We understand that our clients are not only the designers, but also the audiences for their project. Thus, we are responsible for bringing &ldquo;the most wonderful performance of ideas&rdquo; within our enthusiastic brains and via our skillful and creative hands to produce architectural models that are as dynamic as in real life. And after 16 years striving for mastery, Viet Model definitely deserves its clients&rsquo;.
+                  Mô hình Việt hiểu rằng mỗi khách hàng không chỉ là nhà thiết kế mà còn là khán giả của tác phẩm mình. Vì thế, chúng tôi tận tâm mang đến những mô hình sinh động, ấn tượng với sự sáng tạo, khéo léo và nhiệt huyết, tạo nên “màn trình diễn tuyệt vời” của ý tưởng. Và kết quả của những nỗ lực không ngừng đó chính là niềm tin của khách hàng khắp nơi dành cho Mô hình Việt trong nhiều năm qua.
                 </p>
               </div>
             </div>
@@ -163,13 +173,13 @@ const AboutUs = () => {
             <div className={styles.rightPanel}>
               <div>
                 <h2>
-                  Audience for our<br />&quot;artworks&quot;
+                  Khán giả cho<br />&quot;tác phẩm&quot;của mình
                 </h2>
                 <p>
-                  Let&rsquo;s experience the &ldquo;most wonderful performances of ideas&rdquo; with Viet Model through our products and services
+                 Hãy cùng Mô hình Việt trải nghiệm những &ldquo;màn trình diễn tuyệt vời nhất của ý tưởng&rdquo; thông qua các sản phẩm, dịch vụ của chúng tôi
                 </p>
               </div>
-              <a href="#" className={styles.contactButton}>Send contact request</a>
+              <a href="#" className={styles.contactButton}>Gửi yêu cầu liên hệ</a>
             </div>
           </div>
         </div>
@@ -178,15 +188,15 @@ const AboutUs = () => {
           <div className={styles.statsContainer}>
             <div className={styles.statItem}>
               <div className={styles.statNumber}>1500+</div>
-              <div className={styles.statDescription}>Clients and Partners</div>
+              <div className={styles.statDescription}>Khách hàng và đối tác</div>
             </div>
             <div className={styles.statItem}>
               <div className={styles.statNumber}>900+</div>
-              <div className={styles.statDescription}>Project models</div>
+              <div className={styles.statDescription}>Mô hình dự án</div>
             </div>
             <div className={styles.statItem}>
               <div className={styles.statNumber}>10+</div>
-              <div className={styles.statDescription}>Country</div>
+              <div className={styles.statDescription}>quốc gia</div>
             </div>
           </div>
         </section>
@@ -206,8 +216,8 @@ const AboutUs = () => {
             <div className={styles.clientsContainer}>
               <div className={styles.clientsTitle}>
                 <h2>
-                  <span className={styles.largeI}>I</span>nternational Clients<br />
-                  and Projects
+                  <span className={styles.largeI}>K</span>hách hàng quốc tế<br />
+                  và các dự án
                 </h2>
               </div>
               <ul className={styles.clientsList}>
@@ -224,22 +234,26 @@ const AboutUs = () => {
             <div className={styles.domesticContainer}>
               <div className={styles.domesticLeft}>
                 <h2>
-                  <span className={styles.bigLetter}>D</span>omestic{" "}
-                  <span className={styles.lightText}>Clients</span>
-                  <span className={styles.lightText}> and Projects</span>
+                  <span className={styles.bigLetter}>K</span>hách hàng{" "}
+                  <span className={styles.lightText}>trong nước</span>
+                  <span className={styles.lightText}>và các dự án</span>
                 </h2>
               </div>
               <div className={styles.domesticRight}>
                 <ul>
-                  <li><span className={styles.highlight}>* Vihajico JSC</span> &ndash; Ecopark Urban City.</li>
-                  <li><span className={styles.highlight}>* Bitexco Group</span> &ndash; The Manor Central Park &ndash; The Manor Hue &ndash; The Manor Tower Lao Cai.</li>
-                  <li><span className={styles.highlight}>* Vinhomes, VinGroup</span> &ndash; Vinhomes Sky Lake &ndash; Vinhomes Me Tri &ndash; Vinhomes Riverside &ndash; Vinhomes Star City.</li>
-                  <li><span className={styles.highlight}>* BIM Group</span> &ndash; Hung Thang Urban City &ndash; Intercontinental Phu Quoc &ndash; Intercontinental Ha Long &ndash; Sailing Club Villa Ha Long &ndash; Samples Villas of its sub-project.</li>
-                  <li><span className={styles.highlight}>* Hanoi People Committe</span> &ndash; Hanoi Nhat Tan Noi Bai Masterplan &ndash; Hanoi High-rise Limitation Study Masterplan.</li>
-                  <li><span className={styles.highlight}>* Gamuda Land Vietnam</span> &ndash; Gamuda Garden Masterplan and its sub-projects.</li>
-                  <li><span className={styles.highlight}>* Sun Group</span> &ndash; Tu Lien Bridge &ndash; Sun City &ndash; South Phu Quoc Masterplan &ndash; An Thoi Masterplan &ndash; Sun Premier Village Primavera.</li>
-                  <li><span className={styles.highlight}>* Star Lake Development</span> &ndash; Star Lake Master Plan &ndash; Samples Villas of its sub-project.</li>
-                  <li><span className={styles.highlight}>* Alma, Israel</span> &ndash; Alma Resort.</li>
+                  <li><span className={styles.highlight}>* Ecopark Group</span> &ndash; Khu đô thị Ecopark - Eco Central Park Vinh - EcoVillage Saigon River - Eco Retreat Long An. </li>
+                  <li><span className={styles.highlight}>* Sunshine Group</span> &ndash; Sunshine Garden Village - Sunshine Riverside - Sunshine City - Sunshine Golden River - Sunshine Noble Crystal.</li>
+                  <li><span className={styles.highlight}>* Bitexco Group</span> &ndash;  The Manor Central Park - The Manor Hue - The Manor Lào Cai.</li>
+                  <li><span className={styles.highlight}>*  Vinhomes, VinGroup</span> &ndash; Vinhomes Sky Lake - Vinhomes Me Tri - Vinhomes Riverside - Vinhomes Star City Thanh Hóa.</li>
+                  <li><span className={styles.highlight}>* BIM Group</span> &ndash; Khu đô thị Hùng Thắng, Hạ Long - Khách sạn Phú Quốc - Thanh Xuân Valley.</li>
+                  <li><span className={styles.highlight}>* MIK Group</span> &ndash; The Matrix One - Imperial Smart City</li>
+                  <li><span className={styles.highlight}>* Viện Quy hoạch Xây dựng Hà Nội (HUPI)</span> &ndash; Quy hoạch Hà Nội </li>
+                  <li><span className={styles.highlight}>* VSIP</span> &ndash; VSIP Hải Dương - VSIP Bắc Ninh - VSIP Lạng Sơn</li>
+                  <li><span className={styles.highlight}>* Hanoi People Committee </span> &ndash; Quy hoạch tổng thể Nội Bài, Nhật Tân, Hà Nội - Hanoi High_rise Limitation Study Masterplan.</li>
+                   <li><span className={styles.highlight}>* Gamuda Land Vietnam </span> &ndash;  Quy hoạch tổng thể Gamuda Garden and its sub-project.</li>
+                    <li><span className={styles.highlight}>* Sun Group </span> &ndash; Cầu Tứ Liên - Sun City - QHTT Nam Phú Quốc, QH Thị trấn Địa Trung Hải </li>
+                     <li><span className={styles.highlight}>* Star Lake Development  </span> &ndash; Quy hoạch tổng thể Star Lake - Các mẫu biệt thự.</li>
+                      <li><span className={styles.highlight}>* Alma, Israel </span> &ndash; Khu nghỉ dưỡng Alma</li>
                 </ul>
               </div>
             </div>
@@ -250,15 +264,15 @@ const AboutUs = () => {
           <div className={styles.visionContainer}>
             <div className={styles.visionContent}>
               <div className={styles.visionHeadingContainer}>
-                <h2 className={styles.visionHeading}>Vision</h2>
+                <h2 className={styles.visionHeading}>Tầm nhìn</h2>
               </div>
 
               <div className={styles.quoteBlock}>
                 <p className={styles.quoteText}>
-                  Viet Model is constantly striving for a <span className={styles.boldText}>GLOBAL LEVEL</span> position in the field of architectural models in both domestic and international markets.
+                  Mô hình Việt luôn không ngừng hướng tới vị thế <span className={styles.boldText}>ĐĂNG CẤP TOÀN CẦU </span>trong lĩnh vực mô hình kiến trúcở cả thị trường  trong nước và thế giới.
                 </p>
                 <p className={styles.quoteText}>
-                  We strive to <span className={styles.boldText}>CREATIVELY</span> make <span className={styles.boldText}>SMART and EFFECTIVE</span> solutions to serve the needs of clients and partners which are based on the high standard of handiwork skills of our &ldquo;CRAFTSMEN&rdquo; combined with updated technology, and modern facilities via all of our <span className={styles.boldText}>ENTHUSIASM and RESPONSIBILITY</span>.
+                  Chúng tôi nỗ lực <span className={styles.boldText}>SÁNG TẠO </span>ra các giải pháp <span className={styles.boldText}>THÔNG MINH,HIỆU QUẢ </span>để đáp ứng tối ưu nhu cầu của khách hàng, đối tác dựa trên trình độ chuyên môn cao của các &ldquo;NGHỆ NHÂN&rdquo;trong lĩnh vực mô hình kiến trúc kết hợp với công nghệ hiện đại ,thiết bị tiên tiến bằng tất cả <span className={styles.boldText}>NHIỆT HUYẾT VÀ TRÁCH NHIỆM</span>.
                 </p>
               </div>
             </div>
