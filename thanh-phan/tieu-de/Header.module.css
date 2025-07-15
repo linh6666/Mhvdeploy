@@ -275,7 +275,7 @@
   display: inline-block;
   width: 40px;     /* 👈 Tăng vùng ngang */
   height: 30px;    /* 👈 Tăng vùng dọc */
-  padding: 4px;
+  /* padding: 4px; */
   border-radius: 4px;
 }
 

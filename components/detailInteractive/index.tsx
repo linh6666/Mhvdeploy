@@ -50,32 +50,12 @@ Tìm kiếm một dự án"
        
 
      
-        {/* <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
-          <Image
-            src="https://img.heroui.chat/image/places?w=800&h=400&u=2"
-            height={160}
-            alt="Ecopark"
-            style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
-          />
-          <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-            <Text fw={500}>Ecopark</Text>
-            <Text size="sm" c="dimmed">Van Giang, Hung Yen, Vietnam</Text>
-            <Text size="sm" c="dimmed">8%</Text>
-          </Stack>
-            <Button
-      component="a"
-   href="/Detail"
-      className={`${styles.baseButton} ${styles.primaryButton}`}
-  
-    >
-      Go To Project
-    </Button>
-        </Card> */}
+        
 
         {/* Card 3 */}
         <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image
-            src="https://img.heroui.chat/image/places?w=800&h=400&u=3"
+            src="https://img.heroui.chat/image/places?w=800&h=400&u=1"
             height={160}
             alt="Highrise Melbourne"
             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
@@ -94,6 +74,36 @@ Tìm kiếm một dự án"
             Đi tới dự án
           </Button>
         </Card>
+
+<Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
+          <Image
+            src="https://img.heroui.chat/image/places?w=800&h=400&u=3"
+            height={160}
+            alt="HIGHRISE MELBOURNE"
+            style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
+          />
+          <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
+            <Text fw={500}>HIGHRISE MELBOURNE</Text>
+            <Text size="sm" c="dimmed">Tây Melbourne</Text>
+            <Text size="sm" c="dimmed">6%, bao gồm 24 tầng, hướng biển</Text>
+          </Stack>
+            <Button
+      component="a"
+   href="/Detail"
+      className={`${styles.baseButton} ${styles.primaryButton}`}
+  
+    >
+      Đi tới dự án
+    </Button>
+        </Card>
+
+
+
+
+
+
+
+
     <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image
             src="https://img.heroui.chat/image/places?w=800&h=400&u=2"
@@ -102,8 +112,8 @@ Tìm kiếm một dự án"
             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-            <Text fw={500}>Ecopark</Text>
-            <Text size="sm" c="dimmed">Văn Giang, Hưng Yên, Việt Nam</Text>
+            <Text fw={500}>Thanh Xuan Valley</Text>
+            <Text size="sm" c="dimmed">Thung Lũng Thanh Xuân </Text>
             <Text size="sm" c="dimmed">8%</Text>
           </Stack>
           <Button
@@ -115,32 +125,16 @@ Tìm kiếm một dự án"
     Đi tới dự án 
     </Button>
     </Card>
-       <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
-          <Image
-            src="https://img.heroui.chat/image/places?w=800&h=400&u=3"
-            height={160}
-            alt="Highrise Melbourne"
-            style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
-          />
-          <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-            <Text fw={500}>Highrise Melbourne</Text>
-            <Text size="sm" c="dimmed">Tây Melbourne 2023</Text>
-            <Text size="sm" c="dimmed">
-6%, bao gồm 24 tầng, hướng biển</Text>
-          </Stack>
-          <Button className={`${styles.baseButton} ${styles.primaryButton}`}>
-            Đi tới dự án 
-          </Button>
-        </Card>
+      
     <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image
-            src="https://img.heroui.chat/image/places?w=800&h=400&u=4"
+            src="https://img.heroui.chat/image/places?w=800&h=400&u=5"
             height={160}
             alt="Park Hill"
             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-            <Text fw={500}>Park Hill</Text>
+            <Text fw={500}>SUN PREMIER VILLAGE PRIMAVERA</Text>
             <Text size="sm" c="dimmed">Nam Phú Quốc, Việt Nam</Text>
             <Text size="sm" c="dimmed">5%</Text>
           </Stack>

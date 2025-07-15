@@ -121,7 +121,7 @@ export default function ZoneTabContent({ zoneNames }: ZoneTabContentProps) {
       matchedItem?.status === "Đang bán"
         ? "#4a7a96"
         : matchedItem?.status === "Đã bán"
-        ? "#234257"
+        ? "red"
         : matchedItem?.status === "Đã đặt cọc"
         ? "#bb8d38"
         : "#000", // fallback

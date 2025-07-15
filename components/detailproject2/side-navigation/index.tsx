@@ -71,7 +71,7 @@ const SideNavigationInner = ({ className }: SideNavigationProps) => {
 
       </div>
 
-      <h2 className={styles.mainHeading}>TRANG CHỦ</h2>
+      <h2 className={styles.mainHeading}>Trang Chủ</h2>
 
       <div className={styles.buttonGroup}>
         <NavigationButton label="GIỚI THIỆU DỰ ÁN" href="/gioi-thieu-du-an" />
@@ -96,7 +96,7 @@ const SideNavigationInner = ({ className }: SideNavigationProps) => {
         >
           <IconSun size={17} />
           {activeButton === "sun" && (
-            <span className={styles.buttonText}>SUN</span>
+            <span className={styles.buttonText}>DAY</span>
           )}
         </Button>
 

@@ -42,29 +42,11 @@ export default function App() {
       {/* Card Grid */}
       <div className={styles.cardGrid}>
         {/* Card 1 */}
-        <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
+          <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image
             src="https://img.heroui.chat/image/places?w=800&h=400&u=1"
             height={160}
-            alt="BIM Hung Thang"
-            style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
-          />
-          <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-            <Text fw={500}>BIM Hung Thang</Text>
-            <Text size="sm" c="dimmed">Hung Thang, Ha Long, Quang Ninh, Vietnam</Text>
-            <Text size="sm" c="dimmed">6%, many villas and house to sell</Text>
-          </Stack>
-          <Button className={`${styles.baseButton} ${styles.primaryButton}`}>
-            Request Access
-          </Button>
-        </Card>
-
-        {/* Card 2 */}
-        <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
-          <Image
-            src="https://img.heroui.chat/image/places?w=800&h=400&u=2"
-            height={160}
-            alt="ECO RETREAT"
+            alt="Highrise Melbourne"
             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
@@ -72,49 +54,80 @@ export default function App() {
             <Text size="sm" c="dimmed">Long An</Text>
             <Text size="sm" c="dimmed">100%</Text>
           </Stack>
+          <Button 
+               component="a"
+     href="/en/DetailManagent"
+          className={`${styles.baseButton} ${styles.primaryButton}`}>
+
+
+            
+Go To Project
+          </Button>
+        </Card>
+
+        {/* Card 2 */}
+      <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
+          <Image
+            src="https://img.heroui.chat/image/places?w=800&h=400&u=3"
+            height={160}
+            alt="HIGHRISE MELBOURNE"
+            style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
+          />
+          <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
+            <Text fw={500}>HIGHRISE MELBOURNE</Text>
+            <Text size="sm" c="dimmed">Tây Melbourne</Text>
+            <Text size="sm" c="dimmed">6%, 24 floors, sea view</Text>
+          </Stack>
             <Button
       component="a"
-      href="/en/DetailManagent"
+   href="/Detail"
       className={`${styles.baseButton} ${styles.primaryButton}`}
-     // Mở liên kết ở tab mới (nếu cần)
+  
     >
-      Go To Project
+    Go To Project
     </Button>
         </Card>
 
         {/* Card 3 */}
         <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
-          <Image
-            src="https://img.heroui.chat/image/places?w=800&h=400&u=3"
-            height={160}
-            alt="Highrise Melbourne"
-            style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
-          />
-          <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-            <Text fw={500}>Highrise Melbourne</Text>
-            <Text size="sm" c="dimmed">West Melbourne 2023</Text>
-            <Text size="sm" c="dimmed">6%, including 24 floors, Beach front view</Text>
-          </Stack>
-          <Button className={`${styles.baseButton} ${styles.primaryButton}`}>
-            Go To Project
+                <Image
+                  src="https://img.heroui.chat/image/places?w=800&h=400&u=2"
+                  height={160}
+                  alt="Ecopark"
+                  style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
+                />
+                <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
+                  <Text fw={500}>Thanh Xuan Valley</Text>
+                  <Text size="sm" c="dimmed">Thung Lung - Thanh Xuan </Text>
+                  <Text size="sm" c="dimmed">8%</Text>
+                </Stack>
+                <Button
+            component="a"
+            href=" "
+            className={`${styles.baseButton} ${styles.primaryButton}`}
+           // Mở liên kết ở tab mới (nếu cần)
+          >
+         Go To Project
           </Button>
-        </Card>
+          </Card>
 
         {/* Card 4 */}
-        <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
+      <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image
-            src="https://img.heroui.chat/image/places?w=800&h=400&u=4"
+            src="https://img.heroui.chat/image/places?w=800&h=400&u=5"
             height={160}
             alt="Park Hill"
             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-            <Text fw={500}>Park Hill</Text>
-            <Text size="sm" c="dimmed">Nam Phu Quoc, Vietnam</Text>
+            <Text fw={500}>SUN PREMIER VILLAGE PRIMAVERA </Text>
+            <Text size="sm" c="dimmed">Nam Phu Quoc, VietNam</Text>
             <Text size="sm" c="dimmed">5%</Text>
           </Stack>
           <Button disabled className={`${styles.baseButton} ${styles.disabledButton}`}>
-            Wait for approval
+           
+
+Wait for approval
           </Button>
         </Card>
       </div>
