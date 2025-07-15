@@ -74,14 +74,14 @@ Go To Project
         </Card>
        <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image
-            src="https://img.heroui.chat/image/places?w=800&h=400&u=3"
+            src="https://img.heroui.chat/image/places?w=800&h=400&u=8"
             height={160}
             alt="HIGHRISE MELBOURNE"
             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
             <Text fw={500}>HIGHRISE MELBOURNE</Text>
-            <Text size="sm" c="dimmed">Tây Melbourne</Text>
+            <Text size="sm" c="dimmed">Melbourne</Text>
             <Text size="sm" c="dimmed">6%, 24 floors, sea view</Text>
           </Stack>
             <Button
@@ -96,7 +96,7 @@ Go To Project
 
 
 
-       <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
+       {/* <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image
             src="https://img.heroui.chat/image/places?w=800&h=400&u=2"
             height={160}
@@ -104,7 +104,7 @@ Go To Project
             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-            <Text fw={500}>Thanh Xuan Valley</Text>
+            <Text fw={500}> THANH XUAN VALLEY</Text>
             <Text size="sm" c="dimmed">Thung Lung - Thanh Xuan </Text>
             <Text size="sm" c="dimmed">8%</Text>
           </Stack>
@@ -117,8 +117,25 @@ Go To Project
    Go To Project
     </Button>
     </Card>
-    
-    
+     */}
+      <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
+          <Image
+            src="https://img.heroui.chat/image/places?w=800&h=400&u=2"
+            height={160}
+            alt="Park Hill"
+            style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
+          />
+          <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
+            <Text fw={500}>THANH XUAN VALLEY</Text>
+            <Text size="sm" c="dimmed">Thung Lung - Thanh Xuan </Text>
+            <Text size="sm" c="dimmed">8%</Text>
+          </Stack>
+          <Button disabled className={`${styles.baseButton} ${styles.disabledButton}`}>
+           Please approve
+
+
+          </Button>
+        </Card>
     
     <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image

@@ -170,7 +170,8 @@ export default function ResidentialPage() {
     levels.find((l) => l.level === hoveredFloor)?.img ?? null;
 
   return (
-    <SimpleGrid cols={2} spacing="xl" className={styles.simpleGrid}>
+    <div className={styles.container}>
+ <SimpleGrid cols={2} spacing="xl" className={styles.simpleGrid}>
       {/* Cột trái: phần hình ảnh tương tác */}
       <div className={styles.imageWrapper}>
         <Image
@@ -213,5 +214,7 @@ export default function ResidentialPage() {
         </div>
       </Stack>
     </SimpleGrid>
+    </div>
+   
   );
 }

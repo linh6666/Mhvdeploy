@@ -38,7 +38,7 @@ export default function ModelInteractive() {
   };
 
   return (
-    <>
+    <div className={styles.container}>
       {/* ✅ Nút mở Drawer bên phải */}
       {!isDrawerOpen && (
         <div
@@ -140,6 +140,6 @@ export default function ModelInteractive() {
           </Link>
         </Stack>
       </SimpleGrid>
-    </>
+    </div>
   );
 }
