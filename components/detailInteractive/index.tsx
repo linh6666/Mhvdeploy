@@ -11,7 +11,8 @@ export default function DetailInteractive () {
       {/* Search Section */}
       <div className={styles.searchSection}>
       <Select
-  placeholder="Location"
+  placeholder="
+Vị trí"
   leftSection={<IconMapPin size={16} />}
   className={styles.input}
   data={[
@@ -23,7 +24,8 @@ export default function DetailInteractive () {
      clearable
 />
 <Select
-  placeholder="Project Type"
+  placeholder="
+Loại dự án"
   leftSection={<IconBuilding size={16} />}
   className={styles.input}
   data={[
@@ -35,7 +37,8 @@ export default function DetailInteractive () {
    clearable
 />
         <TextInput
-          placeholder="Search a project"
+          placeholder="
+Tìm kiếm một dự án"
           leftSection={<IconSearch size={16} />}
           className={styles.inputGrow}
         />
@@ -88,7 +91,7 @@ export default function DetailInteractive () {
           className={`${styles.baseButton} ${styles.primaryButton}`}>
 
 
-            Go To Project
+            Đi tới dự án
           </Button>
         </Card>
     <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
@@ -100,7 +103,7 @@ export default function DetailInteractive () {
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
             <Text fw={500}>Ecopark</Text>
-            <Text size="sm" c="dimmed">Van Giang, Hung Yen, Vietnam</Text>
+            <Text size="sm" c="dimmed">Văn Giang, Hưng Yên, Việt Nam</Text>
             <Text size="sm" c="dimmed">8%</Text>
           </Stack>
           <Button
@@ -109,7 +112,7 @@ export default function DetailInteractive () {
       className={`${styles.baseButton} ${styles.primaryButton}`}
      // Mở liên kết ở tab mới (nếu cần)
     >
-      Go To Project
+    Đi tới dự án 
     </Button>
     </Card>
        <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
@@ -121,11 +124,12 @@ export default function DetailInteractive () {
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
             <Text fw={500}>Highrise Melbourne</Text>
-            <Text size="sm" c="dimmed">West Melbourne 2023</Text>
-            <Text size="sm" c="dimmed">6%, including 24 floors, Beach front view</Text>
+            <Text size="sm" c="dimmed">Tây Melbourne 2023</Text>
+            <Text size="sm" c="dimmed">
+6%, bao gồm 24 tầng, hướng biển</Text>
           </Stack>
           <Button className={`${styles.baseButton} ${styles.primaryButton}`}>
-            Go To Project
+            Đi tới dự án 
           </Button>
         </Card>
     <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
@@ -137,11 +141,12 @@ export default function DetailInteractive () {
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
             <Text fw={500}>Park Hill</Text>
-            <Text size="sm" c="dimmed">Nam Phu Quoc, Vietnam</Text>
+            <Text size="sm" c="dimmed">Nam Phú Quốc, Việt Nam</Text>
             <Text size="sm" c="dimmed">5%</Text>
           </Stack>
           <Button disabled className={`${styles.baseButton} ${styles.disabledButton}`}>
-            Wait for approval
+           
+Chờ phê duyệt
           </Button>
         </Card>
         

@@ -89,7 +89,7 @@ export default function DetailInteractive () {
 
 
             
-Đi tới dự án
+Go To Project
           </Button>
         </Card>
          <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>

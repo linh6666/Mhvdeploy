@@ -30,13 +30,13 @@ const SideNavigationInner = ({ className }: SideNavigationProps) => {
       setLoadingEffect(url);
       setActiveButton(key);
       await apiarea.post(url); // ❌ res không dùng → xoá
-      showNotification({
-        title: "Thành công",
-        message: "Nút bật thành công!",
-        color: "green",
-        icon: <IconCheck size={18} />,
-        autoClose: 1000,
-      });
+      // showNotification({
+      //   title: "Thành công",
+      //   message: "Nút bật thành công!",
+      //   color: "green",
+      //   icon: <IconCheck size={18} />,
+      //   autoClose: 1000,
+      // });
     } catch (err: unknown) {
       const error = err as {
         response?: { data?: { detail?: string } };
@@ -44,16 +44,16 @@ const SideNavigationInner = ({ className }: SideNavigationProps) => {
       };
 
       console.error("Gọi hiệu ứng thất bại:", error?.response?.data || error?.message || err);
-      showNotification({
-        title: "Lỗi",
-        message:
-          error?.response?.data?.detail ||
-          error?.message ||
-          "Lỗi không xác định",
-        color: "red",
-        icon: <IconX size={18} />,
-        autoClose: 5000,
-      });
+      // showNotification({
+      //   title: "Lỗi",
+      //   message:
+      //     error?.response?.data?.detail ||
+      //     error?.message ||
+      //     "Lỗi không xác định",
+      //   color: "red",
+      //   icon: <IconX size={18} />,
+      //   autoClose: 5000,
+      // });
     } finally {
       setLoadingEffect(null);
     }
