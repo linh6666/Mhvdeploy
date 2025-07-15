@@ -3,10 +3,9 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@mantine/core";
-import { showNotification, Notifications } from "@mantine/notifications";
+import {  Notifications } from "@mantine/notifications";
 import {
-  IconCheck,
-  IconX,
+  
   IconMoon,
   IconSun,
   IconSunset2,
