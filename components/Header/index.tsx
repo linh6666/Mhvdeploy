@@ -15,7 +15,7 @@ const navLinks = [
   { label: "GIỚI THIỆU", href: "/gioi-thieu" },
   { label: "LIÊN HỆ", href: "/lien-he" },
   { label: "QUẢN LÝ BÁN HÀNG", href: "/quan-ly-ban-hang" },
-  { label: "DỰ ÁN CỦA TÔI", href: "/du-an" },
+  // { label: "DỰ ÁN CỦA TÔI", href: "/du-an" },
 ];
 
 export default function Header() {

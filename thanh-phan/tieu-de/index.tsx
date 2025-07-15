@@ -15,7 +15,7 @@ import styles from "./Header.module.css";
     { label: "ABOUT", href: "/en/about" },
     { label: "CONTACT", href: "/en/contact" },
     { label: "SALE MANAGEMENT", href: "/en/Sale-Management" },
-    { label: "MY PROJECT", href: "/en/My-Project" },
+    // { label: "MY PROJECT", href: "/en/My-Project" },
   ];
 
 export default function Header() {

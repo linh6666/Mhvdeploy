@@ -109,7 +109,7 @@ export default function CustomerDetails({ building }: CustomerDetailsProps) {
           </div>
 
           <div className={styles.backButtonContainer}>
-            <Link href="/DetailManagent" className={styles.backButton}>
+            <Link href="/chi-tiet-quan-ly" className={styles.backButton}>
               <IconArrowLeft size={24} />
             </Link>
           </div>

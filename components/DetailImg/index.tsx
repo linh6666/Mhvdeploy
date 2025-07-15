@@ -145,7 +145,7 @@ export default function VideoCard() {
 
         <div style={{ flexGrow: 1 }} />
 
-        <Button className={styles.button} variant="outline" onClick={() => router.push("/Detail2")}>
+        <Button className={styles.button} variant="outline" onClick={() => router.push("/chi-tiet-du-an")}>
           <IconChevronsLeft size={20} />
         </Button>
       </Group>

@@ -273,18 +273,18 @@
 .flagWrapper {
   position: relative;
   display: inline-block;
-  width: 40px;     /* 👈 Tăng vùng ngang */
-  height: 30px;    /* 👈 Tăng vùng dọc */
-  padding: 4px;
+  /* width: 40px;     
+  height: 30px;    
+  padding: 4px; */
   border-radius: 4px;
 }
 
 
 .flag {
   width: 30px;           /* hoặc 28px tuỳ bạn */
-  height: 20px;
+  height: 30px;
   object-fit: cover;     /* đảm bảo không bị méo */
-  border-radius: 2px;
+  border-radius: 9999px;
   cursor: pointer;
   transition: transform 0.2s ease;
 }

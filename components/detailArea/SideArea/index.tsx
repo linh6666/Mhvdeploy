@@ -28,7 +28,7 @@ export const SideNavigation = ({ className }: SideNavigationProps) => {
   const hasFetched = useRef(false);
 
   const handleGoBack = () => {
-    router.push("/Detail2");
+    router.push("/chi-tiet-du-an");
   };
 
   useEffect(() => {

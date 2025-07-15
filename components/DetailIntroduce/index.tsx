@@ -26,7 +26,7 @@ export default function VideoCard() {
     stopAndClearVideo();
 
     setTimeout(() => {
-      window.location.href = '/Detail2';
+      window.location.href = '/chi-tiet-du-an';
     }, 100);
   };
 

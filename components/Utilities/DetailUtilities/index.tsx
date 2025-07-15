@@ -38,7 +38,7 @@ export const SideNavigation = ({ className }: SideNavigationProps) => {
   const hasFetched = useRef(false); // Ngăn gọi API nhiều lần
 
   const handleGoBack = () => {
-    router.push("/Detail2");
+    router.push("/chi-tiet-du-an");
   };
 
   const fetchMenu = async () => {

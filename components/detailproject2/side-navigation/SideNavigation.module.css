@@ -59,7 +59,7 @@
    border-radius:370px 5px;
   /* padding: 0.75rem 1.5rem;  */
   /* ✅ Giữ padding trái/phải để có khoảng cách chữ */
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
   border: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -74,7 +74,7 @@
 
 .bottomButtons {
   position: absolute;
-  bottom: 0rem;
+  bottom: 4px;
   left: 50%;
   display: flex;
   gap: 0.5rem;
@@ -89,6 +89,7 @@
   border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: opacity 0.3s ease;
+  height: 30px;
 }
 
 .bottomButton:hover {
