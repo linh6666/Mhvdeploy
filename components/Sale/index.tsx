@@ -9,7 +9,7 @@ export default function App() {
       {/* Search Section */}
       <div className={styles.searchSection}>
       <Select
-  placeholder="Location"
+  placeholder="Vị Trí"
   leftSection={<IconMapPin size={16} />}
   className={styles.input}
   data={[
@@ -21,7 +21,7 @@ export default function App() {
      clearable
 />
 <Select
-  placeholder="Project Type"
+  placeholder="Loại dự án"
   leftSection={<IconBuilding size={16} />}
   className={styles.input}
   data={[
@@ -33,7 +33,8 @@ export default function App() {
    clearable
 />
         <TextInput
-          placeholder="Search a project"
+          placeholder="
+Tìm kiếm một dự án"
           leftSection={<IconSearch size={16} />}
           className={styles.inputGrow}
         />
@@ -51,11 +52,13 @@ export default function App() {
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
             <Text fw={500}>BIM Hung Thang</Text>
-            <Text size="sm" c="dimmed">Hung Thang, Ha Long, Quang Ninh, Vietnam</Text>
-            <Text size="sm" c="dimmed">6%, many villas and house to sell</Text>
+            <Text size="sm" c="dimmed">Hùng Thắng, Hạ Long, Quảng Ninh, Việt Nam</Text>
+            <Text size="sm" c="dimmed">
+6%, nhiều biệt thự và nhà để bán</Text>
           </Stack>
           <Button className={`${styles.baseButton} ${styles.primaryButton}`}>
-            Request Access
+            
+Yêu cầu quyền truy cập
           </Button>
         </Card>
 
@@ -78,7 +81,7 @@ export default function App() {
       className={`${styles.baseButton} ${styles.primaryButton}`}
      // Mở liên kết ở tab mới (nếu cần)
     >
-      Go To Project
+      Đi tới dự án
     </Button>
         </Card>
 
@@ -92,11 +95,13 @@ export default function App() {
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
             <Text fw={500}>Highrise Melbourne</Text>
-            <Text size="sm" c="dimmed">West Melbourne 2023</Text>
-            <Text size="sm" c="dimmed">6%, including 24 floors, Beach front view</Text>
+            <Text size="sm" c="dimmed">
+Tây Melbourne 2023</Text>
+            <Text size="sm" c="dimmed">
+6%, bao gồm 24 tầng, hướng biển</Text>
           </Stack>
           <Button className={`${styles.baseButton} ${styles.primaryButton}`}>
-            Go To Project
+            Đi tới dụ án
           </Button>
         </Card>
 
@@ -110,11 +115,12 @@ export default function App() {
           />
           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
             <Text fw={500}>Park Hill</Text>
-            <Text size="sm" c="dimmed">Nam Phu Quoc, Vietnam</Text>
+            <Text size="sm" c="dimmed">Nam Phú Quốc, Việt Nam</Text>
             <Text size="sm" c="dimmed">5%</Text>
           </Stack>
           <Button disabled className={`${styles.baseButton} ${styles.disabledButton}`}>
-            Wait for approval
+           
+Chờ phê duyệt
           </Button>
         </Card>
       </div>
