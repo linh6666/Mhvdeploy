@@ -58,7 +58,7 @@ Tìm kiếm một dự án"
           </Stack>
           <Button className={`${styles.baseButton} ${styles.primaryButton}`}>
             
-Yêu cầu quyền truy cập
+Đi tới dự án
           </Button>
         </Card>
 
