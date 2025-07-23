@@ -16,35 +16,50 @@ interface RecordItem {
   building_type: string;
   amenity: string;
   amenity_type: string;
-  status?: string; // ✅ thêm dòng này để hỗ trợ status (nếu cần)
+  status?: string;
 }
 
 interface ZoneTabContentProps {
   zoneNames: string[];
   activeTab: string | null;
   records: RecordItem[];
+  projectId: string; // ✅ THÊM projectId để gọi API đúng
 }
 
-export default function ZoneTabContent({ zoneNames }: ZoneTabContentProps) {
+export default function ZoneTabContent({ zoneNames, projectId }: ZoneTabContentProps) {
   const [allData, setAllData] = useState<RecordItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
     const fetchAllData = async () => {
+      if (!projectId) return;
+
       setLoading(true);
       try {
-        const res = await apiarea.get(API_ROUTE.GET_AREA_DETAIL);
-        const originalData: RecordItem[] = Array.isArray(res.data.records)
-          ? res.data.records
-          : [];
+        const token = localStorage.getItem("access_token");
+        const fullData: RecordItem[] = [];
 
-        const expandedData: RecordItem[] = originalData.flatMap((item) => {
-          const splitNames = item.zone_name.split(".").map((z) => z.trim());
-          return splitNames.map((name) => ({ ...item, zone_name: name }));
-        });
+        for (const zone of zoneNames) {
+          const zoneParam = "pk"; // giả sử slug phân khu
+          const zoneNamePath = encodeURIComponent(zone);
 
-        setAllData(expandedData);
+          const endpoint = API_ROUTE.GET_AREA_DETAIL
+            .replace("{project_id}", projectId)
+            .replace("{zone_param}", zoneParam)
+            .replace("{zone_name_path}", zoneNamePath);
+
+          const res = await apiarea.get(endpoint, {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { lang: "vi" },
+          });
+
+          if (Array.isArray(res.data)) {
+            fullData.push(...res.data);
+          }
+        }
+
+        setAllData(fullData);
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
       } finally {
@@ -53,18 +68,19 @@ export default function ZoneTabContent({ zoneNames }: ZoneTabContentProps) {
     };
 
     fetchAllData();
-  }, []);
+  }, [projectId, zoneNames]);
 
   const handleGoToDetailPage = (buildingName: string) => {
     const encodedName = encodeURIComponent(buildingName);
-    router.push(`/apartment/${encodedName}`); // ✅ đổi sang route mới
+      const encodedProjectId = encodeURIComponent(projectId);
+   router.push(`/apartment/${encodedName}`);
   };
 
   return (
     <>
       {zoneNames.map((zone) => {
         const zoneData = allData.filter((item) =>
-          item.zone_name.startsWith(zone)
+          item.zone_name?.trim().startsWith(zone)
         );
         const groupedData: { [key: string]: Set<string> } = {};
 
@@ -102,34 +118,30 @@ export default function ZoneTabContent({ zoneNames }: ZoneTabContentProps) {
                           {[...nameSet].map((name, idx) => {
                             const matchedItem = zoneData.find(
                               (item) => item.building_name === name
-                            ); // ✅ chỉ thêm dòng này
+                            );
                             return (
                               <tr key={idx}>
                                 <td>{idx + 1}</td>
                                 <td>
                                   <span className={styles.buildingName}>
-                                    <IconHome
-                                      size={18}
-                                      className={styles.buildingNameIcon}
-                                    />
+                                    <IconHome size={18} className={styles.buildingNameIcon} />
                                     {name}
                                   </span>
                                 </td>
-                             <td
-  style={{
-    color:
-      matchedItem?.status === "Đang bán"
-        ? "#4a7a96"
-        : matchedItem?.status === "Đã bán"
-        ? "red"
-        : matchedItem?.status === "Đã đặt cọc"
-        ? "#bb8d38"
-        : "#000", // fallback
-  }}
->
-  {matchedItem?.status ?? "Không rõ"}
-</td>
-
+                                <td
+                                  style={{
+                                    color:
+                                      matchedItem?.status === "Đang bán"
+                                        ? "#4a7a96"
+                                        : matchedItem?.status === "Đã bán"
+                                        ? "red"
+                                        : matchedItem?.status === "Đã đặt cọc"
+                                        ? "#bb8d38"
+                                        : "#000",
+                                  }}
+                                >
+                                  {matchedItem?.status ?? "Không rõ"}
+                                </td>
                                 <td>
                                   <button
                                     onClick={() => handleGoToDetailPage(name)}
@@ -156,5 +168,4 @@ export default function ZoneTabContent({ zoneNames }: ZoneTabContentProps) {
     </>
   );
 }
-
 

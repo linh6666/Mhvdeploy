@@ -13,7 +13,6 @@ import {
 import { IconMapPin, IconBuilding, IconSearch } from "@tabler/icons-react";
 import styles from "./DetailInteractive.module.css";
 import AppContainer from "../../common/AppContainer";
-
 import { apiarea } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
 
@@ -28,9 +27,17 @@ interface Project {
 
 export default function DetailInteractive() {
   const [projects, setProjects] = useState<Project[]>([]);
-  // const [_isApproved, _setIsApproved] = useState<{ [key: string]: boolean }>({});
 
-  // Ảnh cố định để dùng cho các dự án (quay vòng nếu số lượng nhiều)
+  // Danh sách đường dẫn cho từng dự án
+  const projectPaths = [
+    '/chi-tiet-du-an/du-an-1',
+    '/chi-tiet-du-an/du-an-2',
+    '/chi-tiet-du-an',
+    '/chi-tiet',
+    // thêm các đường dẫn cho các dự án khác tại đây
+  ];
+
+  // Ảnh cố định để dùng cho các dự án
   const imageList = [
     "https://img.heroui.chat/image/places?w=800&h=400&u=1",
     "https://img.heroui.chat/image/places?w=800&h=400&u=2",
@@ -109,16 +116,16 @@ export default function DetailInteractive() {
                 <Text size="sm" c="dimmed">{project.address}</Text>
                 <Text size="sm" c="dimmed">{project.type}</Text>
               </Stack>
-          <Button
-  onClick={() => {
-    localStorage.setItem('project_id', project.id);
-    window.location.href = '/chi-tiet-du-an'; // chuyển trang
-  }}
-  className={`${styles.baseButton} ${styles.primaryButton}`}
->
-  Đi tới dự án
-</Button>
-
+              <Button
+                onClick={() => {
+                  localStorage.setItem('project_id', project.id);
+                  const projectPath = projectPaths[index]; // Lấy đường dẫn tương ứng với dự án
+                  window.location.href = projectPath; // Chuyển trang
+                }}
+                className={`${styles.baseButton} ${styles.primaryButton}`}
+              >
+                Đi tới dự án
+              </Button>
             </Card>
           ))}
         </div>

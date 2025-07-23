@@ -1,7 +1,7 @@
-"use client"; // 👈 Bắt buộc
+"use client";
 
 import React, { useEffect, useState } from "react";
-import { apifilter } from "../../library/axios";
+import { apiarea } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,33 +25,54 @@ interface RecordItem {
 
 interface CustomerDetailsProps {
   building: string;
+  projectId: string;
 }
 
-export default function CustomerDetails({ building }: CustomerDetailsProps) {
+export default function CustomerDetails({ building, projectId }: CustomerDetailsProps) {
   const [buildings, setBuildings] = useState<RecordItem[]>([]);
   const buildingName = decodeURIComponent(building);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        console.log("Đang gọi API filter...");
-        const res = await apifilter.post(API_ROUTE.GET_FILTER, {
-          building_name: buildingName,
-        });
+        console.log("🔍 Đang gọi API filter...");
+
+        const token = localStorage.getItem("access_token");
+        if (!token) {
+          console.error("❌ Không tìm thấy token trong localStorage");
+          return;
+        }
+
+        const apiUrl = API_ROUTE.GET_FILTER.replace("{project_id}", projectId);
+
+        const res = await apiarea.post(
+          apiUrl,
+          {
+            building_name: buildingName,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              lang: "vi", // ✅ Thêm ngôn ngữ tiếng Việt
+            },
+          }
+        );
+
         setBuildings(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
-        console.error("Lỗi khi gọi API filter:", error);
+        console.error("❌ Lỗi khi gọi API filter:", error);
       }
     }
 
     fetchData();
-  }, [buildingName]);
+  }, [buildingName, projectId]);
 
   if (buildings.length === 0) {
     return <div style={{ padding: "1rem" }}>❌ Không tìm thấy toà nhà: {buildingName}</div>;
   }
 
-  // ✅ Sửa lỗi ESLint: không dùng any
   const isValid = (value: string | number | undefined | null): boolean => {
     return (
       value !== undefined &&
@@ -109,12 +130,16 @@ export default function CustomerDetails({ building }: CustomerDetailsProps) {
           </div>
 
           <div className={styles.backButtonContainer}>
-            <Link href="/chi-tiet-quan-ly" className={styles.backButton}>
-              <IconArrowLeft size={24} />
-            </Link>
+           <Link
+  href={`/chi-tiet-quan-ly?projectId=${encodeURIComponent(projectId)}`}
+  className={styles.backButton}
+>
+  <IconArrowLeft size={24} />
+</Link>
           </div>
         </div>
       ))}
     </div>
   );
 }
+
