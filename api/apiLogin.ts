@@ -21,7 +21,12 @@ export async function loginUser(username: string, password: string) {
   }
 
   const data = await res.json();
-  return data;
-}
 
+  // ✅ Lưu access_token vào localStorage
+  if (data.access_token) {
+    localStorage.setItem("access_token", data.access_token);
+  }
+
+  return data; // Vẫn trả data nếu bạn muốn dùng thêm
+}
 

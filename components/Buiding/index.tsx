@@ -19,8 +19,10 @@ const zoneImages: Record<string, string> = {
         "Phân Khu 9": "/assets/Project/phan_khu_9.png",
   // Thêm phân khu và ảnh tương ứng
 };
-
-export default function App() {
+interface AppProps {
+  projectId: string;
+}
+export default function App({ projectId }: AppProps) {
   const params = useParams();
   const rawZoneParam = params && typeof params.zone === "string" ? params.zone : "";
   const zoneParam = decodeURIComponent(rawZoneParam);
@@ -39,7 +41,7 @@ export default function App() {
   height={690}
           />
         )}
-         <SideNavigation  className={styles.sideNavOverlay} zoneParam={zoneParam} />
+         <SideNavigation projectId={projectId}  className={styles.sideNavOverlay} zoneParam={zoneParam} />
       </div>
 
     </div>

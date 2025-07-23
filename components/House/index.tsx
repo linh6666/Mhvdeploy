@@ -7,7 +7,12 @@ import styles from "./House.module.css";
 import { slugify } from "../../library/slugify";
 import Image from "next/image";
 
-export default function App() {
+interface AppProps {
+  projectId: string;
+}
+
+
+export default function App({ projectId }: AppProps) {
   const params = useParams();
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
@@ -40,7 +45,7 @@ export default function App() {
             target.src = `/assets/giaodien/${zoneSlug}/${zoneSlug}.png`;
           }}
         />
-         <HouseTypePage  className={styles.sideNavOverlay}  zoneParam={zoneParam} onSelectType={setSelectedType} />
+         <HouseTypePage projectId={projectId}  className={styles.sideNavOverlay}  zoneParam={zoneParam} onSelectType={setSelectedType} />
 
       </div>
      

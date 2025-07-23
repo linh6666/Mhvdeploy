@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import { Card, Image, Stack, Text, Button, TextInput, Select } from "@mantine/core";
 import { IconMapPin, IconBuilding, IconSearch } from '@tabler/icons-react';
 import styles from "./DetailInteractive.module.css";
@@ -5,6 +7,8 @@ import AppContainer from "../../common/AppContainer";
 
 
 export default function DetailInteractive () {
+
+  const [isApproved, setIsApproved] = useState(false); // ✅ Bổ sung state để xử lý button
   return (
 <AppContainer>
  <div className={styles.container}>
@@ -96,28 +100,7 @@ Go To Project
 
 
 
-       {/* <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
-          <Image
-            src="https://img.heroui.chat/image/places?w=800&h=400&u=2"
-            height={160}
-            alt="Ecopark"
-            style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
-          />
-          <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-            <Text fw={500}> THANH XUAN VALLEY</Text>
-            <Text size="sm" c="dimmed">Thung Lung - Thanh Xuan </Text>
-            <Text size="sm" c="dimmed">8%</Text>
-          </Stack>
-          <Button
-      component="a"
-      href=" "
-      className={`${styles.baseButton} ${styles.primaryButton}`}
-     // Mở liên kết ở tab mới (nếu cần)
-    >
-   Go To Project
-    </Button>
-    </Card>
-     */}
+     
       <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image
             src="https://img.heroui.chat/image/places?w=800&h=400&u=2"
@@ -130,11 +113,17 @@ Go To Project
             <Text size="sm" c="dimmed">Thung Lung - Thanh Xuan </Text>
             <Text size="sm" c="dimmed">8%</Text>
           </Stack>
-          <Button disabled className={`${styles.baseButton} ${styles.disabledButton}`}>
-           Please approve
+          <Button
+  disabled={isApproved}
+  onClick={() => setIsApproved(true)}
+  className={`${styles.baseButton} ${
+    isApproved ? styles.disabledButton : styles.primaryButton
+  }`}
+>
+  {isApproved ? "Wait for approval" : "Please approve"}
+</Button>
 
-
-          </Button>
+          
         </Card>
     
     <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>

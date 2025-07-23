@@ -52,7 +52,7 @@ export default function App() {
   )}
 <Image
   className={styles.image}
-  src="/assets/Project/home.jpg"
+  src="https://vietmodel.com.vn/api/v1/static/EcoRetreat/home.jpg"
   alt="Eco Retreat Long An Aerial View"
   width={1000}
   height={690}

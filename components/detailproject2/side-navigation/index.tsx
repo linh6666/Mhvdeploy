@@ -3,9 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@mantine/core";
-import {  Notifications } from "@mantine/notifications";
+import { Notifications } from "@mantine/notifications";
 import {
-  
   IconMoon,
   IconSun,
   IconSunset2,
@@ -17,9 +16,10 @@ import Image from "next/image";
 
 interface SideNavigationProps {
   className?: string;
+  projectId: string; // ✅ Thêm prop projectId
 }
 
-const SideNavigationInner = ({ className }: SideNavigationProps) => {
+const SideNavigationInner = ({ className, projectId }: SideNavigationProps) => {
   const router = useRouter();
   const [loadingEffect, setLoadingEffect] = useState<string | null>(null);
   const [activeButton, setActiveButton] = useState<string | null>("sunset");
@@ -28,31 +28,13 @@ const SideNavigationInner = ({ className }: SideNavigationProps) => {
     try {
       setLoadingEffect(url);
       setActiveButton(key);
-      await apiarea.post(url); // ❌ res không dùng → xoá
-      // showNotification({
-      //   title: "Thành công",
-      //   message: "Nút bật thành công!",
-      //   color: "green",
-      //   icon: <IconCheck size={18} />,
-      //   autoClose: 1000,
-      // });
+      await apiarea.post(url);
     } catch (err: unknown) {
       const error = err as {
         response?: { data?: { detail?: string } };
         message?: string;
       };
-
       console.error("Gọi hiệu ứng thất bại:", error?.response?.data || error?.message || err);
-      // showNotification({
-      //   title: "Lỗi",
-      //   message:
-      //     error?.response?.data?.detail ||
-      //     error?.message ||
-      //     "Lỗi không xác định",
-      //   color: "red",
-      //   icon: <IconX size={18} />,
-      //   autoClose: 5000,
-      // });
     } finally {
       setLoadingEffect(null);
     }
@@ -61,26 +43,25 @@ const SideNavigationInner = ({ className }: SideNavigationProps) => {
   return (
     <div className={`${styles.container} ${className || ""}`}>
       <div className={styles.logoWrapper}>
-    <Image
-  src="/logo.png"
-  alt="Eco Retreat Logo"
-  width={128} // 8rem = 128px
-  height={128}
-  className={styles.logoImage}
-/>
-
+        <Image
+          src="/logo.png"
+          alt="Eco Retreat Logo"
+          width={128}
+          height={128}
+          className={styles.logoImage}
+        />
       </div>
 
       <h2 className={styles.mainHeading}>Trang Chủ</h2>
 
       <div className={styles.buttonGroup}>
-        <NavigationButton label="GIỚI THIỆU DỰ ÁN" href="/gioi-thieu-du-an" />
-        <NavigationButton label="HỆ THỐNG PHÂN KHU" href="/phan-khu" />
-        <NavigationButton label="HỆ THỐNG TIỆN ÍCH" href="/tien-ich" />
-        <NavigationButton label="HIỆU ỨNG ÁNH SÁNG" href="/hieu-ung" />
-        <NavigationButton label="THƯ VIỆN HÌNH ẢNH" href="/thu-vien-hinh-anh" />
-        <NavigationButton label="THƯ VIỆN VIDEO" href="/thu-vien-video" />
-        <NavigationButton label="TRỢ GIÚP" href="/tro-giup" />
+        <NavigationButton label="GIỚI THIỆU DỰ ÁN" href={`/gioi-thieu-du-an`} />
+        <NavigationButton label="HỆ THỐNG PHÂN KHU" href={`/phan-khu?projectId=${projectId}`} />
+        <NavigationButton label="HỆ THỐNG TIỆN ÍCH" href={`/tien-ich`} />
+        <NavigationButton label="HIỆU ỨNG ÁNH SÁNG" href={`/hieu-ung`} />
+        <NavigationButton label="THƯ VIỆN HÌNH ẢNH" href={`/thu-vien-hinh-anh`} />
+        <NavigationButton label="THƯ VIỆN VIDEO" href={`/thu-vien-video`} />
+        <NavigationButton label="TRỢ GIÚP" href={`/tro-giup`} />
         <NavigationButton
           label="THOÁT"
           onClick={() => router.push("/Tuong-tac")}
@@ -152,11 +133,12 @@ const NavigationButton = ({ label, href, onClick }: NavigationButtonProps) => {
   );
 };
 
-export const SideNavigation = ({ className }: SideNavigationProps) => {
+// ✅ Export chính
+export const SideNavigation = ({ className, projectId }: SideNavigationProps) => {
   return (
     <>
       <Notifications position="top-right" zIndex={2077} />
-      <SideNavigationInner className={className} />
+      <SideNavigationInner className={className} projectId={projectId} />
     </>
   );
 };

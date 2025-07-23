@@ -15,7 +15,7 @@ export default function App() {
       <div className={styles.mainContent}>
         <Image
           className={styles.image}
-          src="/assets/giaodien/chung/he_thong_tien_ich.jpg"
+          src="https://vietmodel.com.vn/api/v1/static/EcoRetreat/he_thong_tien_ich.png"
           alt="Eco Retreat Long An Aerial View"
             width={1000}
   height={690}

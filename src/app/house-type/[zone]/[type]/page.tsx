@@ -1,12 +1,17 @@
-import type { Metadata } from "next";
+'use client';
+
+import React, { useEffect, useState } from "react";
 import Building from "../../../../../components/House/index";
 
-export const metadata: Metadata = {
-  title: "Giỏ hàng | Mô Hình Việt",
-  description: "Xem và quản lý các Mô Hình Việt tại giỏ hàng.",
-};
-export default function Buildingtype() {
-  return (
-   <Building/>
-  );
+export default function BuildingtypeClient() {
+  const [projectId, setProjectId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const id = localStorage.getItem("project_id");
+    if (id) setProjectId(id);
+  }, []);
+
+  if (!projectId) return <div>Đang tải dữ liệu...</div>;
+
+  return <Building projectId={projectId} />;
 }

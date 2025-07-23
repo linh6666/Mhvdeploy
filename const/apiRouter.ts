@@ -9,17 +9,17 @@ export const API_ROUTE = {
     SENDEMAIL: "/api/v1/password-recovery/{email}",
     LOGIN_USERNAME:"/api/v1/users/me",
     /////apiarea
-    GET_AREA:"/192.168.100.101/zone/pk",
-    GET_AREA_DETAIL:"/192.168.100.101/zone/pk/Phân Khu",
- GET_AREA_DETAIL_BY_TYPE: (zone: string, buildingType: string) =>
-    `/192.168.100.101/zone/pk/${zone}/${buildingType}`,
- GET_HOUSE_DETAIL: (
-  zone: string,
-  zoneName: string,
-  buildingType: string,
-  buildingName: string
-) =>
-  `/192.168.100.101/zone/${zone}/${zoneName}/${buildingType}/${buildingName}`,
+    // GET_AREA:"/192.168.100.101/zone/pk",
+    // GET_AREA_DETAIL:"/192.168.100.101/zone/pk/Phân Khu",
+//  GET_AREA_DETAIL_BY_TYPE: (zone: string, buildingType: string) =>
+//     `/192.168.100.101/zone/pk/${zone}/${buildingType}`,
+//  GET_HOUSE_DETAIL: (
+//   zone: string,
+//   zoneName: string,
+//   buildingType: string,
+//   buildingName: string
+// ) =>
+//   `/192.168.100.101/zone/${zone}/${zoneName}/${buildingType}/${buildingName}`,
 
  
  
@@ -38,6 +38,8 @@ export const API_ROUTE = {
 GET_UTILITIES:"/192.168.100.101/amenity/ti",
  GET_UTILITIES_DETAIL: (amenityType: string) =>
     `/192.168.100.101/amenity/ti/${amenityType}`,
+ /// GET PROJECT
+ GET_PROJECT:"/api/v1/projects",
 
 
 /////video///
@@ -45,5 +47,15 @@ PUT_VIDEO:"/192.168.100.101/eff/7/1",
   ////FILTER/////
   GET_FILTER:"/filter",
   GET_FILTER_TYPE:"/filter_type",
+
+///bản Tiếng Việt
+
+  GET_AREA:"/api/v1/ecopark/{project_id}/zone/{zone_param}",
+  GET_AREA_DETAIL:"/api/v1/ecopark/{project_id}/zone/{zone_param}/{zone_name_path}",
+  GET_AREA_DETAIL_BY_TYPE:"/api/v1/ecopark/{project_id}/zone/{zone_param}/{zone_name_path}/{building_type_path}",
+  GET_HOUSE_DETAIL:"/api/v1/ecopark/{project_id}/zone/{zone_param}/{zone_name_path}/{building_type_path}/{building_name_param}"
+
+///Bản Tiếng Anh
+
 
   };

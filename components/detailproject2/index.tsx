@@ -1,18 +1,24 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SideNavigation } from "./side-navigation/index";
 import styles from "./App.module.css";
 import { apiarea } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
 import { IconChevronsRight, IconX } from "@tabler/icons-react";
 import DrawerRight from "../DrawerRight/DrawerRight";
-
 import Image from "next/image";
+import { useEffect } from "react";
 
-export default function App() {
+// ✅ Interface để nhận projectId từ cha
+interface AppProps {
+  projectId: string;
+}
+
+export default function App({ projectId }: AppProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  // ✅ Gọi hiệu ứng SUNSET một lần khi vào trang
   useEffect(() => {
     const triggerSunsetEffect = async () => {
       try {
@@ -27,14 +33,14 @@ export default function App() {
   }, []);
 
   return (
- 
-<div className={styles.container}>
-  
-
+    <div className={styles.container}>
       {/* ✅ Drawer trượt vào từ bên trái */}
       {isDrawerOpen && (
         <div className={styles.drawer}>
-          <div className={styles.drawerClose} onClick={() => setIsDrawerOpen(false)}>
+          <div
+            className={styles.drawerClose}
+            onClick={() => setIsDrawerOpen(false)}
+          >
             <IconX size={20} color="white" />
           </div>
           <div className={styles.openDrawer}>
@@ -45,24 +51,29 @@ export default function App() {
 
       {/* ✅ Giao diện chính */}
       <div className={styles.mainContent}>
-  {!isDrawerOpen && (
-    <div className={styles.drawerToggle} onClick={() => setIsDrawerOpen(true)}>
-      <IconChevronsRight size={24} color="white" />
-    </div>
-  )}
-<Image
-  className={styles.image}
-  src="/assets/Project/home.jpg"
-  alt="Eco Retreat Long An Aerial View"
-  width={1000}
-  height={690}
-/>
+        {!isDrawerOpen && (
+          <div
+            className={styles.drawerToggle}
+            onClick={() => setIsDrawerOpen(true)}
+          >
+            <IconChevronsRight size={24} color="white" />
+          </div>
+        )}
 
-  <SideNavigation className={styles.sideNavOverlay} />
-</div>
-    </div>
+        <Image
+          className={styles.image}
+          src="https://vietmodel.com.vn/api/v1/static/EcoRetreat/home.jpg"
+          alt="Ảnh trang chủ"
+          width={1000}
+          height={690}
+        />
 
- 
-    
+        {/* ✅ Truyền projectId sang SideNavigation */}
+        <SideNavigation
+          className={styles.sideNavOverlay}
+          projectId={projectId}
+        />
+      </div>
+    </div>
   );
 }

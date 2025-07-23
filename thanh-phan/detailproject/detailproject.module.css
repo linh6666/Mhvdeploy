@@ -1,3 +1,9 @@
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 .simpleGrid {
   padding: 40px;
   align-items: center;
@@ -9,6 +15,7 @@
   width: 100%;
   height: auto;
   transition: transform 0.3s ease;
+  z-index: 1;
 }
 
 .image {
@@ -51,7 +58,7 @@
 
 .overlayText1,
 .overlayText2 {
-  left: 10px;
+  /* left: 50px; */
   top: 50%;
   transform: translateY(-50%);
 }
@@ -105,23 +112,11 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 700px;
+  width: 470px;
   height: 100vh;
   background-color: rgb(35 66 87 / var(--tw-bg-opacity, 1));
   padding: 1.5rem;
   transition: transform 0.3s ease;
-}
-
-.drawerToggle {
-  position: fixed;
-  top: 40%;
-  left: 0;
-  background-color: rgb(35 66 87 / var(--tw-bg-opacity, 1));
-  padding: 10px;
-  cursor: pointer;
-  z-index: 1000;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
 }
 
 .drawerClose {
@@ -137,8 +132,21 @@
 
 /* Dịch chuyển sang trái khi Drawer mở */
 .shiftLeft {
-  transform: translateX(300px);
+  transform: translateX(20px);
   transition: transform 0.3s ease;
+}
+
+/* ✅ Nút mở Drawer nằm trong ảnh */
+.drawerToggleInside {
+  position: absolute;
+  top: 40%;
+  /* right: 10px; */
+  transform: translateY(-50%);
+  background-color: #406c88;
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
 }
 
 /* Responsive */
@@ -188,7 +196,11 @@
   .openDrawer {
     margin-top: 0;
   }
-}
-.container{
-  width: 100px;
+
+  .drawerToggleInside {
+    top: auto;
+    bottom: 10px;
+    right: 10px;
+    transform: none;
+  }
 }

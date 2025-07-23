@@ -1,9 +1,13 @@
+"use client";
+import { useState } from "react";
 import { Card, Image, Stack, Text, Button, TextInput, Select } from "@mantine/core";
 import { IconMapPin, IconBuilding, IconSearch } from '@tabler/icons-react';
 import styles from "./Sale.module.css";
 
 
+
 export default function App() {
+  const [isApproved, setIsApproved] = useState(false); // ✅ Bổ sung state để xử lý button
   return (
     <div className={styles.container}>
       {/* Search Section */}
@@ -143,10 +147,16 @@ Tìm kiếm một dự án"
             <Text size="sm" c="dimmed">Thung Lũng Thanh Xuân </Text>
             <Text size="sm" c="dimmed">8%</Text>
           </Stack>
-          <Button disabled className={`${styles.baseButton} ${styles.disabledButton}`}>
-           
-Xin phê duyệt
-          </Button>
+         <Button
+  disabled={isApproved}
+  onClick={() => setIsApproved(true)}
+  className={`${styles.baseButton} ${
+    isApproved ? styles.disabledButton : styles.primaryButton
+  }`}
+>
+  {isApproved ? "Chờ phê duyệt" : "Xin phê duyệt"}
+</Button>
+
         </Card>
    <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
           <Image

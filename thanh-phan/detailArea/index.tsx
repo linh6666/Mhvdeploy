@@ -15,7 +15,7 @@ export default function App() {
       <div className={styles.mainContent}>
         <Image
           className={styles.image}
-          src="/assets/Project/phan_khu.png"
+          src="https://vietmodel.com.vn/api/v1/static/EcoRetreat/pk.png"
           alt="Eco Retreat Long An Aerial View"
             width={1000}
   height={690}

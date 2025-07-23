@@ -10,9 +10,9 @@ import { apiarea } from "../../../library/axios";
 import { API_ROUTE } from "../../../const/apiRouter";
 import Image from "next/image";
 
-// Interface cho props
 interface SideNavigationProps {
   className?: string;
+  projectId: string;
 }
 
 interface MenuItem {
@@ -20,7 +20,11 @@ interface MenuItem {
   href: string;
 }
 
-export const SideNavigation = ({ className }: SideNavigationProps) => {
+interface ApiZoneItem {
+  zone_name?: string;
+}
+
+export const SideNavigation = ({ className, projectId }: SideNavigationProps) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,83 +36,105 @@ export const SideNavigation = ({ className }: SideNavigationProps) => {
   };
 
   useEffect(() => {
-    if (hasFetched.current) return;
+    if (!projectId || hasFetched.current) return;
     hasFetched.current = true;
 
     const fetchMenu = async () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await apiarea.get(API_ROUTE.GET_AREA);
-        const records = res.data.records as { zone_name: string }[];
+        const token = localStorage.getItem("access_token");
+        if (!token) throw new Error("Không tìm thấy access token.");
 
-        const normalized = records.map((item) => {
-          const match = item.zone_name.match(/Phân khu\s*(\d+)/i);
-          const zoneBase = match ? `Phân Khu ${match[1]}` : item.zone_name;
-          return {
-            zone_name: zoneBase,
-            href: `/building-type/${encodeURIComponent(zoneBase)}`
-          };
+        const zoneParam = "pk";
+        const lang = "vi";
+
+        const endpoint = API_ROUTE.GET_AREA
+          .replace("{project_id}", projectId)
+          .replace("{zone_param}", zoneParam);
+
+        const res = await apiarea.get(endpoint, {
+          params: { lang },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
-        const uniqueMap = new Map<string, MenuItem>();
-        for (const item of normalized) {
-          if (!uniqueMap.has(item.zone_name)) {
-            uniqueMap.set(item.zone_name, item);
-          }
-        }
+        console.log("📦 Dữ liệu API trả về:", res.data);
 
-        const uniqueZones = Array.from(uniqueMap.values());
-        setMenuItems(uniqueZones);
-      } catch (err) {
-        console.error("Lỗi khi tải menu:", err);
-        setError("Không thể tải dữ liệu phân khu.");
+        const records = Array.isArray(res.data) ? res.data : [];
+
+        const zoneNamesSet = new Set<string>();
+
+        records.forEach((item: ApiZoneItem) => {
+          if (item.zone_name) {
+            const zoneParts = item.zone_name.split(".");
+            zoneParts.forEach((zone: string) => {
+              const trimmed = zone.trim();
+              if (trimmed) {
+                zoneNamesSet.add(trimmed);
+              }
+            });
+          }
+        });
+
+        const menuItems: MenuItem[] = Array.from(zoneNamesSet).map((zoneName) => ({
+          zone_name: zoneName,
+          href: `/building-type/${encodeURIComponent(zoneName)}?projectId=${encodeURIComponent(projectId)}`,
+        }));
+
+        setMenuItems(menuItems);
+      } catch (err: unknown) {
+        const error = err as Error;
+        console.error("Lỗi khi tải menu:", error);
+        setError(error.message || "Không thể tải dữ liệu phân khu.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchMenu();
-  }, []);
+  }, [projectId]);
 
   return (
-    <div
-      className={`${styles.container} ${className || ""}`}
-      // style={{ position: "relative" }}
-    >
+    <div className={`${styles.container} ${className || ""}`}>
       <div className={styles.logoWrapper}>
-        <Image src="/logo.png" alt="Eco Retreat Logo" className={styles.logoImage}  width={128} // 8rem = 128px
-  height={128}
+        <Image
+          src="/logo.png"
+          alt="Eco Retreat Logo"
+          className={styles.logoImage}
+          width={128}
+          height={128}
         />
-
       </div>
 
       <h2 className={styles.mainHeading}>Phân Khu</h2>
-<div className={styles.box}>
-  <div className={styles.buttonGroup}>
-    {loading && <div>Đang tải...</div>}
-    {error && <div style={{ color: "red" }}>{error}</div>}
-    {!loading && !error &&
-      menuItems.map((item, idx) => (
-        <NavigationButton
-          key={`${item.zone_name}-${idx}`}
-          label={item.zone_name}
-          href={item.href}
-        />
-      ))}
-  </div>
-</div>
 
-{/* Di chuyển ra ngoài box */}
-<div className={styles.bottomButtons}>
-  <Button
-    variant="filled"
-    className={styles.bottomButton}
-    onClick={handleGoBack}
-  >
-    <IconChevronsLeft size={20} />
-  </Button>
-</div>
+      <div className={styles.box}>
+        <div className={styles.buttonGroup}>
+          {loading && <div>Đang tải...</div>}
+          {error && <div style={{ color: "red" }}>{error}</div>}
+          {!loading && !error && menuItems.length > 0 &&
+            menuItems.map((item, idx) => (
+              <NavigationButton
+                key={`${item.zone_name}-${idx}`}
+                label={item.zone_name}
+                href={item.href}
+              />
+            ))}
+          {!loading && !error && menuItems.length === 0 && <div>Không có phân khu.</div>}
+        </div>
+      </div>
+
+      <div className={styles.bottomButtons}>
+        <Button
+          variant="filled"
+          className={styles.bottomButton}
+          onClick={handleGoBack}
+        >
+          <IconChevronsLeft size={20} />
+        </Button>
+      </div>
     </div>
   );
 };
