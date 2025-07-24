@@ -1,185 +1,3 @@
-// "use client";
-// import { useState } from "react";
-// import { Card, Image, Stack, Text, Button, TextInput, Select } from "@mantine/core";
-// import { IconMapPin, IconBuilding, IconSearch } from '@tabler/icons-react';
-// import styles from "./Sale.module.css";
-
-
-
-// export default function App() {
-//   const [isApproved, setIsApproved] = useState(false); // ✅ Bổ sung state để xử lý button
-//   return (
-//     <div className={styles.container}>
-//       {/* Search Section */}
-//       <div className={styles.searchSection}>
-//       <Select
-//   placeholder="Vị Trí"
-//   leftSection={<IconMapPin size={16} />}
-//   className={styles.input}
-//   data={[
-//     { value: 'ha_long', label: 'Ha Long' },
-//     { value: 'hanoi', label: 'Hanoi' },
-//     { value: 'ho_chi_minh', label: 'Ho Chi Minh City' },
-//     // Thêm các tùy chọn khác ở đây
-//   ]}
-//      clearable
-// />
-// <Select
-//   placeholder="Loại dự án"
-//   leftSection={<IconBuilding size={16} />}
-//   className={styles.input}
-//   data={[
-//     { value: 'residential', label: 'Residential' },
-//     { value: 'commercial', label: 'Commercial' },
-//     { value: 'industrial', label: 'Industrial' },
-//     // Thêm các tùy chọn khác ở đây
-//   ]}
-//    clearable
-// />
-//         <TextInput
-//           placeholder="
-// Tìm kiếm một dự án"
-//           leftSection={<IconSearch size={16} />}
-//           className={styles.inputGrow}
-//         />
-//       </div>
-
-//       {/* Card Grid */}
-//       <div className={styles.cardGrid}>
-//         {/* Card 1 */}
-//         {/* <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
-//           <Image
-//             src="https://img.heroui.chat/image/places?w=800&h=400&u=1"
-//             height={160}
-//             alt="BIM Hung Thang"
-//             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
-//           />
-//           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-//             <Text fw={500}>BIM Hung Thang</Text>
-//             <Text size="sm" c="dimmed">Hùng Thắng, Hạ Long, Quảng Ninh, Việt Nam</Text>
-//             <Text size="sm" c="dimmed">
-// 6%, nhiều biệt thự và nhà để bán</Text>
-//           </Stack>
-//           <Button className={`${styles.baseButton} ${styles.primaryButton}`}>
-            
-// Đi tới dự án
-//           </Button>
-//         </Card> */}
-
-
-//          <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
-//           <Image
-//             src="https://img.heroui.chat/image/places?w=800&h=400&u=1"
-//             height={160}
-//             alt="Highrise Melbourne"
-//             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
-//           />
-//           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-//             <Text fw={500}>ECO RETREAT</Text>
-//             <Text size="sm" c="dimmed">Long An</Text>
-//             <Text size="sm" c="dimmed">100%</Text>
-//           </Stack>
-//           <Button 
-//                component="a"
-//    href="/chi-tiet-quan-ly"
-//           className={`${styles.baseButton} ${styles.primaryButton}`}>
-
-
-//             Đi tới dự án
-//           </Button>
-//         </Card>
-
-//         {/* Card 2 */}
-      
-
-//         {/* Card 3 */}
-//      <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
-//                <Image
-//                  src="https://img.heroui.chat/image/places?w=800&h=400&u=8"
-//                  height={160}
-//                  alt="HIGHRISE MELBOURNE"
-//                  style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
-//                />
-//                <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-//                  <Text fw={500}>HIGHRISE MELBOURNE</Text>
-//                  <Text size="sm" c="dimmed">Melbourne</Text>
-//                  <Text size="sm" c="dimmed">6%, bao gồm 24 tầng, hướng biển</Text>
-//                </Stack>
-//                  <Button
-//            component="a"
-//         href=""
-//            className={`${styles.baseButton} ${styles.primaryButton}`}
-       
-//          >
-//            Đi tới dự án
-//          </Button>
-//              </Card>
-//        {/* <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
-//           <Image
-//             src="https://img.heroui.chat/image/places?w=800&h=400&u=2"
-//             height={160}
-//             alt="Ecopark"
-//             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
-//           />
-//           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-//             <Text fw={500}>THANH XUANN VALLEY</Text>
-//             <Text size="sm" c="dimmed">Thung Lũng Thanh Xuân </Text>
-//             <Text size="sm" c="dimmed">8%</Text>
-//           </Stack>
-//           <Button
-//       component="a"
-//       href=" "
-//       className={`${styles.baseButton} ${styles.primaryButton}`}
-//      // Mở liên kết ở tab mới (nếu cần)
-//     >
-//     Đi tới dự án 
-//     </Button>
-//     </Card> */}
-//      <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
-//           <Image
-//             src="https://img.heroui.chat/image/places?w=800&h=400&u=2"
-//             height={160}
-//             alt="Park Hill"
-//             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
-//           />
-//           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-//             <Text fw={500}>THANH XUANN VALLEY</Text>
-//             <Text size="sm" c="dimmed">Thung Lũng Thanh Xuân </Text>
-//             <Text size="sm" c="dimmed">8%</Text>
-//           </Stack>
-//          <Button
-//   disabled={isApproved}
-//   onClick={() => setIsApproved(true)}
-//   className={`${styles.baseButton} ${
-//     isApproved ? styles.disabledButton : styles.primaryButton
-//   }`}
-// >
-//   {isApproved ? "Chờ phê duyệt" : "Xin phê duyệt"}
-// </Button>
-
-//         </Card>
-//    <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
-//           <Image
-//             src="https://img.heroui.chat/image/places?w=800&h=400&u=5"
-//             height={160}
-//             alt="Park Hill"
-//             style={{ borderTopLeftRadius: "var(--mantine-radius-md)", borderTopRightRadius: "var(--mantine-radius-md)" }}
-//           />
-//           <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-//             <Text fw={500}>SUN PREMIER VILLAGE PRIMAVERA</Text>
-//             <Text size="sm" c="dimmed">Nam Phú Quốc, Việt Nam</Text>
-//             <Text size="sm" c="dimmed">5%</Text>
-//           </Stack>
-//           <Button disabled className={`${styles.baseButton} ${styles.disabledButton}`}>
-           
-// Chờ phê duyệt
-//           </Button>
-//         </Card>
-        
-//       </div>
-//     </div>
-//   );
-// }
 "use client";
 
 import { useEffect, useState } from "react";
@@ -205,30 +23,20 @@ interface Project {
   address: string;
   type: string;
   investor: string;
+  image_url?: string;
 }
 
 export default function DetailInteractive() {
   const [projects, setProjects] = useState<Project[]>([]);
 
-  // Danh sách đường dẫn cho từng dự án
-  const projectPaths = [
-    '/chi-tiet-du-an/du-an-1',
-    '/chi-tiet-du-an/du-an-2',
-    '/chi-tiet-quan-ly',
-    'chi-tiet',
-    // thêm các đường dẫn cho các dự án khác tại đây
-  ];
+  // const projectPaths = [
+  //   "/chi-tiet-du-an/du-an-1",
+  //   "/chi-tiet-du-an/du-an-2",
+  //   "/chi-tiet-du-an",
+  //   "/chi-tiet",
+  //   // thêm các đường dẫn khác
+  // ];
 
-  // Ảnh cố định để dùng cho các dự án
-  const imageList = [
-    "https://img.heroui.chat/image/places?w=800&h=400&u=1",
-    "https://img.heroui.chat/image/places?w=800&h=400&u=2",
-    "https://img.heroui.chat/image/places?w=800&h=400&u=3",
-    "https://img.heroui.chat/image/places?w=800&h=400&u=4",
-    "https://img.heroui.chat/image/places?w=800&h=400&u=5",
-  ];
-
-  // Gọi API lấy danh sách dự án
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -238,7 +46,7 @@ export default function DetailInteractive() {
             Authorization: `Bearer ${token}`,
           },
         });
-        setProjects(res.data.data); // Lưu dữ liệu dự án
+        setProjects(res.data.data);
       } catch (error) {
         console.error("Lỗi khi fetch projects:", error);
       }
@@ -250,20 +58,20 @@ export default function DetailInteractive() {
   return (
     <AppContainer>
       <div className={styles.container}>
-        {/* Khu vực tìm kiếm / lọc */}
+        {/* Thanh tìm kiếm / lọc */}
         <div className={styles.searchSection}>
           <Select
             placeholder="Vị trí"
             leftSection={<IconMapPin size={16} />}
             className={styles.input}
-            data={[]} // bạn có thể bổ sung dữ liệu filter sau
+            data={[]}
             clearable
           />
           <Select
             placeholder="Loại dự án"
             leftSection={<IconBuilding size={16} />}
             className={styles.input}
-            data={[]} // bạn có thể bổ sung dữ liệu filter sau
+            data={[]}
             clearable
           />
           <TextInput
@@ -273,9 +81,9 @@ export default function DetailInteractive() {
           />
         </div>
 
-        {/* Hiển thị danh sách dự án */}
+        {/* Danh sách dự án */}
         <div className={styles.cardGrid}>
-          {projects.map((project, index) => (
+          {projects.map((project) => (
             <Card
               key={project.id}
               shadow="sm"
@@ -285,25 +93,28 @@ export default function DetailInteractive() {
               className={styles.card}
             >
               <Image
-                src={imageList[index % imageList.length]} // Ảnh cố định theo index
-                height={160}
+                src={
+                  project.image_url ||
+                  "https://via.placeholder.com/800x400?text=No+Image"
+                }
                 alt={project.name}
-                style={{
-                  borderTopLeftRadius: "var(--mantine-radius-md)",
-                  borderTopRightRadius: "var(--mantine-radius-md)",
-                }}
+                fallbackSrc="https://via.placeholder.com/800x400?text=No+Image"
+                className={styles.cardImage}
               />
+
               <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
                 <Text fw={500}>{project.name}</Text>
-                <Text size="sm" c="dimmed">{project.address}</Text>
-                <Text size="sm" c="dimmed">{project.type}</Text>
+                <Text size="sm" c="dimmed">
+                  {project.address}
+                </Text>
+                <Text size="sm" c="dimmed">
+                  {project.type}
+                </Text>
               </Stack>
               <Button
                 onClick={() => {
-                  localStorage.setItem('project_id', project.id);
-                  const basePath = projectPaths[index];
-                  const projectPath = `${basePath}?projectId=${encodeURIComponent(project.id)}`;
-                  window.location.href = projectPath;
+                  localStorage.setItem("project_id", project.id);
+                  window.location.href = `/chi-tiet-quan-ly?pageId=${project.id}`;
                 }}
                 className={`${styles.baseButton} ${styles.primaryButton}`}
               >

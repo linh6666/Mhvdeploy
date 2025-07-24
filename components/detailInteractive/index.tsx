@@ -92,27 +92,34 @@ export default function DetailInteractive() {
               padding="0"
               className={styles.card}
             >
-             <Image
-  src={project.image_url || "https://via.placeholder.com/800x400?text=No+Image"}
-  alt={project.name}
-  fallbackSrc="https://via.placeholder.com/800x400?text=No+Image"
-  className={styles.cardImage}
-/>
+              <Image
+                src={
+                  project.image_url ||
+                  "https://via.placeholder.com/800x400?text=No+Image"
+                }
+                alt={project.name}
+                fallbackSrc="https://via.placeholder.com/800x400?text=No+Image"
+                className={styles.cardImage}
+              />
 
               <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
                 <Text fw={500}>{project.name}</Text>
-                <Text size="sm" c="dimmed">{project.address}</Text>
-                <Text size="sm" c="dimmed">{project.type}</Text>
+                <Text size="sm" c="dimmed">
+                  {project.address}
+                </Text>
+                <Text size="sm" c="dimmed">
+                  {project.type}
+                </Text>
               </Stack>
               <Button
-  onClick={() => {
-    localStorage.setItem("project_id", project.id);
-    window.location.href = `/chi-tiet-du-an?pageId=${project.id}`;
-  }}
-  className={`${styles.baseButton} ${styles.primaryButton}`}
->
-  Đi tới dự án
-</Button>
+                onClick={() => {
+                  localStorage.setItem("project_id", project.id);
+                  window.location.href = `/chi-tiet-du-an?pageId=${project.id}`;
+                }}
+                className={`${styles.baseButton} ${styles.primaryButton}`}
+              >
+                Đi tới dự án
+              </Button>
             </Card>
           ))}
         </div>

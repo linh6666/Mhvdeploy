@@ -7,6 +7,10 @@ import { API_ROUTE } from "../../const/apiRouter";
 import ZoneTabContent from "./Matrix";
 import styles from "./App.module.css";
 
+interface AppProps {
+  projectId: string;
+}
+
 interface RecordItem {
   id: number;
   zone: string;
@@ -17,25 +21,13 @@ interface RecordItem {
   amenity_type: string;
 }
 
-export default function Managent() {
-  const [projectId, setProjectId] = useState<string | null>(null);
+export default function Managent({ projectId }: AppProps) {
   const [records, setRecords] = useState<RecordItem[]>([]);
   const [zoneNames, setZoneNames] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedProjectId = localStorage.getItem("projectId");
-    if (storedProjectId) {
-      setProjectId(storedProjectId);
-    } else {
-      console.error("Không tìm thấy projectId trong localStorage.");
-    }
-  }, []);
-
-  useEffect(() => {
     const fetchData = async () => {
-      if (!projectId) return;
-
       try {
         const token = localStorage.getItem("access_token");
         if (!token) throw new Error("Không tìm thấy access token.");
@@ -43,9 +35,10 @@ export default function Managent() {
         const zoneParam = "pk";
         const lang = "vi";
 
-        const endpoint = API_ROUTE.GET_AREA
-          .replace("{project_id}", projectId)
-          .replace("{zone_param}", zoneParam);
+        const endpoint = API_ROUTE.GET_AREA.replace(
+          "{project_id}",
+          projectId
+        ).replace("{zone_param}", zoneParam);
 
         const res = await apiarea.get(endpoint, {
           params: { lang },
@@ -54,6 +47,7 @@ export default function Managent() {
           },
         });
 
+        console.log("📦 Dữ liệu API:", res.data);
         const data = Array.isArray(res.data) ? res.data : [];
 
         setRecords(data);
@@ -109,12 +103,9 @@ export default function Managent() {
           zoneNames={zoneNames}
           activeTab={activeTab}
           records={records}
-          projectId={projectId || ""}
+          projectId={projectId}
         />
       </Tabs>
     </div>
   );
 }
-
-
-

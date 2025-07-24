@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Card, Button, Group } from '@mantine/core';
-import { useRef, useState, useEffect } from 'react';
-import styles from './DetailIntroduce.module.css';
-import { IconChevronsLeft } from '@tabler/icons-react';
+import { Card, Button, Group } from "@mantine/core";
+import { useRef, useState, useEffect } from "react";
+import styles from "./DetailIntroduce.module.css";
+import { IconChevronsLeft } from "@tabler/icons-react";
 
-// import { apiarea } from '../../library/axios';  
-// import { API_ROUTE } from '../../const/apiRouter'; 
+// import { apiarea } from '../../library/axios';
+// import { API_ROUTE } from '../../const/apiRouter';
 
 export default function VideoCard() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -16,7 +16,7 @@ export default function VideoCard() {
     if (videoRef.current) {
       const video = videoRef.current;
       video.pause();
-      video.removeAttribute('src');
+      video.removeAttribute("src");
       video.load();
     }
   };
@@ -26,14 +26,13 @@ export default function VideoCard() {
     stopAndClearVideo();
 
     setTimeout(() => {
-      window.location.href = '/chi-tiet-du-an?pageId=${project.id}';
+      window.location.href = `/chi-tiet-du-an?pageId=123`;
     }, 100);
   };
 
   // Hàm gọi API khi video play
   // const handleVideoPlay = async () => {
   //   try {
-  //     // Gọi API PUT_VIDEO dùng method PUT theo API bạn cung cấp
   //     await apiarea.post(API_ROUTE.PUT_VIDEO);
   //     console.log('Gọi API PUT_VIDEO thành công khi video play');
   //   } catch (error) {
@@ -53,27 +52,29 @@ export default function VideoCard() {
       padding="lg"
       radius="md"
       withBorder
-      style={{ maxWidth: 1000, margin: '100px auto' }}
+      style={{
+        width: "100%",
+        maxWidth: "950px",
+        margin: "100px auto",
+      }}
     >
       {isVisible && (
-       <iframe
-  src="https://www.youtube.com/embed/G0hZ-uPof7A?autoplay=1&controls=1"
-  title="YouTube video"
-  frameBorder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowFullScreen
-  style={{
-    width: '100%',
-    height: 'auto', // giống video
-    aspectRatio: '16 / 9', // đảm bảo tỷ lệ như video
-    borderRadius: 8,
-    display: 'block',
-  }}
-></iframe>
-
+        <iframe
+          src="https://www.youtube.com/embed/G0hZ-uPof7A?autoplay=1&controls=1"
+          title="YouTube video"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          style={{
+            width: "100%",
+            aspectRatio: "16 / 9",
+            borderRadius: 8,
+            display: "block",
+          }}
+        ></iframe>
       )}
 
-      <Group mt="md" style={{ width: '100%' }}>
+      <Group mt="md" style={{ width: "100%" }}>
         <div style={{ flexGrow: 1 }} />
         <Button
           className={styles.button}

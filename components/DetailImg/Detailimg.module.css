@@ -1,8 +1,8 @@
 .button {
-  background: #8B994A;
+  background: #8b994a;
   color: white;
-   border-radius:300px 5px;
- /* ✅ Giữ padding trái/phải để có khoảng cách chữ */
+  border-radius: 300px 5px;
+  /* ✅ Giữ padding trái/phải để có khoảng cách chữ */
   font-weight: 500;
   border: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -12,13 +12,6 @@
 }
 .button:hover {
   opacity: 0.9;
-    color: white;
-    background-color: #616732;
-}
-.container{
-      max-width: 1000px;
-    margin-top: 100px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 2rem 1rem;
+  color: white;
+  background-color: #616732;
 }

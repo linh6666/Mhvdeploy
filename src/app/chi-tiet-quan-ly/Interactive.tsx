@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useSearchParams } from "next/navigation";
-import Detailproject2 from "../../../components/detailproject2"; // Default import
+import Managent from "../../../components/Managent/Managent";
 
 export default function InteractiveClient() {
   const searchParams = useSearchParams();
@@ -10,5 +10,5 @@ export default function InteractiveClient() {
 
   if (!projectId) return <div>Không có projectId trong URL</div>;
 
-  return <Detailproject2 projectId={projectId} />;
+  return <Managent projectId={projectId} />;
 }
