@@ -32,7 +32,7 @@ export const SideNavigation = ({ className, projectId }: SideNavigationProps) =>
   const hasFetched = useRef(false);
 
   const handleGoBack = () => {
-    router.push("/chi-tiet-du-an");
+    router.push("/chi-tiet-du-an?pageId=${project.id}");
   };
 
   useEffect(() => {

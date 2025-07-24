@@ -5,8 +5,8 @@ import { useRef, useState, useEffect } from 'react';
 import styles from './DetailIntroduce.module.css';
 import { IconChevronsLeft } from '@tabler/icons-react';
 
-import { apiarea } from '../../library/axios';  // bạn đổi đường dẫn cho đúng
-import { API_ROUTE } from '../../const/apiRouter'; // bạn đổi đường dẫn cho đúng
+// import { apiarea } from '../../library/axios';  
+// import { API_ROUTE } from '../../const/apiRouter'; 
 
 export default function VideoCard() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -26,20 +26,20 @@ export default function VideoCard() {
     stopAndClearVideo();
 
     setTimeout(() => {
-      window.location.href = '/chi-tiet-du-an';
+      window.location.href = '/chi-tiet-du-an?pageId=${project.id}';
     }, 100);
   };
 
   // Hàm gọi API khi video play
-  const handleVideoPlay = async () => {
-    try {
-      // Gọi API PUT_VIDEO dùng method PUT theo API bạn cung cấp
-      await apiarea.post(API_ROUTE.PUT_VIDEO);
-      console.log('Gọi API PUT_VIDEO thành công khi video play');
-    } catch (error) {
-      console.error('Lỗi gọi API PUT_VIDEO khi video play:', error);
-    }
-  };
+  // const handleVideoPlay = async () => {
+  //   try {
+  //     // Gọi API PUT_VIDEO dùng method PUT theo API bạn cung cấp
+  //     await apiarea.post(API_ROUTE.PUT_VIDEO);
+  //     console.log('Gọi API PUT_VIDEO thành công khi video play');
+  //   } catch (error) {
+  //     console.error('Lỗi gọi API PUT_VIDEO khi video play:', error);
+  //   }
+  // };
 
   useEffect(() => {
     return () => {
@@ -56,22 +56,21 @@ export default function VideoCard() {
       style={{ maxWidth: 1000, margin: '100px auto' }}
     >
       {isVisible && (
-        <video
-          ref={videoRef}
-          controls
-          autoPlay
-          onPlay={handleVideoPlay}  // <-- gọi API khi video play
-          style={{
-            width: '100%',
-            height: 'auto',
-            borderRadius: 8,
-            display: 'block',
-          }}
-          src="/video/gioi_thieu_du_an.mp4"
-          onEnded={handleBack}
-        >
-          Trình duyệt của bạn không hỗ trợ video.
-        </video>
+       <iframe
+  src="https://www.youtube.com/embed/G0hZ-uPof7A?autoplay=1&controls=1"
+  title="YouTube video"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  style={{
+    width: '100%',
+    height: 'auto', // giống video
+    aspectRatio: '16 / 9', // đảm bảo tỷ lệ như video
+    borderRadius: 8,
+    display: 'block',
+  }}
+></iframe>
+
       )}
 
       <Group mt="md" style={{ width: '100%' }}>

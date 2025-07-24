@@ -23,16 +23,17 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
     <>
       {isLoggedIn && user ? (
         <div className="relative inline-block text-left">
-          <button
-            type="button"
-            onClick={toggleMenu}
-            className={`loginButton flex items-center gap-2 ${
-              isMobile ? "" : "hidden md:inline-flex"
-            }`}
-          >
-            <IconUser size={20} />
-            <span>{user.full_name}</span>
-          </button>
+        <button
+  type="button"
+  onClick={toggleMenu}
+  className={`flex items-center gap-2 text-white bg-[#bb8d38] font-medium text-sm px-3 py-2 rounded-full transition-all border-none hover:bg-[#e09e09] focus:outline-none focus:ring-2 focus:ring-yellow-400 ${
+    isMobile ? "" : "hidden md:inline-flex"
+  }`}
+>
+  <IconUser size={20} />
+  <span>{user.full_name}</span>
+</button>
+
 
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">

@@ -48,9 +48,9 @@
 .card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Căn chỉnh các phần tử bên trong thẻ */
-  height: 100%; /* Đảm bảo thẻ có chiều cao đầy đủ */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng chuyển động mượt mà */
+  justify-content: space-between;
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
@@ -58,33 +58,40 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
+.cardImage {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-top-left-radius: var(--mantine-radius-md);
+  border-top-right-radius: var(--mantine-radius-md);
+  display: block;
+}
+
 .baseButton {
   width: 80%;
   border-radius: var(--mantine-radius-md);
   margin: var(--mantine-spacing-md) auto;
-           /* tăng chiều cao theo chiều dọc hơn nữa */
-  font-weight: 600;           /* đậm hơn một chút */
-  line-height: 1.6;           /* thoáng hơn để tránh bị che */
-  font-size: 18px;            /* tăng cỡ chữ rõ ràng hơn */
-   /* dày hơn cho nút nổi bật */
+  font-weight: 600;
+  line-height: 1.6;
+  font-size: 18px;
   background-color: white;
   color: #228be6;
   text-align: center;
-  display: block;             /* đảm bảo chiếm toàn bộ chiều rộng cha */
+  display: block;
 }
 
 .primaryButton {
-  background-color: #294b61; /* Màu nền chính */
-  color: white; /* Màu chữ trắng */
+  background-color: #294b61;
+  color: white;
 }
 
 .primaryButton:hover {
-  background-color: #bb8d38; /* Màu nền khi hover */
+  background-color: #bb8d38;
 }
 
 .disabledButton {
-  background-color: #f1f3f5; /* Màu nền disabled */
-  color: #adb5bd; /* Màu chữ disabled */
+  background-color: #f1f3f5;
+  color: #adb5bd;
   cursor: not-allowed;
-  border: none; /* Không có viền */
+  border: none;
 }
