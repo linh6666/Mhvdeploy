@@ -1,9 +1,10 @@
-// page.tsx
-import React from "react";
-import Detailproject2 from "../../../../thanh-phan/chi-tiet-2";  // Dùng default import
+import React, { Suspense } from "react";
+import InteractiveClient from "./interactive-client"; // client component riêng
 
-export default function Interactive() {
+export default function Page() {
   return (
-    <Detailproject2 />
+    <Suspense fallback={<div>Loading...</div>}>
+      <InteractiveClient />
+    </Suspense>
   );
 }

@@ -142,4 +142,3 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
     </div>
   );
 }
-

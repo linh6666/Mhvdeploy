@@ -1,15 +1,24 @@
-// app/chi-tiet-du-an/page.tsx
-'use client';
+// // app/chi-tiet-du-an/page.tsx
+// import Interactive from "./Interactive";
 
-import React from "react";
-import { useSearchParams } from "next/navigation";
-import Detailproject2 from "../../../components/detailproject2";
+// interface PageProps {
+//   searchParams: {
+//     pageId?: string;
+//   };
+// }
 
-export default function Interactive() {
-  const searchParams = useSearchParams();
-  const projectId = searchParams.get("pageId"); // Lấy pageId từ URL
+// export default function Page({ searchParams }: PageProps) {
+//   const projectId = typeof searchParams.pageId === "string" ? searchParams.pageId : "";
 
+//   return <Interactive projectId={projectId} />;
+// }
+import React, { Suspense } from "react";
+import Interactive from "./Interactive"; // client component riêng
+
+export default function Page() {
   return (
-    <Detailproject2 projectId={projectId as string} />
+    <Suspense fallback={<div>Loading...</div>}>
+      <Interactive />
+    </Suspense>
   );
 }

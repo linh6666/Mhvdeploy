@@ -189,7 +189,7 @@ export default function DetailInteractive() {
   const projectPaths = [
     '/chi-tiet-du-an/du-an-1',
     '/chi-tiet-du-an/du-an-2',
-    '/en/Detail2"',
+    '/en/Detail2',
     '/en/Detail',
     // thêm các đường dẫn cho các dự án khác tại đây
   ];
