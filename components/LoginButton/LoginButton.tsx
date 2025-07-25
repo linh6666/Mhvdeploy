@@ -1,8 +1,9 @@
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
-import useAuth from "../../hook/useAuth";
 import { IconUser } from "@tabler/icons-react";
+import useAuth from "../../hook/useAuth";
 
 interface LoginButtonProps {
   isMobile?: boolean;
@@ -15,25 +16,25 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
   const handleLogout = async () => {
-    await logout();
+    await logout(); // Gọi hàm logout từ useAuth
     window.alert("Đăng xuất thành công");
+    window.location.href = "/"; // ✅ Điều hướng và reload lại trang
   };
 
   return (
     <>
       {isLoggedIn && user ? (
         <div className="relative inline-block text-left">
-        <button
-  type="button"
-  onClick={toggleMenu}
-  className={`flex items-center gap-1.5 text-white bg-[#bb8d38] font-medium text-sm px-2 py-1.5 rounded-full transition-all border-none hover:bg-[#e09e09] focus:outline-none focus:ring-2 focus:ring-yellow-400 ${
-    isMobile ? "" : "hidden md:inline-flex"
-  }`}
->
-  <IconUser size={17} />
-  <span style={{ fontSize: "17px" }}>{user.full_name}</span>
-</button>
-
+          <button
+            type="button"
+            onClick={toggleMenu}
+            className={`flex items-center gap-1.5 text-white bg-[#bb8d38] font-medium text-sm px-2 py-1.5 rounded-full transition-all border-none hover:bg-[#e09e09] focus:outline-none focus:ring-2 focus:ring-yellow-400 ${
+              isMobile ? "" : "hidden md:inline-flex"
+            }`}
+          >
+            <IconUser size={17} />
+            <span style={{ fontSize: "17px" }}>{user.full_name}</span>
+          </button>
 
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
@@ -59,23 +60,18 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
           )}
         </div>
       ) : (
-      <Link href="/dang-nhap">
- <button
-  type="button"
-  className={
-    isMobile
-      ? "bg-white text-[#d4a64a] p-2 rounded-full flex items-center justify-center transition duration-300"
-      : "hidden md:flex items-center justify-center bg-[#d4a64a] text-white p-1 text-xs font-medium rounded-full transition duration-300"
-  }
->
-  <IconUser size={20} />
-</button>
-
-
-</Link>
-
-
-
+        <Link href="/dang-nhap">
+          <button
+            type="button"
+            className={
+              isMobile
+                ? "bg-white text-[#d4a64a] p-2 rounded-full flex items-center justify-center transition duration-300"
+                : "hidden md:flex items-center justify-center bg-[#d4a64a] text-white p-1 text-xs font-medium rounded-full transition duration-300"
+            }
+          >
+            <IconUser size={20} />
+          </button>
+        </Link>
       )}
 
       {error && (

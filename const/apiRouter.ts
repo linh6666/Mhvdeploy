@@ -46,7 +46,7 @@ GET_UTILITIES:"/192.168.100.101/amenity/ti",
 PUT_VIDEO:"/192.168.100.101/eff/7/1",
   ////FILTER/////
   GET_FILTER:"/api/v1/ecopark/{project_id}/filter",
-  GET_FILTER_TYPE:"/filter_type",
+  GET_FILTER_TYPE:"/api/v1/ecopark/{project_id}/filter_options",
 
 ///bản Tiếng Việt
 

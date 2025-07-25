@@ -95,7 +95,7 @@ const SideNavigationInner = ({ className }: { className?: string }) => {
        <Button
   className={styles.button1}
   variant="outline"
-  onClick={() => router.push("/en/Detail2")} // Đường dẫn bạn muốn quay về
+  onClick={() => router.push("/chi-tiet-du-an?pageId=${project.id}")} // Đường dẫn bạn muốn quay về
 >
   <IconChevronsLeft size={20} />
 </Button>

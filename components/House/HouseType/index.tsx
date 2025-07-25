@@ -9,21 +9,20 @@ import { apiarea } from '../../../library/axios';
 import { API_ROUTE } from '../../../const/apiRouter';
 import Image from 'next/image';
 
-interface BuildingDetail {
+export interface BuildingDetail {
   id?: string;
   building_name?: string;
   building_type?: string;
   zone?: string;
   zone_name?: string;
-  amenity?: string;
-  amenity_type?: string;
+  image_url?: string;
   [key: string]: unknown;
 }
 
 interface HouseTypePageProps {
   projectId?: string;
   zoneParam: string;
-  onSelectType?: (type: string) => void;
+  onSelectType?: (type: string, detail: BuildingDetail) => void;
   className?: string;
   bearerToken?: string;
 }
@@ -46,6 +45,7 @@ const HouseTypePage: React.FC<HouseTypePageProps> = ({
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState('');
   const [selectedType, setSelectedType] = useState(typeFromURL);
+  const [_selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null); // 👈 fix: dùng biến
   const lang = 'vi';
 
   useEffect(() => {
@@ -95,6 +95,7 @@ const HouseTypePage: React.FC<HouseTypePageProps> = ({
         }
 
         setBuildingDetails(records);
+        setSelectedImageUrl(records[0]?.image_url || null);
       } catch {
         setDetailError('Lỗi tải chi tiết');
       } finally {
@@ -104,38 +105,10 @@ const HouseTypePage: React.FC<HouseTypePageProps> = ({
     [projectId, bearerToken]
   );
 
-  const fetchHouseDetail = async (detail: BuildingDetail) => {
-    if (!projectId || !bearerToken) return;
-
-    const endpoint = API_ROUTE.GET_HOUSE_DETAIL
-      .replace('{project_id}', projectId)
-      .replace('{zone_param}', 'pk')
-      .replace('{zone_name_path}', encodeURIComponent(detail.zone_name || ''))
-      .replace('{building_type_path}', encodeURIComponent(detail.building_type || ''))
-      .replace('{building_name_param}', encodeURIComponent(detail.building_name || ''));
-
-    try {
-      const res = await apiarea.get(`${endpoint}?lang=${lang}`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      });
-      setBuildingDetails(res.data);
-    } catch {
-      setDetailError('Lỗi khi tải chi tiết nhà.');
-    }
-  };
-
-  const handleSelectType = (selected: string) => {
+  const handleSelectType = (selected: string, detail: BuildingDetail) => {
     setSelectedType(selected);
-    onSelectType?.(selected);
-
-    const detail = buildingDetails.find(
-      (d) => (d.building_name?.trim() || 'Không rõ loại nhà') === selected
-    );
-    if (detail) {
-      fetchHouseDetail(detail);
-    }
+    setSelectedImageUrl(detail.image_url || null);
+    onSelectType?.(selected, detail);
   };
 
   useEffect(() => {
@@ -169,6 +142,7 @@ const HouseTypePage: React.FC<HouseTypePageProps> = ({
       ) : (
         <>
           <h2 className={styles.mainHeading}>{typeFromURL || 'Chọn loại nhà'}</h2>
+
           <div className={styles.scrollContainer}>
             <div className={styles.buttonGroup}>
               {buildingDetails.map((detail) => {
@@ -180,7 +154,7 @@ const HouseTypePage: React.FC<HouseTypePageProps> = ({
                     key={detail.id || buildingType}
                     className={`${styles.button} ${isActive ? styles.active : ''}`}
                     title={detail.building_name}
-                    onClick={() => handleSelectType(buildingType)}
+                    onClick={() => handleSelectType(buildingType, detail)}
                   >
                     {buildingType}
                   </Button>
@@ -188,6 +162,18 @@ const HouseTypePage: React.FC<HouseTypePageProps> = ({
               })}
             </div>
           </div>
+
+          {_selectedImageUrl && (
+            <div className={styles.selectedImageWrapper}>
+              {/* <Image
+                src={_selectedImageUrl}
+                alt="Ảnh loại nhà đã chọn"
+                width={600}
+                height={400}
+                className={styles.selectedImage}
+              /> */}
+            </div>
+          )}
         </>
       )}
 
@@ -201,6 +187,9 @@ const HouseTypePage: React.FC<HouseTypePageProps> = ({
 };
 
 export default HouseTypePage;
+
+
+
 
 
 
