@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useMediaQuery } from "@mantine/hooks";
 import styles from "./ImageGallery.module.css";
-import DrawerRight from "../../components/DrawerRight/DrawerRight"; 
+// import DrawerRight from "../../components/DrawerRight/DrawerRight"; 
 
 export default function ModelInteractive() {
   const [hoveredFloor, setHoveredFloor] = useState<number | null>(null);
@@ -62,7 +62,7 @@ export default function ModelInteractive() {
 
           {/* Nội dung Drawer (ví dụ: key areas) */}
           <div className={styles.openDrawer}>
-            <DrawerRight />
+            {/* <DrawerRight /> */}
           </div>
         </div>
       )}

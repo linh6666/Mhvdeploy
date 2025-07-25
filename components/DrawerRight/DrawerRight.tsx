@@ -1,10 +1,16 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { Input, Button, RangeSlider } from "@mantine/core";
 import styles from "./DrawerRight.module.css";
-import { apifilter } from "../../library/axios";
+import {  apiarea } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
 import ResultsTable from "./ResultsTable";
+
+// Props
+interface FilterFormProps {
+  projectId: string;
+}
 
 // Interface cho response filter
 interface FilterTypeResponse {
@@ -22,10 +28,9 @@ interface ResultItem {
   status: string;
   direction: string;
   price: number;
-  // Nếu có thêm trường nào từ API, bạn thêm vào đây
 }
 
-export default function FilterForm() {
+export default function FilterForm({ projectId }: FilterFormProps) {
   const [statusOptions, setStatusOptions] = useState<string[]>([]);
   const [bedroomOptions, setBedroomOptions] = useState<string[]>([]);
   const [directionOptions, setDirectionOptions] = useState<string[]>([]);
@@ -46,9 +51,21 @@ export default function FilterForm() {
   const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
-    apifilter
-      .get<FilterTypeResponse>(API_ROUTE.GET_FILTER_TYPE)
-      .then((res) => {
+    const fetchFilterOptions = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+        if (!token) {
+          console.error("Không tìm thấy access token.");
+          return;
+        }
+
+        const endpoint = API_ROUTE.GET_FILTER_TYPE.replace("{project_id}", projectId);
+
+        const res = await  apiarea.get<FilterTypeResponse>(endpoint, {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { lang: "vi" },
+        });
+
         const d = res.data;
         setStatusOptions(d.status || []);
         setDirectionOptions(d.direction || []);
@@ -58,9 +75,13 @@ export default function FilterForm() {
           setPriceBounds([nums[0], nums[nums.length - 1]]);
           setRangeValue([nums[0], nums[nums.length - 1]]);
         }
-      })
-      .catch(console.error);
-  }, []);
+      } catch (err) {
+        console.error("Lỗi khi gọi GET_FILTER_TYPE:", err);
+      }
+    };
+
+    fetchFilterOptions();
+  }, [projectId]);
 
   useEffect(() => {
     if (priceBounds) {
@@ -129,9 +150,21 @@ export default function FilterForm() {
     }
 
     try {
-      const resp = await apifilter.post(API_ROUTE.GET_FILTER, payload);
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        alert("Không tìm thấy access token.");
+        return;
+      }
+
+      const endpoint = API_ROUTE.GET_FILTER.replace("{project_id}", projectId);
+
+      const resp = await  apiarea.post(endpoint, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { lang: "vi" },
+      });
+
       const data = resp.data;
-      setResults(Array.isArray(data) ? (data as ResultItem[]) : data ? [data as ResultItem] : []);
+      setResults(Array.isArray(data) ? data : data ? [data] : []);
       setShowResults(true);
     } catch (e: unknown) {
       if (e instanceof Error) {
@@ -165,7 +198,6 @@ export default function FilterForm() {
                   label={st}
                   isSelected={selectedStatus === st}
                   onClick={() => handleStatusClick(st)}
-                  // bgColor={`bg${(i % 3) + 1}`}
                 />
               ))}
             </div>
@@ -209,20 +241,19 @@ export default function FilterForm() {
             />
           </div>
 
-       <div className={styles.section}>
-  <div className={styles.label}>Direction:</div>
-  <div className={styles.buttonRow}>
-    {directionOptions.map((d) => (
-      <StatusButton
-        key={d}
-        label={d}
-        isSelected={direction === d}
-        onClick={() => handleDirectionClick(d)}
-        // ❌ Không truyền bgColor nữa
-      />
-    ))}
-  </div>
-</div>
+          <div className={styles.section}>
+            <div className={styles.label}>Direction:</div>
+            <div className={styles.buttonRow}>
+              {directionOptions.map((d) => (
+                <StatusButton
+                  key={d}
+                  label={d}
+                  isSelected={direction === d}
+                  onClick={() => handleDirectionClick(d)}
+                />
+              ))}
+            </div>
+          </div>
 
           <div className={styles.actionButtons}>
             <Button variant="outline" className={styles.clearBtn} onClick={handleClear}>
@@ -254,12 +285,13 @@ const StatusButton = ({
   bgColor?: string;
 }) => (
   <button
-  className={`${styles.statusBtn} ${bgColor ? styles[bgColor as keyof typeof styles] : ""} ${isSelected ? styles.selected : ""}`}
-  onClick={onClick}
->
-  {label}
-</button>
-
+    className={`${styles.statusBtn} ${bgColor ? styles[bgColor as keyof typeof styles] : ""} ${
+      isSelected ? styles.selected : ""
+    }`}
+    onClick={onClick}
+  >
+    {label}
+  </button>
 );
 
 const DiamondButton = ({
@@ -271,11 +303,10 @@ const DiamondButton = ({
   isSelected: boolean;
   onClick: () => void;
 }) => (
- <button
-  className={`${styles.diamond} ${isSelected ? styles.selectedDiamond : ""}`}
-  onClick={onClick}
->
-  <span className={styles.diamondText}>{label}</span>
-</button>
-
+  <button
+    className={`${styles.diamond} ${isSelected ? styles.selectedDiamond : ""}`}
+    onClick={onClick}
+  >
+    <span className={styles.diamondText}>{label}</span>
+  </button>
 );
