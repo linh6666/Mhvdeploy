@@ -131,7 +131,7 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
 
           <div className={styles.backButtonContainer}>
            <Link
-  href={`/chi-tiet-quan-ly?projectId=${encodeURIComponent(projectId)}`}
+  href={`/chi-tiet-quan-ly?pageId=${encodeURIComponent(projectId)}`}
   className={styles.backButton}
 >
   <IconArrowLeft size={24} />

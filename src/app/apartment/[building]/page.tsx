@@ -1,52 +1,32 @@
+'use client';
 
-// // src/app/apartment/[building]/page.tsx
-// 'use client';
-
-// import { useEffect, useState } from "react";
-// import CustomerDetails from "../../../../components/CustomerDetails";
-
-// interface PageProps {
-//   params: {
-//     building: string;
-//   };
-// }
-
-// export default function CartPage({ params }: PageProps) {
-//   const { building } = params;
-//   const [projectId, setProjectId] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     const id = localStorage.getItem("project_id");
-//     if (id) setProjectId(id);
-//   }, []);
-
-//   if (!projectId) return <div>Đang tải dữ liệu...</div>;
-
-//   return <CustomerDetails projectId={projectId} building={building} />;
-// }
-
-
-
-// src/app/apartment/[building]/page.tsx
+import { useEffect, useState } from "react";
 import CustomerDetails from "../../../../components/CustomerDetails";
+import { useParams } from "next/navigation";
 
-interface PageProps {
-  params: Promise<{
-    building: string;
-    projectId: string;
-  }>;
-}
+export default function CartPage() {
+  const { building } = useParams();
+  const [projectId, setProjectId] = useState<string | null>(null);
 
-// Chuyển đổi thành hàm async
-export default async function CartPage({ params }: PageProps) {
-  // Chờ để lấy giá trị của params
-  const resolvedParams = await params;
+  useEffect(() => {
+    const id = localStorage.getItem("project_id");
+    if (id) setProjectId(id);
+  }, []);
 
+  if (!projectId) return <div>Đang tải dữ liệu...</div>;
+
+  // building là string | string[] | undefined => cần ép kiểu:
   return (
     <CustomerDetails
-      projectId={resolvedParams.projectId}
-      building={resolvedParams.building}
+      projectId={projectId}
+      building={typeof building === "string" ? building : ""}
     />
   );
 }
+
+
+
+
+
+
 

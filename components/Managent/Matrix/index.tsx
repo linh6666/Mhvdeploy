@@ -5,7 +5,7 @@ import { Tabs } from "@mantine/core";
 import { apiarea } from "../../../library/axios";
 import { API_ROUTE } from "../../../const/apiRouter";
 import { IconHome } from "@tabler/icons-react";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import styles from "./App.module.css";
 
 interface RecordItem {
@@ -29,7 +29,7 @@ interface ZoneTabContentProps {
 export default function ZoneTabContent({ zoneNames, projectId }: ZoneTabContentProps) {
   const [allData, setAllData] = useState<RecordItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  // const router = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -70,11 +70,11 @@ export default function ZoneTabContent({ zoneNames, projectId }: ZoneTabContentP
     fetchAllData();
   }, [projectId, zoneNames]);
 
-  // const handleGoToDetailPage = (buildingName: string) => {
-  //   // const encodedName = encodeURIComponent(buildingName);
-  //     // const encodedProjectId = encodeURIComponent(projectId);
-  // //  router.push(`/apartment/${encodedName}`);
-  // };
+  const handleGoToDetailPage = (buildingName: string) => {
+    const encodedName = encodeURIComponent(buildingName);
+      // const encodedProjectId = encodeURIComponent(projectId);
+   router.push(`/apartment/${encodedName}`);
+  };
 
   return (
     <>
@@ -144,7 +144,7 @@ export default function ZoneTabContent({ zoneNames, projectId }: ZoneTabContentP
                                 </td>
                                 <td>
                                   <button
-                                    // onClick={() => handleGoToDetailPage(name)}
+                                    onClick={() => handleGoToDetailPage(name)}
                                     className={styles.button}
                                   >
                                     Xem chi tiết

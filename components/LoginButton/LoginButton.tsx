@@ -26,12 +26,12 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
         <button
   type="button"
   onClick={toggleMenu}
-  className={`flex items-center gap-2 text-white bg-[#bb8d38] font-medium text-sm px-3 py-2 rounded-full transition-all border-none hover:bg-[#e09e09] focus:outline-none focus:ring-2 focus:ring-yellow-400 ${
+  className={`flex items-center gap-1.5 text-white bg-[#bb8d38] font-medium text-sm px-2 py-1.5 rounded-full transition-all border-none hover:bg-[#e09e09] focus:outline-none focus:ring-2 focus:ring-yellow-400 ${
     isMobile ? "" : "hidden md:inline-flex"
   }`}
 >
-  <IconUser size={20} />
-  <span>{user.full_name}</span>
+  <IconUser size={17} />
+  <span style={{ fontSize: "17px" }}>{user.full_name}</span>
 </button>
 
 
