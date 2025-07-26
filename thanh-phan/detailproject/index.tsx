@@ -53,7 +53,7 @@ export default function ModelInteractive() {
 
           {/* Nội dung Drawer */}
           <div className={styles.openDrawer}>
-            <DrawerRight />
+            {/* <DrawerRight /> */}
           </div>
         </div>
       )}
