@@ -5,6 +5,9 @@ import { Tabs } from "@mantine/core";
 import { apiarea } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
 import ZoneTabContent from "./Matrix";
+import AmenityContent from "./AmenityContent";
+import HouseTypeContent from "./HouseTypeConten";
+import Note from "./tai-lieu";
 import styles from "./App.module.css";
 
 interface AppProps {
@@ -25,6 +28,7 @@ export default function Managent({ projectId }: AppProps) {
   const [records, setRecords] = useState<RecordItem[]>([]);
   const [zoneNames, setZoneNames] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<string | null>(null);
+  const [activeView, setActiveView] = useState<string>("warehouse");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,9 +51,7 @@ export default function Managent({ projectId }: AppProps) {
           },
         });
 
-        console.log("📦 Dữ liệu API:", res.data);
         const data = Array.isArray(res.data) ? res.data : [];
-
         setRecords(data);
 
         const zoneSet = new Set<string>();
@@ -79,33 +81,76 @@ export default function Managent({ projectId }: AppProps) {
 
   return (
     <div className={styles.container}>
-      <Tabs
-        variant="outline"
-        radius="xs"
-        value={activeTab}
-        onChange={setActiveTab}
-        className={styles.tabList}
-      >
-        <h1 className={styles.title}>Kho hàng</h1>
-        <Tabs.List>
-          {zoneNames.map((zoneName) => (
-            <Tabs.Tab
-              key={zoneName}
-              value={zoneName}
-              className={styles.customTab}
-            >
-              {zoneName}
-            </Tabs.Tab>
-          ))}
-        </Tabs.List>
+      {/* Các tiêu đề dạng h1 nằm ngang */}
+      <div className={styles.headerList}>
+        <h1
+          className={`${styles.titleTab} ${
+            activeView === "warehouse" ? styles.titleTabActive : ""
+          }`}
+          onClick={() => setActiveView("warehouse")}
+        >
+          Kho hàng
+        </h1>
+        <h1
+          className={`${styles.titleTab} ${
+            activeView === "amenities" ? styles.titleTabActive : ""
+          }`}
+          onClick={() => setActiveView("amenities")}
+        >
+          Tài liệu
+        </h1>
+        <h1
+          className={`${styles.titleTab} ${
+            activeView === "houseType" ? styles.titleTabActive : ""
+          }`}
+          onClick={() => setActiveView("houseType")}
+        >
+          Danh sách giá
+        </h1>
+         <h1
+          className={`${styles.titleTab} ${
+            activeView === "note" ? styles.titleTabActive : ""
+          }`}
+          onClick={() => setActiveView("note")}
+        >
+          Ghi chú
+        </h1>
+      </div>
 
-        <ZoneTabContent
-          zoneNames={zoneNames}
-          activeTab={activeTab}
-          records={records}
-          projectId={projectId}
-        />
-      </Tabs>
+      {/* Nội dung tương ứng từng phần */}
+      {activeView === "warehouse" && (
+        <Tabs
+          variant="outline"
+          radius="xs"
+          value={activeTab}
+          onChange={setActiveTab}
+          className={styles.tabList}
+        >
+          <Tabs.List>
+            {zoneNames.map((zoneName) => (
+              <Tabs.Tab
+                key={zoneName}
+                value={zoneName}
+                className={styles.customTab}
+              >
+                {zoneName}
+              </Tabs.Tab>
+            ))}
+          </Tabs.List>
+
+          <ZoneTabContent
+            zoneNames={zoneNames}
+            activeTab={activeTab}
+            records={records}
+            projectId={projectId}
+          />
+        </Tabs>
+      )}
+
+      {activeView === "amenities" && <AmenityContent projectId={projectId} />}
+      {activeView === "houseType" && <HouseTypeContent projectId={projectId} />}
+        {activeView === "note" && <Note projectId={projectId} />}
     </div>
   );
 }
+

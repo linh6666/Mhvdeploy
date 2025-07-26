@@ -1,59 +1,15 @@
 .container {
   width: 100%;
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 0px auto;
   padding: 0 16px;
-}
-
-.title {
-  font-size: 1.5rem; /* tương đương text-2xl */
-  font-weight: 600;   /* tương đương font-semibold */
-  margin-bottom: 1.5rem;
-  color: #294b61;
-}
-
-.tabList {
   margin-top: 100px;
 }
 
-/* 🌐 Responsive - Tablet */
-@media (max-width: 768px) {
-  .container {
-    max-width: 90%;
-    padding: 0 12px;
-  }
-
-  .title {
-    font-size: 1.25rem; /* giảm font trên tablet */
-    text-align: center;
-  }
-
-  .tabList {
-    margin-top: 60px;
-  }
+.tabList {
+  margin-top: 10px;
 }
 
-/* 📱 Responsive - Mobile */
-@media (max-width: 480px) {
-  .container {
-    padding: 0 10px;
-  }
-
-  .title {
-    font-size: 1.125rem;
-    text-align: center;
-  }
-
-  .tabList {
-    margin-top: 40px;
-  }
-
-  /* Tabs: stack dạng dọc nếu cần (chưa apply trực tiếp trong JS) */
-   .tabListWrapper :global(.mantine-Tabs-tabList) {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-}
 .customTab {
   color: #406c88;
   font-weight: 500;
@@ -64,5 +20,83 @@
 .customTab[data-active] {
   background-color: #406c88;
   color: white;
-  /* border-radius: px; */
+}
+
+/* Tiêu đề nằm ngang (phần mới thêm) */
+.headerList {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  margin-bottom: 20px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.titleTab {
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: #294b61;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 4px;
+  transition: all 0.2s ease;
+}
+
+.titleTab:hover {
+  color: #1c7ed6;
+}
+
+.titleTabActive {
+  color: #1c7ed6;
+  font-weight: 600;
+  border-bottom: 2px solid #1c7ed6;
+}
+
+/* 🌐 Responsive - Tablet */
+@media (max-width: 768px) {
+  .container {
+    max-width: 90%;
+    padding: 0 12px;
+  }
+
+  .tabList {
+    margin-top: 60px;
+  }
+
+  .titleTab {
+    font-size: 1.125rem;
+  }
+
+  .headerList {
+    gap: 16px;
+    justify-content: center;
+  }
+}
+
+/* 📱 Responsive - Mobile */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  .tabList {
+    margin-top: 40px;
+  }
+
+  .titleTab {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .headerList {
+    gap: 12px;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .tabListWrapper :global(.mantine-Tabs-tabList) {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 }

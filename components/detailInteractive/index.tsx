@@ -29,13 +29,14 @@ interface Project {
 export default function DetailInteractive() {
   const [projects, setProjects] = useState<Project[]>([]);
 
-  // const projectPaths = [
-  //   "/chi-tiet-du-an/du-an-1",
-  //   "/chi-tiet-du-an/du-an-2",
-  //   "/chi-tiet-du-an",
-  //   "/chi-tiet",
-  //   // thêm các đường dẫn khác
-  // ];
+  // Danh sách đường dẫn cho từng dự án
+  const projectPaths = [
+    '/chi-tiet-du-an',
+    '/chi-tiet-du-an/du-an-2',
+    '/chi-tiet-du-an/12',
+    '/chi-tiet',
+    // thêm các đường dẫn cho các dự án khác tại đây
+  ];
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -83,7 +84,7 @@ export default function DetailInteractive() {
 
         {/* Danh sách dự án */}
         <div className={styles.cardGrid}>
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <Card
               key={project.id}
               shadow="sm"
@@ -111,10 +112,12 @@ export default function DetailInteractive() {
                   {project.type}
                 </Text>
               </Stack>
+
               <Button
                 onClick={() => {
                   localStorage.setItem("project_id", project.id);
-                  window.location.href = `/chi-tiet-du-an?pageId=${project.id}`;
+                  const path = projectPaths[index] || "/chi-tiet-du-an";
+                  window.location.href = `${path}?pageId=${project.id}`;
                 }}
                 className={`${styles.baseButton} ${styles.primaryButton}`}
               >
