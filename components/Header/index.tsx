@@ -65,10 +65,16 @@ export default function Header() {
   };
 
   // ✅ nếu user có system_rank = 1 thì thêm ADMIN
-  const navLinks = [...baseLinks];
-  if (user && user.system_rank === 1) {
-    navLinks.push(adminLink);
+const navLinks = [...baseLinks];
+if (user && user.system_rank === 1) {
+  // tìm vị trí của "LIÊN HỆ"
+  const contactIndex = navLinks.findIndex(link => link.href === "/lien-he");
+  if (contactIndex !== -1) {
+    navLinks.splice(contactIndex, 0, adminLink); // chèn adminLink trước "LIÊN HỆ"
+  } else {
+    navLinks.push(adminLink); // fallback: nếu không có thì thêm cuối
   }
+}
 
   return (
     <nav className={styles.navbar}>
