@@ -4,19 +4,23 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Image } from "@mantine/core";
-import { IconShoppingCart } from "@tabler/icons-react";
+
 
 import LoginButton from "../../components/LoginButton/LoginButton";
 import styles from "./Header.module.css";
+import useAuth from "../../hook/useAuth"; // ✅ import hook
 
-const navLinks = [
+// menu mặc định
+const baseLinks = [
   { label: "TRANG CHỦ", href: "/", highlight: true },
+    { label: "GIỚI THIỆU", href: "/gioi-thieu" },
   { label: "TƯƠNG TÁC", href: "/Tuong-tac" },
-  { label: "GIỚI THIỆU", href: "/gioi-thieu" },
+{ label: "QUẢN LÝ BÁN HÀNG", href: "/quan-ly-ban-hang" },
   { label: "LIÊN HỆ", href: "/lien-he" },
-  { label: "QUẢN LÝ BÁN HÀNG", href: "/quan-ly-ban-hang" },
-  // { label: "DỰ ÁN CỦA TÔI", href: "/du-an" },
+  
 ];
+
+const adminLink = { label: "QUẢN TRỊ HỆ THỐNG", href: "/quan-tri-he-thong" };
 
 export default function Header() {
   const pathname = usePathname();
@@ -24,6 +28,9 @@ export default function Header() {
   const [currentFlag, setCurrentFlag] = useState<"vn" | "en">("vn");
   const [isFlagDropdownOpen, setIsFlagDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // ✅ lấy user từ hook
+  const { user } = useAuth();
 
   useEffect(() => {
     if (pathname.startsWith("/en")) {
@@ -57,6 +64,12 @@ export default function Header() {
     return styles.navNormal;
   };
 
+  // ✅ nếu user có system_rank = 1 thì thêm ADMIN
+  const navLinks = [...baseLinks];
+  if (user && user.system_rank === 1) {
+    navLinks.push(adminLink);
+  }
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
@@ -69,8 +82,12 @@ export default function Header() {
 
             {/* Flags for mobile */}
             <div className={styles.mobileOnlyFlags}>
-              <Link href="/"><Image src="/images/vietnam.webp" alt="VN" width={20} height={14} /></Link>
-              <Link href="/en"><Image src="/images/Australia.svg" alt="EN" width={20} height={14} /></Link>
+              <Link href="/">
+                <Image src="/images/vietnam.webp" alt="VN" width={20} height={14} />
+              </Link>
+              <Link href="/en">
+                <Image src="/images/Australia.svg" alt="EN" width={20} height={14} />
+              </Link>
             </div>
           </div>
 
@@ -95,13 +112,13 @@ export default function Header() {
 
         {/* Right Section (Cart + Login + Flags) */}
         <div className="flex items-center gap-3 md:order-2">
-          <div className="hidden md:block">
+          {/* <div className="hidden md:block">
             <Link href="/cart">
               <button className={styles.cartButton} aria-label="Cart">
                 <IconShoppingCart size={16} />
               </button>
             </Link>
-          </div>
+          </div> */}
 
           <div className={`hidden md:flex ${styles.loginLangBlock}`}>
             <LoginButton />
@@ -179,11 +196,11 @@ export default function Header() {
 
             {/* Cart + Login in Mobile */}
             <div className="flex items-center justify-between pt-2">
-              <Link href="/cart">
+              {/* <Link href="/cart">
                 <button className={styles.cartButton} aria-label="Cart">
                   <IconShoppingCart size={14} />
                 </button>
-              </Link>
+              </Link> */}
               <LoginButton isMobile />
             </div>
           </div>
@@ -192,4 +209,3 @@ export default function Header() {
     </nav>
   );
 }
-

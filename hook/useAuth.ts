@@ -5,6 +5,7 @@ import { getUserInfo } from "../api/apiLoginusename";
 interface User {
   full_name: string;
   email: string;
+    system_rank?: number;
 }
 
 const useAuth = () => {

@@ -31,10 +31,10 @@ export default function DetailInteractive() {
 
   // Danh sách đường dẫn cho từng dự án
   const projectPaths = [
-    '/chi-tiet-du-an',
-    '/chi-tiet-du-an/du-an-2',
-    '/chi-tiet-du-an/12',
-    '/chi-tiet',
+    "/chi-tiet-du-an",
+    "/chi-tiet-du-an/du-an-2",
+    "/chi-tiet-du-an/12",
+    "/chi-tiet",
     // thêm các đường dẫn cho các dự án khác tại đây
   ];
 
@@ -45,6 +45,11 @@ export default function DetailInteractive() {
         const res = await apiarea.get(API_ROUTE.GET_PROJECT, {
           headers: {
             Authorization: `Bearer ${token}`,
+          },
+          params: {
+            skip: 0,
+            limit: 20,
+            lang: "vi", // ✅ truyền đúng tham số lang=vi
           },
         });
         setProjects(res.data.data);

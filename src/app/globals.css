@@ -48,3 +48,9 @@ a {
     overflow: scroll;
   }
 }
+.euiScreenReaderOnly[data-tabular-copy-marker="tab"] {
+  display: none !important;
+}
+.euiScreenReaderOnly[aria-hidden="true"] {
+  display: none !important;
+}

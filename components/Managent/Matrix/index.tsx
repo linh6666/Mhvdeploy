@@ -70,11 +70,12 @@ export default function ZoneTabContent({ zoneNames, projectId }: ZoneTabContentP
     fetchAllData();
   }, [projectId, zoneNames]);
 
-  const handleGoToDetailPage = (buildingName: string) => {
-    const encodedName = encodeURIComponent(buildingName);
-      // const encodedProjectId = encodeURIComponent(projectId);
-   router.push(`/apartment/${encodedName}`);
-  };
+const handleGoToDetailPage = (buildingData: RecordItem) => {
+  const encodedName = encodeURIComponent(buildingData.building_name);
+  localStorage.setItem("building_data", JSON.stringify(buildingData));
+  localStorage.setItem("project_id", projectId); // nếu muốn dùng ở trang chi tiết
+  router.push(`/apartment/${encodedName}`);
+};
 
   return (
     <>
@@ -143,12 +144,13 @@ export default function ZoneTabContent({ zoneNames, projectId }: ZoneTabContentP
                                   {matchedItem?.status ?? "Không rõ"}
                                 </td>
                                 <td>
-                                  <button
-                                    onClick={() => handleGoToDetailPage(name)}
-                                    className={styles.button}
-                                  >
-                                    Xem chi tiết
-                                  </button>
+                                 <button
+  onClick={() => matchedItem && handleGoToDetailPage(matchedItem)}
+  className={styles.button}
+>
+  Xem chi tiết
+</button>
+
                                 </td>
                               </tr>
                             );

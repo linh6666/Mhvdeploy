@@ -53,7 +53,42 @@ PUT_VIDEO:"/192.168.100.101/eff/7/1",
   GET_AREA:"/api/v1/ecopark/{project_id}/zone/{zone_param}",
   GET_AREA_DETAIL:"/api/v1/ecopark/{project_id}/zone/{zone_param}/{zone_name_path}",
   GET_AREA_DETAIL_BY_TYPE:"/api/v1/ecopark/{project_id}/zone/{zone_param}/{zone_name_path}/{building_type_path}",
-  GET_HOUSE_DETAIL:"/api/v1/ecopark/{project_id}/zone/{zone_param}/{zone_name_path}/{building_type_path}/{building_name_param}"
+  GET_HOUSE_DETAIL:"/api/v1/ecopark/{project_id}/zone/{zone_param}/{zone_name_path}/{building_type_path}/{building_name_param}",
+  GET_DETAIL_HOME:"/api/v1/ecopark/by_ports",
+//// trang ADMIN
+GET_LIST_USE:"/api/v1/users",
+//   LOGIN: "/api/v1/login/access-token",
+// LOGIN_USERNAME:"/api/v1/users/me",
+DELETE_USERNAME: "/api/v1/users/{user_id}",
+CREATE_USERNAME:"/api/v1/users",
+EDIT_USERNAME:"/api/v1/users/{user_id}",
+/////Roles
+GET_LIST_ROLES:"/api/v1/roles/",
+CREATE_ROLES:"/api/v1/roles/",
+EDIT_ROLES:"/api/v1/roles/{user_id}",
+DELETE_ROLES: "/api/v1/roles/{user_id}",
+///system
+GET_LIST_SYSTEM:"/api/v1/system/",
+CREATE_SYSTEM:"/api/v1/system/",
+EDIT_SYSTEM:"/api/v1/system/{user_id}",
+DELETE_SYSTEM: "/api/v1/system/{user_id}",
+
+///Projects
+GET_LIST_PROJECTS: "/api/v1/projects/",
+CREATE_PROJECTS: "/api/v1/projects/",
+EDIT_PROJECTS: "/api/v1/projects/{project_id}",
+DELETE_PROJECTS: "/api/v1/projects/{project_id}",
+
+//Project Users
+GET_LIST_PROJECT_USERS: "/api/v1/UserProjectRole/assignments/",
+CREATE_PROJECT_USERS: "/api/v1/UserProjectRole/{project_id}",
+EDIT_PROJECT_USERS: "/api/v1/UserProjectRole/{user_id}/{project_id}/{old_role_id}",
+DELETE_PROJECT_USERS: "/api/v1/UserProjectRole/{user_project_role_id}",
+GET_DETAIL_PROJECT_USERS: "/api/v1/UserProjectRole/{user_project_role_id}",
+
+
+
+
 
 ///Bản Tiếng Anh
 
