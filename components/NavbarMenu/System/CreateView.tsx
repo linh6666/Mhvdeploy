@@ -7,10 +7,12 @@ import {
   Group,
   LoadingOverlay,
 
+  NativeSelect,
+
   TextInput,
 } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { IconCheck, IconChevronDown, IconX } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
 import { useDisclosure } from "@mantine/hooks";
 import { createUser } from "../../../api/apicreatesystem"; // 🔁 sửa đường dẫn nếu cần
@@ -59,12 +61,19 @@ const form = useForm({
         overlayProps={{ radius: "sm", blur: 2 }}
       />
 
-      <TextInput
+      {/* <TextInput
         label="Cấp bậc"
         placeholder="Nhập cấp bậc"
         withAsterisk
         mt="md"
         {...form.getInputProps("rank_total")}
+      /> */}
+      <NativeSelect
+        rightSection={<IconChevronDown size={16} />}
+        label="Cấp bậc"
+         data={['0','1', '2', '3', '4', '5', '6', '7', '8']}
+        mt="md"
+           {...form.getInputProps("rank_total")}
       />
 
       <TextInput

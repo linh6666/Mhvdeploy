@@ -138,13 +138,13 @@ const CreateView = ({ onSearch, language }: CreateViewProps) => {
         )}
       </SimpleGrid>
 
-      <TextInput
+      {/* <TextInput
         label={language === 'vi' ? 'Tên hình ảnh' : 'Picture Name'}
         placeholder={language === 'vi' ? 'Nhập tên hình ảnh' : 'Enter picture name'}
         withAsterisk
         mt="md"
         {...form.getInputProps('picture')}
-      />
+      /> */}
 
       <Group justify="flex-end" mt="lg">
         <Button

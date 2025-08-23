@@ -185,7 +185,7 @@ const EditView = ({ onSearch, id, language = "vi" }: EditViewProps) => {
         />
       )}
     
-      <TextInput
+      {/* <TextInput
         label={language === "vi" ? "Tên hình ảnh" : "Picture Name"}
         placeholder={
           language === "vi" ? "Nhập tên hình ảnh" : "Enter picture name"
@@ -193,7 +193,7 @@ const EditView = ({ onSearch, id, language = "vi" }: EditViewProps) => {
         withAsterisk
         mt="md"
         {...form.getInputProps("picture")}
-      />
+      /> */}
 
       <Group justify="flex-end" mt="lg">
         <Button

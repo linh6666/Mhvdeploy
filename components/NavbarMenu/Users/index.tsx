@@ -83,12 +83,12 @@ const RoleTable = () => {
   }, [fetchRoles]);
 
   const columns: Array<EuiBasicTableColumn<Role>> = [
-    {
-      field: 'id',
-      name: 'ID',
-      truncateText: true,
-      width: '40%',
-    },
+    // {
+    //   field: 'id',
+    //   name: 'ID',
+    //   truncateText: true,
+    //   width: '40%',
+    // },
     {
       field: 'full_name',
       name: 'Họ tên',

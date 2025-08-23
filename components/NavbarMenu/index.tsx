@@ -1,114 +1,141 @@
 'use client';
 import { useState } from 'react';
 import {
-
-  IconUsers,
+  IconGauge,
   IconNotes,
-
+  IconUser,
 } from '@tabler/icons-react';
-import { Code, Group } from '@mantine/core';
-import  User from './Users/index';
-import  Project from './Project/index';
-import  System from './System/index';
-import  ListProject from './ListProject/index';
-import  UserProject from './UserPoject/index';
-
-
-
+import { ScrollArea } from '@mantine/core';
+import { LinksGroup } from './NavbarLinksGroup/NavbarLinksGroup';
 import classes from './NavbarSimple.module.css';
+import Project from './Project'; 
+import System from './System'; 
+import Users from './Users'; 
+import ListProject from './ListProject'; 
+import UserProject from './UserPoject'; 
 
-const data = [
-  { link: 'users', label: 'Phân quyền người dùng', icon: IconUsers },
-  { link: 'Project', label: 'Phân quyền dự án', icon: IconNotes },
-  { link: 'System', label: 'Phân quyền hiển thị', icon: IconNotes },
-  { link: 'ListProject', label: 'Danh sách dự án', icon: IconNotes },
-  { link: 'UserProject', label: 'Vai trò người dùng dự án', icon: IconNotes },
-  // { link: 'auth', label: 'Authentication', icon: Icon2fa },
-  // { link: 'other', label: 'Other Settings', icon: IconSettings },
+const mockdata = [
+  { label: 'Trang chủ', icon: IconGauge, link: 'home' },
+  {
+    label: 'Cấu hình',
+    icon: IconNotes,
+    initiallyOpened: true,
+    links: [
+      { label: 'Vai trò người dùng', link: 'project' },
+      { label: 'Vai trò người dùng trong dự án', link: 'user-role-project' },
+    ],
+  },
+  {
+    label: 'Phân quyền',
+    icon: IconUser,
+    initiallyOpened: true,
+    links: [{ label: 'Phân quyền người dùng', link: 'permission' }],
+  },
+];
+
+const footerData = [
+  {
+    label: 'Quản lý dự án',
+    icon: IconNotes,
+    initiallyOpened: true,
+    links: [
+      { label: 'Danh sách dự án', link: 'project-list' },
+      { label: 'Dự án 1', link: 'project-1' },
+    ],
+  },
+  {
+    label: 'Phân quyền người dùng trong dự án',
+    icon: IconUser,
+    initiallyOpened: true,
+    links: [{ label: 'Danh sách người dùng', link: 'user-list' }],
+  },
 ];
 
 export function NavbarSimple() {
-  const [active, setActive] = useState('billing');
+  const [active, setActive] = useState<string>(''); // <-- thêm state để xử lý active
 
-  const links = data.map((item) => (
-    <a
-      className={classes.link}
-data-active={item.link === active ? 'true' : undefined}  // ← sửa ở đây
-      href="#"
-      key={item.label}
-      onClick={(event) => {
-        event.preventDefault(); // ngăn không redirect
-        setActive(item.link);   // lưu giá trị link thay vì label
-      }}
-    >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
-    </a>
-  ));
+  const combinedData = [...mockdata, ...footerData];
 
-  // nội dung tương ứng theo link
+  // Hàm render nội dung tương ứng với menu
   const renderContent = () => {
     switch (active) {
-      case 'users':
-        return <div><User/></div>;
-      case 'Project':
-        return <div><Project/></div>;
-      case 'System':
-        return <div><System/> </div>;
-      case 'ListProject':
-        return <div><ListProject/></div>;
-      case 'UserProject':
-        return <div><UserProject/></div>;
-      // case 'auth':
-      //   return <div>🔐 Authentication settings</div>;
-      // case 'other':
-      //   return <div>⚙️ Other settings</div>;
+      case 'project':
+        return <Project />;
+      case 'user-role-project':
+        return <System />;
+      case 'permission':
+        return <Users />;
+      case 'project-list':
+        return <ListProject />;
+      case 'project-1':
+        return <h2>Dự án 1</h2>;
+      case 'user-list':
+        return <UserProject />;
       default:
-        return <div>chào mừng bạn đã đến trang  quản trị hệ thống,chọn menu để xem nội dung !</div>;
+        return <h2>Chào mừng bạn đến với trang quản trị !!!</h2>;
     }
   };
 
   return (
-   <div
-  style={{
-    display: 'flex',
-    width: '100%',
-    maxWidth: '1200px',
-
-    margin: '100px auto 10px auto',
-     border: '1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))',
-  }}
->
+    <div
+      style={{
+        display: 'flex',
+        width: '100%',
+        maxWidth: '1200px',
+        margin: '100px auto 10px auto',
+        border:
+          '1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))',
+      }}
+    >
       {/* Sidebar */}
       <nav className={classes.navbar}>
-        <div className={classes.navbarMain}>
-          <Group className={classes.header} justify="space-between">
-            <Code className={classes.title}>Quản trị hệ thống</Code>
-          </Group>
-          {links}
+        <div className={classes.header}>
+          <h1>QUẢN TRỊ HỆ THỐNG</h1>
         </div>
+
+        <ScrollArea className={classes.links}>
+          <div className={classes.linksInner}>
+            {combinedData.slice(0, mockdata.length).map((item) => (
+              <LinksGroup
+                {...item}
+                key={item.label}
+                active={active}
+                onActiveChange={setActive} // truyền hàm để đổi nội dung khi click
+              />
+            ))}
+          </div>
+
+          <div className={classes.footer}>
+            <h1>QUẢN TRỊ DỰ ÁN</h1>
+          </div>
+
+          <div style={{ width: '100%' }}>
+            {combinedData.slice(mockdata.length).map((item) => (
+              <LinksGroup
+                {...item}
+                key={item.label}
+                active={active}
+                onActiveChange={setActive}
+              />
+            ))}
+          </div>
+        </ScrollArea>
       </nav>
 
-      {/* Content area */}
-<div
-  style={{
-    flex: 1,
-    padding: 20,
-    height: "750px",
-    overflowY: "scroll",     // vẫn cuộn được
-    scrollbarWidth: "none",  // ẩn scrollbar trên Firefox
-    msOverflowStyle: "none", // ẩn scrollbar trên IE, Edge cũ
-  }}
->
-  <style jsx>{`
-    div::-webkit-scrollbar {
-      display: none; /* ẩn scrollbar trên Chrome, Safari */
-    }
-  `}</style>
-
-  {renderContent()}
-</div>
-
+      {/* Phần nội dung hiển thị bên phải */}
+      <div
+        style={{ 
+          flex: 1, 
+          padding: 20, 
+          overflowY: 'auto', 
+          height: '800px',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none'
+        }}
+        className={classes.hidescrollbar}
+      >
+        {renderContent()}
+      </div>
     </div>
   );
 }

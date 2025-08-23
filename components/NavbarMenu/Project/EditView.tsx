@@ -5,13 +5,14 @@ import {
   Button,
   Group,
   LoadingOverlay,
-  NumberInput,
+  NativeSelect,
+  
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { IconCheck, IconChevronDown,  IconX } from "@tabler/icons-react";
 import { useEffect, useCallback, useRef } from "react";
 import { API_ROUTE } from "../../../const/apiRouter";
 import { api } from "../../../library/axios";
@@ -104,14 +105,15 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         mt="md"
         {...form.getInputProps("name")}
       />
-
-      <NumberInput
+ 
+      <NativeSelect
+        rightSection={<IconChevronDown size={16} />}
         label="Cấp bậc"
-        placeholder="Nhập cấp bậc"
-        withAsterisk
+         data={['1', '2', '3', '4', '5', '6', '7', '8']}
         mt="md"
-        {...form.getInputProps("rank")}
+          {...form.getInputProps("rank")}
       />
+    
 
       <TextInput
         label="Mô tả"
