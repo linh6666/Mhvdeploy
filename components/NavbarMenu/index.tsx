@@ -13,6 +13,7 @@ import System from './System';
 import Users from './Users'; 
 import ListProject from './ListProject'; 
 import UserProject from './UserPoject'; 
+import ProjectManagere from './ProjectManagere'; 
 
 const mockdata = [
   { label: 'Trang chủ', icon: IconGauge, link: 'home' },
@@ -40,7 +41,7 @@ const footerData = [
     initiallyOpened: true,
     links: [
       { label: 'Danh sách dự án', link: 'project-list' },
-      { label: 'Dự án 1', link: 'project-1' },
+      { label: 'Dự án Eco Retreat', link: 'project-1' },
     ],
   },
   {
@@ -68,7 +69,7 @@ export function NavbarSimple() {
       case 'project-list':
         return <ListProject />;
       case 'project-1':
-        return <h2>Dự án 1</h2>;
+        return <ProjectManagere />;
       case 'user-list':
         return <UserProject />;
       default:

@@ -86,7 +86,9 @@ EDIT_PROJECT_USERS: "/api/v1/UserProjectRole/{user_id}/{project_id}/{old_role_id
 DELETE_PROJECT_USERS: "/api/v1/UserProjectRole/{user_project_role_id}",
 GET_DETAIL_PROJECT_USERS: "/api/v1/UserProjectRole/{user_project_role_id}",
 
-
+////GET LIST DETAL ecopark
+GET_LIST_DETAIL_ECOPARK:"/api/v1/ecopark/",
+EDIT_LIST_DETAIL_ECOPARK:"/api/v1/ecopark/{ecopark_id}",
 
 
 
