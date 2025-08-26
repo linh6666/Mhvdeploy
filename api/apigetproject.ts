@@ -8,8 +8,10 @@ export interface CreateProjectPayload {
   zone_name: string;
   building_type: string;
   status: string;
+   price: number | string;
   direction: string;
   description: string;
+   [key: string]: any;
 }
 
 // Đổi tên hàm từ CreateUserPayload thành createProject hoặc createUser

@@ -146,6 +146,7 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
                   {isValid(item.status) && (
                     <li><strong>Trạng thái:</strong> {item.status}</li>
                   )}
+                 
                 </ul>
               </div>
 

@@ -17,6 +17,7 @@ import { getListRoles } from '../../../api/apigetlistdetailproject';
 import CreateView from './CreateView';
 import DeleteView from './DeleteView';
 import EditView from './EditView';
+import View from './View';
 import AppAction from '../../../common/AppAction';
 import AppSearch from '../../../common/AppSearch';
 import { NotificationExtension } from '../../../common/extension/NotificationExtension';
@@ -31,6 +32,8 @@ type Role = {
   zone_name: string;
   building_type: string;
   status: string;
+  port:string;
+   price: number | string;
   direction: string;
   description: string;
 
@@ -130,19 +133,21 @@ const RoleTable = () => {
       let color = 'subdued';
 
       switch (status) {
-        case 'Đang bán':
-          color = 'danger'; // đỏ
-          break;
-        case 'Đã đặt cọc':
-          color = 'yellow'; // vàng
-          break;
-        case 'Đã bán':
-          color = 'success'; // xanh lá
-          break;
-        default:
-          color = 'subdued'; // mặc định xám
-      }
-
+  case 'Đang bán':
+  case 'Available':
+    color = 'danger';
+    break;
+  case 'Đã đặt cọc':
+  case 'Deposit Paid':
+    color = 'yellow';
+    break;
+  case 'Đã bán':
+  case 'Sold':
+    color = 'success';
+    break;
+  default:
+    color = 'subdued';
+}
       return <EuiHealth color={color}>{status}</EuiHealth>;
     },
   },
@@ -169,6 +174,8 @@ const RoleTable = () => {
               onClick={() => openDeleteUserModal(role)}
             />
           </EuiFlexItem> */}
+          <EuiFlexItem grow={false}> <EuiButtonIcon iconType="eye" aria-label="Dashboard" color="success"    onClick={() => openDetaileUserModal (role)} /> </EuiFlexItem>
+          
         </EuiFlexGroup>
       ),
     },
@@ -205,6 +212,14 @@ const RoleTable = () => {
       cancelProps: { display: 'none' },
     });
   };
+    const openDetaileUserModal = (role: Role) => {
+    modals.openConfirmModal({
+      title: <div style={{ fontWeight: 600, fontSize: 18 }}>{language === 'vi' ? 'Xem chi tiết ' : 'Detail Project'}</div>,
+      children:  <View port={Number(role.port)} language={language} />,
+      confirmProps: { display: 'none' },
+      cancelProps: { display: 'none' },
+    });
+  };
 
   const openModalEdit = () => {
     if (selectedItems.length !== 1) {
@@ -227,6 +242,9 @@ const RoleTable = () => {
       cancelProps: { display: 'none' },
     });
   };
+
+
+  
 
   const selection = {
     selectable: () => true,
@@ -268,7 +286,10 @@ const RoleTable = () => {
       />
 
       <Divider my="sm" label={language === 'vi' ? 'Danh sách dự án' : 'Project List'} labelPosition="center" />
-   <AppSearch language={language} />
+
+
+      {/* thêm bộ lọc vào đây  */}
+
       <Divider my="sm" />
 
       <EuiBasicTable
