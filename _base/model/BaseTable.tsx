@@ -10,7 +10,7 @@ export interface PaginationOptions {
 }
 
 export const paginationBase: PaginationOptions = {
-  pageSizeOptions: [10, 20, 50, 150, 200], // ← Thêm 10 ở đây
+  pageSizeOptions: [10, 20, 50,], // ← Thêm 10 ở đây
   pageIndex: 0,
   pageSize: 20,
   totalItemCount: 0,

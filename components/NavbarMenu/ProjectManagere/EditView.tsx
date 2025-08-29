@@ -263,6 +263,7 @@ const EditView = ({ onSearch, role, language = "vi" }: EditViewProps) => {
     },
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     form.setValues(role);
   }, [role]);
@@ -275,13 +276,14 @@ const EditView = ({ onSearch, role, language = "vi" }: EditViewProps) => {
         `?lang=${language}`;
 
       // Tạo payload với các trường phù hợp với ngôn ngữ
-      const payload: any = {
+      const payload: Record<string, unknown> = {
         building_name: values.building_name,
         bedroom: Number(values.bedroom),
         price: Number(values.price),
-        description: typeof values.description === "string" 
-          ? values.description 
-          : JSON.stringify(values.description),
+        description:
+          typeof values.description === "string"
+            ? values.description
+            : JSON.stringify(values.description),
       };
 
       if (language === "vi") {
@@ -289,14 +291,13 @@ const EditView = ({ onSearch, role, language = "vi" }: EditViewProps) => {
         payload.building_type_vi = values.building_type;
         payload.direction_vi = values.direction;
         payload.status_vi = values.status;
-          payload. description_vi = values.description;        
-
+        payload.description_vi = values.description;
       } else {
         payload.zone_name_en = values.zone_name;
         payload.building_type_en = values.building_type;
         payload.direction_en = values.direction;
         payload.status_en = values.status;
-        payload. description_en = values. description;
+        payload.description_en = values.description;
       }
 
       const response = await api.patch(url, payload);
@@ -316,7 +317,7 @@ const EditView = ({ onSearch, role, language = "vi" }: EditViewProps) => {
           ),
         });
       }
-    } catch (error: any) {
+    } catch {
       modals.open({
         title: language === "vi" ? "Lỗi" : "Error",
         children: (
@@ -382,7 +383,11 @@ const EditView = ({ onSearch, role, language = "vi" }: EditViewProps) => {
       <NativeSelect
         rightSection={<IconChevronDown size={16} />}
         label={language === "vi" ? "Trạng thái" : "Status"}
-        data={language === "vi" ? ["Đang bán", "Đã đặt cọc", "Đã bán"] : ["Available", "Deposit Paid", "Sold"]}
+        data={
+          language === "vi"
+            ? ["Đang bán", "Đã đặt cọc", "Đã bán"]
+            : ["Available", "Deposit Paid", "Sold"]
+        }
         mt="md"
         {...form.getInputProps("status")}
       />
@@ -431,6 +436,8 @@ const EditView = ({ onSearch, role, language = "vi" }: EditViewProps) => {
 };
 
 export default EditView;
+
+
 
 
 
