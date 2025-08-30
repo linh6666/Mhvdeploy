@@ -22,8 +22,8 @@ const mockdata = [
     icon: IconNotes,
     initiallyOpened: true,
     links: [
-      { label: 'Vai trò người dùng', link: 'project' },
-      { label: 'Vai trò người dùng trong dự án', link: 'user-role-project' },
+      { label: 'Vai trò người dùng', link: 'user-role-project' },
+      { label: 'Vai trò người dùng trong dự án', link: 'project' },
     ],
   },
   {

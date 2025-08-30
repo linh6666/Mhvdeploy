@@ -24,6 +24,7 @@ import { paginationBase, PaginationOptions } from '../../../_base/model/BaseTabl
 
 type Role = {
   id: string;
+  name:string;
   description: string;
   rank_total: number;
 };
@@ -80,15 +81,15 @@ const RoleTable = () => {
   }, [fetchRoles]);
 
   const columns: Array<EuiBasicTableColumn<Role>> = [
-    // {
-    //   field: "id",
-    //   name: "ID",
-    //   truncateText: true,
-    //   width: "30%",
-    // },
+    {
+      field: "name",
+      name: "Tên",
+      truncateText: true,
+      width: "30%",
+    },
     {
       field: "description",
-      name: "Tên vai trò",
+      name: "Mô tả",
       width: "30%",
       "data-test-subj": "descriptionCell",
       mobileOptions: {

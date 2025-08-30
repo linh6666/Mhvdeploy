@@ -341,7 +341,7 @@ const EditView = ({ onSearch, role, language = "vi" }: EditViewProps) => {
         label={language === "vi" ? "Tên khu" : "Zone Name"}
         placeholder={language === "vi" ? "Nhập khu" : "Enter zone name"}
         withAsterisk
-        readOnly
+        disabled
         mt="md"
         {...form.getInputProps("zone_name")}
       />
@@ -350,7 +350,7 @@ const EditView = ({ onSearch, role, language = "vi" }: EditViewProps) => {
         label={language === "vi" ? "Loại nhà" : "Building Type"}
         placeholder={language === "vi" ? "Nhập loại nhà" : "Enter building type"}
         withAsterisk
-        readOnly
+       disabled
         mt="md"
         {...form.getInputProps("building_type")}
       />
@@ -359,7 +359,7 @@ const EditView = ({ onSearch, role, language = "vi" }: EditViewProps) => {
         label={language === "vi" ? "Tên nhà" : "Building Name"}
         placeholder={language === "vi" ? "Nhập tên nhà" : "Enter building name"}
         withAsterisk
-        readOnly
+        disabled 
         mt="md"
         {...form.getInputProps("building_name")}
       />

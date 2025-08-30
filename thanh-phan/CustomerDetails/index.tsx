@@ -67,7 +67,7 @@ export default function CustomerDetails({ building }: CustomerDetailsProps) {
       {buildings.map((buildingData, index) => (
         <div className={styles.container} key={index}>
           <h1 style={{ marginBottom: "1rem" }}>
-            Chi tiết các căn thuộc: {buildingName}
+            Chi tiết các căn: {buildingName}
           </h1>
 
           <div className={styles.box}>

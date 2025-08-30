@@ -6,7 +6,7 @@ import {
   Checkbox,
   Group,
   LoadingOverlay,
-  PasswordInput,
+
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -31,8 +31,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
       email: "",
       full_name: "",
       phone: "",
-      password: "",
-      confirm_password: "",
+     
       is_active: false,
       is_superuser: false,
     },
@@ -74,8 +73,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         email: userData.email || "",
         full_name: userData.full_name || "",
         phone: userData.phone || "",
-        password: "",
-        confirm_password: "",
+      
         is_active: userData.is_active ?? false,
         is_superuser: userData.is_superuser ?? false,
       });
@@ -130,7 +128,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         {...form.getInputProps("phone")}
       />
 
-      <PasswordInput
+      {/* <PasswordInput
         label="Mật khẩu"
         placeholder="Nhập mật khẩu"
         withAsterisk
@@ -144,7 +142,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         withAsterisk
         mt="md"
         {...form.getInputProps("confirm_password")}
-      />
+      /> */}
 
       <Checkbox
         label="Hoạt động"

@@ -35,9 +35,13 @@ interface Option {
 }
 
 interface UserProjectRole {
-  project_id: string;
-  role_id: string;
-  user_id: string;
+  // project_id: string;
+  // role_id: string;
+  // user_id: string;
+  project_name:string;
+  role_name:string;
+  user_email:string;
+
 }
 
 const EditView = ({
@@ -56,14 +60,14 @@ const EditView = ({
 
   const form = useForm<CreateProjectPayload>({
     initialValues: {
-      project_id: "",
-      role_id: "",
-      user_id: "",
+        project_name: "",
+      user_email: "",
+      role_name: "",
     },
     validate: {
-      project_id: isNotEmpty("không được để trống"),
-      role_id: isNotEmpty("không được để trống"),
-      user_id: isNotEmpty("Cấp bậc không được để trống"),
+        project_name: isNotEmpty("không được để trống"),
+      user_email: isNotEmpty("không được để trống"),
+      role_name: isNotEmpty("Cấp bậc không được để trống"),
     },
   });
 
@@ -78,9 +82,9 @@ const EditView = ({
       );
       const { data: userData } = await api.get<UserProjectRole>(url);
       form.setValues({
-        project_id: userData.project_id || "",
-        role_id: userData.role_id || "",
-        user_id: userData.user_id || "",
+        user_email: userData.user_email || "",
+        role_name: userData.role_name || "",
+          project_name: userData.  project_name || "",
       });
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu user:", error);
@@ -101,35 +105,35 @@ const EditView = ({
       }
 
       // Projects
-      const resProjects = await getProjects({ token }) as { data: { id: string }[] };
-      setProjectNameOptions(
-        resProjects.data.map((item) => ({
-          value: String(item.id),
-          label: item.id,
-        }))
-      );
+      const resProjects = await getProjects({ token }) as { data: { id: string; name: string }[] };
+    setProjectNameOptions(
+      resProjects.data.map((item) => ({
+        value: String(item.id),   // vẫn dùng id làm value
+        label: item.name,         // hiển thị name
+      }))
+    );
 
-      // Roles
-      const resRoles = await getRoles({ token }) as { data: { id: string }[] };
-      setRoleOptions(
-        resRoles.data.map((item) => ({
-          value: String(item.id),
-          label: item.id,
-        }))
-      );
+    // Roles
+    const resRoles = await getRoles({ token }) as { data: { id: string; name: string }[] };
+    setRoleOptions(
+      resRoles.data.map((item) => ({
+        value: String(item.id),   // id là giá trị submit
+        label: item.name,         // hiển thị tên role
+      }))
+    );
 
-      // Users
-      const resUsers = await getUsers({ token }) as { data: { id: string }[] };
-      setUserOptions(
-        resUsers.data.map((item) => ({
-          value: String(item.id),
-          label: item.id,
-        }))
-      );
-    } catch (error) {
-      console.error("Lỗi khi load danh sách select:", error);
-    }
-  }, []); // Không có phụ thuộc
+    // Users
+const resUsers = await getUsers({ token }) as { data: { id: string; email: string }[] };
+setUserOptions(
+  resUsers.data.map((item) => ({
+    value: String(item.id),   // submit vẫn theo id
+    label: item.email,        // hiển thị email thôi
+  }))
+);
+  } catch (error) {
+    console.error("Lỗi khi load danh sách select:", error);
+  }
+}, []);
 
   /** Chỉ gọi 1 lần khi mở modal */
   useEffect(() => {
@@ -167,29 +171,39 @@ const EditView = ({
       {/* Select dự án theo tên */}
       <NativeSelect
         rightSection={<IconChevronDown size={16} />}
-        label="ID dự án"
-        data={projectNameOptions.length ? projectNameOptions : [{ value: "", label: "Đang tải..." }]}
+        label="Email người dùng"
+         data={userOptions.length ? userOptions : [{ value: "", label: "Đang tải..." }]}
+        // data={projectNameOptions.length ? projectNameOptions : [{ value: "", label: "Đang tải..." }]}
         mt="md"
-        {...form.getInputProps("project_id")}
+        {...form.getInputProps("user_email")}
       />
 
       {/* Select vai trò */}
-      <NativeSelect
+      {/* <NativeSelect
         rightSection={<IconChevronDown size={16} />}
-        label="ID Vai trò"
+        label="Tên vai trò"
         data={roleOptions.length ? roleOptions : [{ value: "", label: "Đang tải..." }]}
         mt="md"
-        {...form.getInputProps("role_id")}
-      />
+        {...form.getInputProps("role_name")}
+      /> */}
 
       {/* Select người dùng */}
       <NativeSelect
         rightSection={<IconChevronDown size={16} />}
-        label="ID Người dùng"
-        data={userOptions.length ? userOptions : [{ value: "", label: "Đang tải..." }]}
+        label="Tên dự án"
+        // data={userOptions.length ? userOptions : [{ value: "", label: "Đang tải..." }]}
+          data={projectNameOptions.length ? projectNameOptions : [{ value: "", label: "Đang tải..." }]}
         mt="md"
-        {...form.getInputProps("user_id")}
+        {...form.getInputProps("project_name")}
       />
+          <NativeSelect
+        rightSection={<IconChevronDown size={16} />}
+        label="Tên vai trò"
+        data={roleOptions.length ? roleOptions : [{ value: "", label: "Đang tải..." }]}
+        mt="md"
+        {...form.getInputProps("role_name")}
+      />
+
 
       <Group justify="flex-end" mt="lg">
         <Button type="submit" color="#3598dc" loading={visible} leftSection={<IconCheck size={18} />}>

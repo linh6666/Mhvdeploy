@@ -20,7 +20,7 @@ import { getListRoles } from '../../../api/apigetlistdetailproject';
 import CreateView from './CreateView';
 // import DeleteView from './DeleteView';
 import EditView from './EditView';
-import View from './View';
+// import View from './View';
 import AppAction from '../../../common/AppAction';
 import { paginationBase, PaginationOptions } from '../../../_base/model/BaseTable';
 
@@ -135,19 +135,19 @@ const RoleTable = () => {
       truncateText: true,
       width: '20%',
       render: (status: string) => {
-        let color: 'success' | 'warning' | 'danger' | 'subdued' = 'subdued';
+        let color: 'success' | 'orange' | 'danger' | 'subdued' = 'subdued';
         switch (status) {
           case 'Đang bán':
           case 'Available':
-            color = 'danger';
+            color = 'success';
             break;
           case 'Đã đặt cọc':
           case 'Deposit Paid':
-            color = 'warning';
+            color = 'orange';
             break;
           case 'Đã bán':
           case 'Sold':
-            color = 'success';
+            color = 'danger';
             break;
         }
         return <EuiHealth color={color}>{status}</EuiHealth>;
@@ -161,9 +161,9 @@ const RoleTable = () => {
           <EuiFlexItem grow={false}>
             <EuiButtonIcon iconType="documentEdit" aria-label="Edit" color="success" onClick={() => openEditUserModal(role)} />
           </EuiFlexItem>
-          <EuiFlexItem grow={false}>
+          {/* <EuiFlexItem grow={false}>
             <EuiButtonIcon iconType="eye" aria-label="View" color="success" onClick={() => openDetaileUserModal(role)} />
-          </EuiFlexItem>
+          </EuiFlexItem> */}
         </EuiFlexGroup>
       ),
     },
@@ -190,14 +190,21 @@ const RoleTable = () => {
     });
   };
 
-  const openDetaileUserModal = (role: Role) => {
-    modals.openConfirmModal({
-      title: <div style={{ fontWeight: 600, fontSize: 18 }}>{language === 'vi' ? 'Xem chi tiết' : 'Detail Project'}</div>,
-      children: <View port={Number(role.port)} language={language} />,
-      confirmProps: { display: 'none' },
-      cancelProps: { display: 'none' },
-    });
-  };
+// const openDetaileUserModal = (role: Role) => {
+//   modals.openConfirmModal({
+//     title: (
+//       <div style={{ fontWeight: 600, fontSize: 18 }}>
+//         {language === "vi" ? "Hình ảnh" : "Image"}
+//       </div>
+//     ),
+//     children: <View port={Number(role.port)} language={language} />,
+//     confirmProps: { display: "none" },
+//     cancelProps: { display: "none" },
+
+//     // 👇 chỉnh chiều ngang
+//     size: "50%", // có thể dùng "lg" | "xl" | số px: 800
+//   });
+// };
 
   // --- Table selection ---
   const selection = {

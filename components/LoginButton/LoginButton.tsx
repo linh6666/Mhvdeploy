@@ -32,8 +32,8 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
               isMobile ? "" : "hidden md:inline-flex"
             }`}
           >
-            <IconUser size={17} />
-            <span style={{ fontSize: "17px" }}>{user.full_name}</span>
+       
+            <span style={{ fontSize: "14px" }}>{user.full_name}</span>
           </button>
 
           {isOpen && (

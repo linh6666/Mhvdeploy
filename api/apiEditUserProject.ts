@@ -2,11 +2,14 @@ import { api } from "../library/axios";
 import { API_ROUTE } from "../const/apiRouter";
 
 export interface CreateProjectPayload {
-  project_id: string;
+  // project_id: string;
 
-  role_id: string;
+  // role_id: string;
 
-  user_id: string;
+  // user_id: string;
+    project_name:string;
+    user_email:string;
+    role_name:string;
 }
 
 // Đổi tên hàm từ CreateUserPayload thành createProject hoặc createUser

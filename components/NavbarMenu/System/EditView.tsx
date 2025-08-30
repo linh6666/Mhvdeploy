@@ -4,8 +4,10 @@ import {
   Box,
   Button,
   Group,
+ 
   LoadingOverlay,
   NativeSelect,
+  Textarea,
   TextInput,
 } from "@mantine/core";
 import { useForm, isNotEmpty } from "@mantine/form";
@@ -29,10 +31,12 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
     initialValues: {
       rank_total: 0,
       description: "",
+      name:"",
     },
     validate: {
       rank_total: isNotEmpty("Cấp bậc không được để trống"),
-      description: isNotEmpty("Tên vai trò không được để trống"),
+      description: isNotEmpty("Mô tả không được để trống"),
+      name: isNotEmpty("Tên vai trò không được để trống"),
     },
   });
 
@@ -66,6 +70,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
       formRef.current.setValues({
         rank_total: userData.rank_total ?? 0,
         description: userData.description || "",
+        name:userData.name || "",
       });
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu user:", error);
@@ -114,9 +119,17 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         placeholder="Nhập tên vai trò"
         withAsterisk
         mt="md"
+        {...form.getInputProps("name")}
+      />
+       <Textarea
+        resize="vertical"
+        label="Mô tả"
         {...form.getInputProps("description")}
       />
-
+ {/* <JsonInput
+      label="Mô tả"
+        {...form.getInputProps("description")}
+    /> */}
       <Group justify="flex-end" mt="lg">
         <Button
           type="submit"

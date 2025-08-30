@@ -187,7 +187,7 @@ const RoleTable = () => {
 
   const openEditUserModal = (role: Role) => {
     modals.openConfirmModal({
-      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Chỉnh sửa vai trò</div>,
+      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Chỉnh sửa người dùng</div>,
       children: <EditView id={role.id} onSearch={fetchRoles} />,
       confirmProps: { display: 'none' },
       cancelProps: { display: 'none' },

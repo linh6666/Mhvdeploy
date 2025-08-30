@@ -5,6 +5,7 @@ import { API_ROUTE } from "../const/apiRouter"; // ✅ import đúng object ch�
 export interface CreateUserPayload {
   rank_total: number;
   description: string;
+  name:string;
 
 }
 

@@ -28,6 +28,7 @@ const form = useForm({
   initialValues: {
     rank_total: 0,
     description: '',
+    name:'',
   },
   validate: {
     rank_total: isNotEmpty("Email không được để trống"),

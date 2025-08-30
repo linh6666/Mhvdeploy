@@ -1,81 +1,56 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { apiarea } from "../../../library/axios";
-import { API_ROUTE } from "../../../const/apiRouter";
+import React, { useEffect } from 'react';
+import { Tabs } from '@mantine/core';
+import { IconPhoto } from '@tabler/icons-react';
+import ViewComponent from './Detailimg/index';
+// import ViewCreate from './Createimg/index';
+import ViewEdit from './Editimg/index';
 
-interface ImageItem {
-  image_url: string;
-}
+type ViewProps = {
+  idItem: string[];
+    port?: number; // thêm port
+  onSearch: () => void;
+  language: 'vi' | 'en';
+};
 
-interface CustomerDetailsProps {
-  port: number;      // chỉ nhận port
-  language?: 'vi' | 'en';
-}
-
-export default function CustomerDetails({ port, language = 'vi' }: CustomerDetailsProps) {
-  const [images, setImages] = useState<string[]>([]);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
+const View = ({ idItem, port, onSearch, language }: ViewProps) => {
   useEffect(() => {
-    if (!port) return;
-
-    const fetchImages = async () => {
-      try {
-        const res = await apiarea.get(API_ROUTE.GET_DETAIL_HOME, {
-          params: { port, lang: language },
-        });
-
-        const imageData: ImageItem[] = res.data?.items || [];
-        const urls = imageData.map(img => img.image_url);
-
-        setImages(urls);
-        if (urls.length > 0) setSelectedImage(urls[0]);
-      } catch (err) {
-        console.error(`❌ Lỗi khi fetch ảnh cho port ${port}:`, err);
-      }
-    };
-
-    fetchImages();
-  }, [port, language]);
-
-  if (!port) return <div>⚠️ Port không hợp lệ</div>;
+    console.log('Port value:', port); // test xem có nhận đúng không
+  }, [port]);
 
   return (
     <div>
-      <h2>
-  {language === 'vi' ? 'Hình ảnh chi tiết của nhà!' : 'Detailed Images of the House!'}
-</h2>
-      <div style={{ display: 'flex', gap: 10 }}>
-  <div>
-    <Image
-      src={selectedImage || "/THUMBNAIL/4-MH-CAO-TANG.jpg"}
-      alt={`Port ${port}`}
-      width={400}
-      height={300}
-      style={{ objectFit: 'cover' }} // hoặc 'contain' nếu muốn hiện toàn bộ ảnh
-    />
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-    {images.map((url, idx) => (
-      <Image
-        key={idx}
-        src={url}
-        alt={`Thumbnail ${idx}`}
-        width={80}
-        height={60}
-        style={{
-          cursor: 'pointer',
-          border: selectedImage === url ? '2px solid blue' : 'none',
-          objectFit: 'cover', // giữ tỉ lệ vừa khung
-        }}
-        onClick={() => setSelectedImage(url)}
-      />
-    ))}
-  </div>
-</div>
+     <Tabs defaultValue="gallery">
+  <Tabs.List>
+    <Tabs.Tab value="gallery" leftSection={<IconPhoto size={15} />}>
+      {language === 'vi' ? 'Xem chi tiết hình ảnh' : 'View image details'}
+    </Tabs.Tab>
+    <Tabs.Tab value="messages" leftSection={<IconPhoto size={15} />}>
+      {language === 'vi' ? 'Thêm mới hình ảnh' : 'Add new image'}
+    </Tabs.Tab>
+    <Tabs.Tab value="settings" leftSection={<IconPhoto size={15} />}>
+      {language === 'vi' ? 'Sửa hình ảnh' : 'Edit image'}
+    </Tabs.Tab>
+  </Tabs.List>
 
+
+
+      
+      <Tabs.Panel value="gallery">
+        <ViewComponent idItem={idItem} port={port} language={language} onSearch={onSearch} />
+      </Tabs.Panel>
+
+      {/* <Tabs.Panel value="messages">
+        <ViewCreate  port={port} language={language} onSearch={onSearch} />
+      </Tabs.Panel> */}
+
+      <Tabs.Panel value="settings">
+        <ViewEdit  port={port} language={language} onSearch={onSearch} />
+      </Tabs.Panel>
+      </Tabs>
     </div>
   );
-}
+};
+
+export default View;
