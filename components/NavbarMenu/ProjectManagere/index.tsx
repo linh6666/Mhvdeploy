@@ -20,7 +20,7 @@ import { getListRoles } from '../../../api/apigetlistdetailproject';
 import CreateView from './CreateView';
 // import DeleteView from './DeleteView';
 import EditView from './EditView';
-// import View from './View';
+import View from './View';
 import AppAction from '../../../common/AppAction';
 import { paginationBase, PaginationOptions } from '../../../_base/model/BaseTable';
 
@@ -77,7 +77,8 @@ const RoleTable = () => {
 
       do {
         const res = await getListRoles({ token, lang: language, skip, limit });
-        allData = [...allData, ...(res.data || [])];
+        allData = [...allData, ...(res.items
+ || [])];
         total = res.total;
         skip += limit;
       } while (skip < total);
@@ -161,9 +162,9 @@ const RoleTable = () => {
           <EuiFlexItem grow={false}>
             <EuiButtonIcon iconType="documentEdit" aria-label="Edit" color="success" onClick={() => openEditUserModal(role)} />
           </EuiFlexItem>
-          {/* <EuiFlexItem grow={false}>
+          <EuiFlexItem grow={false}>
             <EuiButtonIcon iconType="eye" aria-label="View" color="success" onClick={() => openDetaileUserModal(role)} />
-          </EuiFlexItem> */}
+          </EuiFlexItem>
         </EuiFlexGroup>
       ),
     },
@@ -190,21 +191,26 @@ const RoleTable = () => {
     });
   };
 
-// const openDetaileUserModal = (role: Role) => {
-//   modals.openConfirmModal({
-//     title: (
-//       <div style={{ fontWeight: 600, fontSize: 18 }}>
-//         {language === "vi" ? "Hình ảnh" : "Image"}
-//       </div>
-//     ),
-//     children: <View port={Number(role.port)} language={language} />,
-//     confirmProps: { display: "none" },
-//     cancelProps: { display: "none" },
-
-//     // 👇 chỉnh chiều ngang
-//     size: "50%", // có thể dùng "lg" | "xl" | số px: 800
-//   });
-// };
+const openDetaileUserModal = (role: Role) => {
+  modals.openConfirmModal({
+    title: (
+      <div style={{ fontWeight: 600, fontSize: 18 }}>
+        {language === "vi" ? "Hình ảnh" : "Image"}
+      </div>
+    ),
+    children: (
+      <View
+        idItem={role.id}                  // 👈 thêm idItem
+        port={Number(role.port)}              // giữ nguyên
+        language={language}                   // giữ nguyên
+        onSearch={() => console.log("Search")} // 👈 thêm onSearch
+      />
+    ),
+    confirmProps: { display: "none" },
+    cancelProps: { display: "none" },
+    size: "50%",
+  });
+};
 
   // --- Table selection ---
   const selection = {
@@ -355,4 +361,5 @@ const RoleTable = () => {
 };
 
 export default RoleTable;
+
 

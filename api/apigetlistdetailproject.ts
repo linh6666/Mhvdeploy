@@ -38,8 +38,8 @@ export const getListRoles = async ({
   });
 
   return {
-    data: response.data.data,
-    total: response.data.count, // tổng số item
+  items: response.data.items,
+  total: response.data.count,
   };
 };
 
