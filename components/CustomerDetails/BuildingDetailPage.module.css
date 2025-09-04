@@ -62,17 +62,17 @@
 }
 
 .image {
-  width: 100%;
-  height: auto;
+  width: 500px;
+  height: 300px;
   object-fit: cover;
   border-radius: 12px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.image:hover {
+/* .image:hover {
   transform: scale(1.03);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-}
+} */
 
 .backButtonContainer {
   display: flex;
@@ -162,15 +162,32 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
   margin-bottom: 1rem;
 }
-
+/* start */
 .thumbnailContainer {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-wrap: nowrap; /* bỏ wrap để scroll ngang */
+  overflow-x: auto;  /* bật scroll ngang */
   gap: 10px;
-  max-width: 420px;
+  max-width: 260px;
+  padding-bottom: 5px; /* tùy chọn để scroll bar không che nội dung */
 }
 
+/* Thanh scroll nhỏ hơn và gọn */
+.thumbnailContainer::-webkit-scrollbar {
+  height: 6px;           /* giảm chiều cao */
+}
+
+.thumbnailContainer::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.3);
+  border-radius: 2px;    /* bo tròn nhỏ hơn */
+}
+
+.thumbnailContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+/* the end */
 .thumbnail {
   width: 80px;
   height: 60px;
@@ -187,7 +204,7 @@
 }
 
 .thumbnail.active {
-  border-color: #bb8d38;
+  border-color:#406c88;
 }
 
 @media (max-width: 768px) {
@@ -204,4 +221,37 @@
     width: 70px;
     height: 50px;
   }
+}
+.mainImageContainer {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0,0,0,0.4);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navButton:hover {
+  background-color: rgba(0,0,0,0.6);
+}
+
+.navButton:first-of-type {
+  left: 5px;
+}
+
+.navButton:last-of-type {
+  right: 5px;
 }

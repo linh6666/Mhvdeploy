@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./BuildingDetailPage.module.css";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowLeft, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { apiarea } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
 
@@ -105,6 +105,42 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
     );
   };
 
+  // Xử lý Prev/Next an toàn
+  const handlePrev = (port: number) => {
+    console.log(`Prev button clicked for port: ${port}`);
+    const thumbnailsForPort = imageUrls[port] || [];
+    if (thumbnailsForPort.length === 0) return;
+
+    const current = selectedImagePerPort[port];
+    const currentIndex = thumbnailsForPort.indexOf(current);
+    const prevIndex =
+      currentIndex > 0
+        ? currentIndex - 1
+        : thumbnailsForPort.length - 1; // nếu currentIndex = -1 hoặc 0 -> chọn ảnh cuối cùng
+
+    setSelectedImagePerPort((prev) => ({
+      ...prev,
+      [port]: thumbnailsForPort[prevIndex],
+    }));
+  };
+
+  const handleNext = (port: number) => {
+    const thumbnailsForPort = imageUrls[port] || [];
+    if (thumbnailsForPort.length === 0) return;
+
+    const current = selectedImagePerPort[port];
+    const currentIndex = thumbnailsForPort.indexOf(current);
+    const nextIndex =
+      currentIndex >= 0 && currentIndex < thumbnailsForPort.length - 1
+        ? currentIndex + 1
+        : 0; // nếu currentIndex = -1 hoặc cuối -> chọn ảnh đầu tiên
+
+    setSelectedImagePerPort((prev) => ({
+      ...prev,
+      [port]: thumbnailsForPort[nextIndex],
+    }));
+  };
+
   if (buildingData.length === 0) {
     return <div style={{ padding: "1rem" }}>❌ Không tìm thấy tòa nhà: {buildingName}</div>;
   }
@@ -146,13 +182,18 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
                   {isValid(item.status) && (
                     <li><strong>Trạng thái:</strong> {item.status}</li>
                   )}
-                 
                 </ul>
               </div>
 
-              {/* Hình ảnh chính và thumbnails */}
+              {/* Hình ảnh chính với nút next/prev */}
               <div className={styles.imageGallery}>
-                <div className={styles.mainImage}>
+                <div className={styles.mainImageContainer}>
+                  {/* Nút Previous */}
+                  <button className={styles.navButton} onClick={() => handlePrev(port)}>
+                    <IconChevronLeft size={24} />
+                  </button>
+
+                  {/* Ảnh chính */}
                   <Image
                     src={selectedImage || "/THUMBNAIL/4-MH-CAO-TANG.jpg"}
                     alt={item.building_name}
@@ -160,8 +201,14 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
                     height={300}
                     className={styles.image}
                   />
+
+                  {/* Nút Next */}
+                  <button className={styles.navButton} onClick={() => handleNext(port)}>
+                    <IconChevronRight size={24} />
+                  </button>
                 </div>
 
+                {/* Thumbnails */}
                 {thumbnails.length > 1 && (
                   <div className={styles.thumbnailContainer}>
                     {thumbnails.map((url, idx) => (

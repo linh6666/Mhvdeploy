@@ -17,6 +17,11 @@ interface RecordItem {
   amenity: string;
   amenity_type: string;
   status?: string;
+  price:string;
+direction:string;
+bedroom:string;
+
+
 }
 
 interface ZoneTabContentProps {
@@ -97,74 +102,71 @@ const handleGoToDetailPage = (buildingData: RecordItem) => {
         });
 
         return (
-          <Tabs.Panel key={zone} value={zone}>
-            <div className={styles.wrapper}>
-              {loading ? (
-                <p>Đang tải dữ liệu...</p>
-              ) : Object.keys(groupedData).length > 0 ? (
-                <div>
-                  {Object.entries(groupedData).map(([type, nameSet]) => (
-                    <div key={type} className={styles.buildingGroup}>
-                      <strong className={styles.buildingTypeTitle}>{type}</strong>
-                      <table className={styles.table}>
-                        <thead>
-                          <tr>
-                            <th>STT</th>
-                            <th>Tên tòa nhà</th>
-                            <th>Trạng Thái</th>
-                            <th>Hành động</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {[...nameSet].map((name, idx) => {
-                            const matchedItem = zoneData.find(
-                              (item) => item.building_name === name
-                            );
-                            return (
-                              <tr key={idx}>
-                                <td>{idx + 1}</td>
-                                <td>
-                                  <span className={styles.buildingName}>
-                                    <IconHome size={18} className={styles.buildingNameIcon} />
-                                    {name}
-                                  </span>
-                                </td>
-                                <td
-                                  style={{
-                                    color:
-                                      matchedItem?.status === "Đang bán"
-                                        ? "#4a7a96"
-                                        : matchedItem?.status === "Đã bán"
-                                        ? "red"
-                                        : matchedItem?.status === "Đã đặt cọc"
-                                        ? "#bb8d38"
-                                        : "#000",
-                                  }}
-                                >
-                                  {matchedItem?.status ?? "Không rõ"}
-                                </td>
-                                <td>
-                                 <button
-  onClick={() => matchedItem && handleGoToDetailPage(matchedItem)}
-  className={styles.button}
->
-  Xem chi tiết
-</button>
-
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
+         <Tabs.Panel key={zone} value={zone}>
+  <div className={styles.wrapper}>
+    {loading ? (
+      <p>Đang tải dữ liệu...</p>
+    ) : Object.keys(groupedData).length > 0 ? (
+      <div>
+        {Object.entries(groupedData).map(([type, nameSet]) => (
+          <div key={type} className={styles.buildingGroup}>
+            <strong className={styles.buildingTypeTitle}>{type}</strong>
+            <div className={styles.gridContainer}>
+              {[...nameSet].map((name, idx) => {
+                const matchedItem = zoneData.find(
+                  (item) => item.building_name === name
+                );
+                return (
+                  <div
+                    key={idx}
+                    className={styles.buildingCard}
+                    onClick={() => matchedItem && handleGoToDetailPage(matchedItem)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div className={styles.buildingHeader}>
+                      <IconHome size={20} className={styles.buildingNameIcon} />
+                      <span className={styles.buildingName}>{name}</span>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <p>Không có dữ liệu</p>
-              )}
+                    <div className={styles.buildingDetails}>
+                       <p>Phòng ngủ: {matchedItem?.bedroom ?? "Chưa có"}</p>
+    <p>
+  Giá:{" "}
+  {matchedItem?.price
+    ? new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(Number(matchedItem.price))
+    : "Chưa có"}
+</p>
+    <p>Hướng: {matchedItem?.direction ?? "Chưa có"}</p>
+   
+  </div>  
+                    <div
+                      className={styles.statusBadge}
+                      style={{
+                        backgroundColor:
+                          matchedItem?.status === "Đang bán"
+                            ? "#4CAF50"
+                            : matchedItem?.status === "Đã bán"
+                            ? "#F44336"
+                            : matchedItem?.status === "Đã đặt cọc"
+                            ? "#FFC107"
+                            : "#000",
+                        color: "#fff",
+                      }}
+                    >
+                      {matchedItem?.status ?? "Không rõ"}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          </Tabs.Panel>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p>Không có dữ liệu</p>
+    )}
+  </div>
+</Tabs.Panel>
+
         );
       })}
     </>

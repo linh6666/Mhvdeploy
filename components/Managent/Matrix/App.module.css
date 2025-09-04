@@ -122,3 +122,72 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+.wrapper {
+  padding: 16px;
+}
+
+.buildingGroup {
+  margin-bottom: 24px;
+}
+
+.buildingTypeTitle {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.buildingCard {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.2s;
+}
+
+.buildingCard:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.buildingHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.buildingName {
+  font-weight: 500;
+}
+
+.statusBadge {
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  margin-top: 10px;
+  margin-bottom: 8px;
+  text-align: center;
+  width: 100%;
+}
+
+.detailButton {
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.detailButton:hover {
+  background-color: #115293;
+}

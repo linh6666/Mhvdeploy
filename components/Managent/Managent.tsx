@@ -22,6 +22,11 @@ interface RecordItem {
   building_type: string;
   amenity: string;
   amenity_type: string;
+  price:string;
+direction:string;
+bedroom:string;
+
+
 }
 
 export default function Managent({ projectId }: AppProps) {
