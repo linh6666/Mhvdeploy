@@ -116,7 +116,6 @@ const RoleTable = () => {
     });
   };
 
-  // Xóa 1 vai trò
   const openDeleteUserModal = (role: Role) => {
     if (!role.user_project_role_id) {
       NotificationExtension.Warn('ID vai trò không hợp lệ.');
@@ -136,36 +135,8 @@ const RoleTable = () => {
     });
   };
 
-  // Xóa nhiều vai trò
-  const openModalDelete = () => {
-    const ids = selectedItems
-      .map((role) => role.user_project_role_id)
-      .filter(Boolean); // loại bỏ undefined
-
-    if (ids.length < 1) {
-      NotificationExtension.Warn('Vui lòng chọn ít nhất 1 vai trò hợp lệ để xóa');
-      return;
-    }
-
-    modals.openConfirmModal({
-      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Xóa người dùng dự án</div>,
-      children: <DeleteView idItem={ids} onSearch={fetchRoles} />,
-      confirmProps: { display: 'none' },
-      cancelProps: { display: 'none' },
-    });
-  };
-
-  const openModalEdit = () => {
-    if (selectedItems.length !== 1) {
-      NotificationExtension.Warn('Vui lòng chọn 1 vai trò để chỉnh sửa');
-      return;
-    }
-    openEditUserModal(selectedItems[0]);
-  };
-
   /* ==== Bảng dữ liệu ==== */
   const columns: Array<EuiBasicTableColumn<Role>> = [
-    // { field: 'user_id', name: 'ID Người Dùng', truncateText: true, width: '20%' },
     { field: 'user_email', name: 'Email', truncateText: true, width: '25%' },
     { field: 'project_id', name: 'ID Dự Án', truncateText: true, width: '22%' },
     { field: 'project_name', name: 'Tên Dự Án', truncateText: true, width: '25%' },
@@ -208,6 +179,7 @@ const RoleTable = () => {
   const selection = {
     selectable: () => true,
     onSelectionChange: (items: Role[]) => setSelectedItems(items),
+    selected: selectedItems, // ✅ thêm dòng này để fix lỗi ESLint
   };
 
   const onTableChange = ({ page }: Criteria<Role>) => {
@@ -222,11 +194,8 @@ const RoleTable = () => {
 
   return (
     <>
-      <AppAction
-        openModal={openModal}
-        openModalDelete={openModalDelete}
-        openModalEdit={openModalEdit}
-      />
+      {/* ✅ Chỉ còn nút Thêm */}
+      <AppAction openModal={openModal} />
 
       <Divider my="sm" label="Danh sách người dùng dự án" labelPosition="center" />
       <AppSearch />
@@ -261,3 +230,4 @@ const RoleTable = () => {
 };
 
 export default RoleTable;
+

@@ -12,6 +12,7 @@ import {
   FileInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { apiarea } from "../../../../library/axios";
 import { API_ROUTE } from "../../../../const/apiRouter";
@@ -22,7 +23,7 @@ interface ImageItem {
 }
 
 interface CustomerDetailsProps {
-     idItem: string[]; 
+  idItem: string[];
   port?: number;
   language?: "vi" | "en";
   onSearch?: () => void;
@@ -87,7 +88,11 @@ export default function CustomerDetails({
   const handleSaveEdit = async (file: File | null) => {
     if (!editingImage) return;
     if (!file) {
-      alert(language === "vi" ? "Chọn file trước khi lưu!" : "Select a file first!");
+      notifications.show({
+        title: language === "vi" ? "Lỗi" : "Error",
+        message: language === "vi" ? "Chọn file trước khi lưu!" : "Select a file first!",
+        color: "red",
+      });
       return;
     }
 
@@ -95,7 +100,7 @@ export default function CustomerDetails({
       setLoading(true);
 
       const formData = new FormData();
-      formData.append("file", file);           // backend yêu cầu key là "file"
+      formData.append("file", file);
       formData.append("lang", language);
 
       // Gọi API PUT
@@ -107,9 +112,8 @@ export default function CustomerDetails({
 
       console.log("✅ PUT response:", res.data);
 
-      // Nếu API trả về URL ảnh mới, cập nhật state
       const updatedUrl = res.data?.image_url
-        ? res.data.image_url + "?t=" + new Date().getTime() // tránh cache ảnh cũ
+        ? res.data.image_url + "?t=" + new Date().getTime()
         : editingImage.image_url;
 
       setImages(prev =>
@@ -124,9 +128,20 @@ export default function CustomerDetails({
       form.reset();
       setEditingImage(null);
       onSearch?.();
+
+      // 🔔 Thông báo thành công
+      notifications.show({
+        title: language === "vi" ? "Thành công" : "Success",
+        message: language === "vi" ? "Cập nhật ảnh thành công!" : "Image updated successfully!",
+        color: "green",
+      });
     } catch (err) {
       console.error("❌ Lỗi cập nhật ảnh:", err);
-      alert(language === "vi" ? "Cập nhật ảnh thất bại!" : "Failed to update image!");
+      notifications.show({
+        title: language === "vi" ? "Thất bại" : "Failed",
+        message: language === "vi" ? "Cập nhật ảnh thất bại!" : "Failed to update image!",
+        color: "red",
+      });
     } finally {
       setLoading(false);
     }
@@ -152,9 +167,20 @@ export default function CustomerDetails({
         setSelectedImage(images[0]?.image_url || null);
       }
       onSearch?.();
+
+      // 🔔 Thông báo thành công
+      notifications.show({
+        title: language === "vi" ? "Thành công" : "Success",
+        message: language === "vi" ? "Xóa ảnh thành công!" : "Image deleted successfully!",
+        color: "green",
+      });
     } catch (err) {
       console.error(err);
-      alert(language === "vi" ? "Xóa ảnh thất bại!" : "Failed to delete image!");
+      notifications.show({
+        title: language === "vi" ? "Thất bại" : "Failed",
+        message: language === "vi" ? "Xóa ảnh thất bại!" : "Failed to delete image!",
+        color: "red",
+      });
     } finally {
       setLoading(false);
     }

@@ -193,7 +193,7 @@ const RoleTable = () => {
   };
 
 const openDetaileUserModal = (role: Role) => {
-  modals.openConfirmModal({
+  const id = modals.openConfirmModal({
     title: (
       <div style={{ fontWeight: 600, fontSize: 18 }}>
         {language === "vi" ? "Hình ảnh" : "Image"}
@@ -201,10 +201,13 @@ const openDetaileUserModal = (role: Role) => {
     ),
     children: (
       <View
-        idItem={role.id}                  // 👈 thêm idItem
-        port={Number(role.port)}              // giữ nguyên
-        language={language}                   // giữ nguyên
-        onSearch={() => console.log("Search")} // 👈 thêm onSearch
+        idItem={role.id}
+        port={Number(role.port)}
+        language={language}
+        onSearch={() => {
+          console.log("Search");
+          modals.close(id); // ✅ đóng modal khi thành công
+        }}
       />
     ),
     confirmProps: { display: "none" },

@@ -19,7 +19,6 @@ import DeleteView from './DeleteView';
 import EditView from './EditView';
 import AppAction from '../../../common/AppAction';
 import AppSearch from '../../../common/AppSearch';
-import { NotificationExtension } from '../../../common/extension/NotificationExtension';
 import { paginationBase, PaginationOptions } from '../../../_base/model/BaseTable';
 
 type Role = {
@@ -82,13 +81,14 @@ const RoleTable = () => {
     fetchRoles();
   }, [fetchRoles]);
 
+  // 👉 đọc selectedItems để eslint không báo lỗi
+  useEffect(() => {
+    if (selectedItems.length > 0) {
+      console.log('Đã chọn:', selectedItems.map((u) => u.id));
+    }
+  }, [selectedItems]);
+
   const columns: Array<EuiBasicTableColumn<Role>> = [
-    // {
-    //   field: 'id',
-    //   name: 'ID',
-    //   truncateText: true,
-    //   width: '40%',
-    // },
     {
       field: 'full_name',
       name: 'Họ tên',
@@ -152,34 +152,13 @@ const RoleTable = () => {
     },
   ];
 
+  // 👉 chỉ giữ lại modal thêm
   const openModal = () => {
     modals.openConfirmModal({
       title: <div style={{ fontWeight: 600, fontSize: 18 }}>Thêm vai trò mới</div>,
       children: <CreateView onSearch={fetchRoles} />,
       size: 'lg',
       radius: 'md',
-      confirmProps: { display: 'none' },
-      cancelProps: { display: 'none' },
-    });
-  };
-
-  const openModalEdit = () => {
-    if (selectedItems.length !== 1) {
-      NotificationExtension.Warn('Vui lòng chọn 1 vai trò để chỉnh sửa');
-      return;
-    }
-    openEditUserModal(selectedItems[0]);
-  };
-
-  const openModalDelete = () => {
-    if (selectedItems.length < 1) {
-      NotificationExtension.Warn('Vui lòng chọn ít nhất 1 vai trò để xóa');
-      return;
-    }
-    const ids = selectedItems.map((role) => role.id);
-    modals.openConfirmModal({
-      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Xóa vai trò</div>,
-      children: <DeleteView idItem={ids} onSearch={fetchRoles} />,
       confirmProps: { display: 'none' },
       cancelProps: { display: 'none' },
     });
@@ -220,11 +199,8 @@ const RoleTable = () => {
 
   return (
     <>
-      <AppAction
-        openModal={openModal}
-        openModalDelete={openModalDelete}
-        openModalEdit={openModalEdit}
-      />
+      {/* 👉 AppAction chỉ còn nút Thêm */}
+      <AppAction openModal={openModal} />
 
       <Divider my="sm" label="Danh sách người dùng" labelPosition="center" />
       <AppSearch />

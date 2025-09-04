@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Button, FileInput, Group, LoadingOverlay } from '@mantine/core';
-import { IconCheck, IconX } from '@tabler/icons-react';
+import { Box, Button, FileInput, Group, LoadingOverlay} from '@mantine/core';
+import { IconCheck, IconX, IconPlus } from '@tabler/icons-react';
 import { apiarea } from "../../../../library/axios";
 import { API_ROUTE } from "../../../../const/apiRouter";
 import type { AxiosError } from "axios";
@@ -15,12 +15,29 @@ type CreateProps = {
 };
 
 const ViewCreate = ({ port, onSearch, language, onClose }: CreateProps) => {
-  const [files, setFiles] = useState<File[]>([]);
+  // mỗi phần tử là danh sách file của 1 input
+  const [fileInputs, setFileInputs] = useState<File[][]>([[]]);
   const [loading, setLoading] = useState(false);
+
+  // cập nhật files cho input cụ thể
+  const handleFileChange = (index: number, value: File[] | null) => {
+    const newInputs = [...fileInputs];
+    newInputs[index] = value ?? [];
+    setFileInputs(newInputs);
+  };
+
+  // thêm 2 input mới
+  const handleAddInputs = () => {
+    setFileInputs((prev) => [...prev, [], []]);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (files.length < 1) {
+
+    // gom tất cả file từ các input
+    const allFiles = fileInputs.flat();
+
+    if (allFiles.length < 1) {
       alert(language === 'vi' ? 'Vui lòng chọn ít nhất 1 file' : 'Please select at least one file');
       return;
     }
@@ -35,17 +52,22 @@ const ViewCreate = ({ port, onSearch, language, onClose }: CreateProps) => {
     try {
       const formData = new FormData();
 
-      // Thêm files
-      files.forEach((file) => formData.append("files", file));
+      // Append nhiều ảnh
+      allFiles.forEach((file) => formData.append("files", file));
 
-      // Thêm description theo ngôn ngữ
-      files.forEach((_, index) => {
+      // Append description cho từng ảnh
+      allFiles.forEach((_, index) => {
         if (language === "vi") {
           formData.append("description_vi", `Ảnh số ${index + 1}`);
         } else {
           formData.append("description_en", `Image ${index + 1}`);
         }
       });
+
+      // Debug log
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
 
       const url = `${API_ROUTE.CREATE_IMGE_BUILDING.replace("{port}", String(port))}?lang=${language}`;
       const res = await apiarea.put(url, formData, {
@@ -76,13 +98,30 @@ const ViewCreate = ({ port, onSearch, language, onClose }: CreateProps) => {
     <Box component="form" miw={321} mx="auto" onSubmit={handleSubmit}>
       <LoadingOverlay visible={loading} zIndex={1001} overlayProps={{ radius: "sm", blur: 2 }} />
 
-      <FileInput
-        label={language === "vi" ? "Tải ảnh lên" : "Upload files"}
-        placeholder={language === "vi" ? "Chọn file..." : "Select files..."}
-        multiple
-        value={files}
-        onChange={(value) => setFiles(value ?? [])}
-      />
+      {/* render các input file */}
+      {fileInputs.map((files, index) => (
+        <FileInput
+          key={index}
+          label={`${language === "vi" ? "Ảnh" : "Image"} ${index + 1}`}
+          placeholder={language === "vi" ? "Chọn file..." : "Select file..."}
+          value={files}
+          multiple
+          onChange={(value) => handleFileChange(index, value)}
+          mt="sm"
+        />
+      ))}
+
+      {/* nút thêm input */}
+      <Button
+        type="button"
+        variant="light"
+        color="blue"
+        mt="md"
+        leftSection={<IconPlus size={18} />}
+        onClick={handleAddInputs}
+      >
+        {language === "vi" ? "Thêm nhiều ảnh" : "Add more images"}
+      </Button>
 
       <Group justify="flex-end" mt="lg">
         <Button
@@ -108,6 +147,7 @@ const ViewCreate = ({ port, onSearch, language, onClose }: CreateProps) => {
 };
 
 export default ViewCreate;
+
 
 
 
