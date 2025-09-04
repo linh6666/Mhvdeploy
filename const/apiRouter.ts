@@ -92,8 +92,8 @@ EDIT_LIST_DETAIL_ECOPARK:"/api/v1/ecopark/{ecopark_id}",
 
 //// thêm mới + sửa ảnh cho từng nhà 
 CREATE_IMGE_BUILDING:"/api/v1/ecopark/add_multiple_images/{port}",
-EDIT_IMGE_BUILING:"/api/v1/update_image/{detal_id}"
-
+EDIT_IMGE_BUILING:"/api/v1/update_image/{detal_id}",
+DETELE_IMGE:"/api/v1/ecopark/bulk_delete"
 
 
 ///Bản Tiếng Anh

@@ -126,9 +126,10 @@ const RoleTable = () => {
   // --- Columns ---
   const columns: Array<EuiBasicTableColumn<Role>> = [
     { field: 'zone_name', name: language === 'vi' ? 'Tên Khu' : 'Zone Name', truncateText: true, width: '20%' },
+     { field: 'building_type', name: language === 'vi' ? 'Loại nhà' : 'Building Type', truncateText: true, width: '25%' },
     { field: 'building_name', name: language === 'vi' ? 'Tên nhà' : 'Building Name', truncateText: true, width: '25%' },
     { field: 'bedroom', name: language === 'vi' ? 'Số phòng' : 'Bedroom', truncateText: true, width: '15%' },
-    { field: 'building_type', name: language === 'vi' ? 'Loại nhà' : 'Building Type', truncateText: true, width: '25%' },
+
     { field: 'direction', name: language === 'vi' ? 'Hướng nhà' : 'Direction', truncateText: true, width: '20%' },
     {
       field: 'status',

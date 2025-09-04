@@ -2,58 +2,172 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Table } from "@mantine/core"; // ✅ thêm Mantine Table
+import {
+  Table,
+  ActionIcon,
+  Tooltip,
+  Button,
+  Group,
+  LoadingOverlay,
+  FileInput,
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { apiarea } from "../../../../library/axios";
 import { API_ROUTE } from "../../../../const/apiRouter";
 
 interface ImageItem {
+  id: string;
   image_url: string;
 }
 
 interface CustomerDetailsProps {
-  idItem: string[];
+     idItem: string[]; 
   port?: number;
   language?: "vi" | "en";
-  onSearch: () => void;
+  onSearch?: () => void;
 }
 
 export default function CustomerDetails({
   port,
   language = "vi",
+  onSearch,
 }: CustomerDetailsProps) {
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<ImageItem[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [editingImage, setEditingImage] = useState<ImageItem | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const form = useForm<{ image: File | null }>({
+    initialValues: { image: null },
+  });
+
+  // Fetch ảnh từ API
+  const fetchImages = async () => {
+    if (!port) return;
+    try {
+      setLoading(true);
+      const res = await apiarea.get(API_ROUTE.GET_DETAIL_HOME, {
+        params: { port, lang: language },
+      });
+
+      const imageData: ImageItem[] = Array.isArray(res.data)
+        ? res.data
+        : res.data?.items || [];
+
+      setImages(imageData);
+      if (imageData.length > 0) setSelectedImage(imageData[0].image_url);
+    } catch (err) {
+      console.error("❌ Lỗi fetch ảnh:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (!port) return;
-
-    const fetchImages = async () => {
-      try {
-        const res = await apiarea.get(API_ROUTE.GET_DETAIL_HOME, {
-          params: { port, lang: language },
-        });
-
-        const imageData: ImageItem[] = res.data?.items || [];
-        const urls = imageData.map((img) => img.image_url);
-
-        setImages(urls);
-        if (urls.length > 0) setSelectedImage(urls[0]);
-      } catch (err) {
-        console.error(`❌ Lỗi khi fetch ảnh cho port ${port}:`, err);
-      }
-    };
-
     fetchImages();
   }, [port, language]);
 
-  if (!port) return <div>⚠️ Port không hợp lệ</div>;
+  if (!port)
+    return (
+      <div>
+        ⚠️ {language === "vi" ? "Port không hợp lệ" : "Invalid Port"}
+      </div>
+    );
+
+  // Mở form sửa ảnh
+  const handleEditClick = (img: ImageItem) => {
+    setEditingImage(img);
+    form.setFieldValue("image", null);
+    setPreviewUrl(img.image_url);
+  };
+
+  // Lưu sửa ảnh
+  const handleSaveEdit = async (file: File | null) => {
+    if (!editingImage) return;
+    if (!file) {
+      alert(language === "vi" ? "Chọn file trước khi lưu!" : "Select a file first!");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append("file", file);           // backend yêu cầu key là "file"
+      formData.append("lang", language);
+
+      // Gọi API PUT
+      const res = await apiarea.put(
+        `/api/v1/ecopark/update_image/${editingImage.id}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      console.log("✅ PUT response:", res.data);
+
+      // Nếu API trả về URL ảnh mới, cập nhật state
+      const updatedUrl = res.data?.image_url
+        ? res.data.image_url + "?t=" + new Date().getTime() // tránh cache ảnh cũ
+        : editingImage.image_url;
+
+      setImages(prev =>
+        prev.map(img =>
+          img.id === editingImage.id ? { ...img, image_url: updatedUrl } : img
+        )
+      );
+
+      setSelectedImage(updatedUrl);
+      setPreviewUrl(updatedUrl);
+
+      form.reset();
+      setEditingImage(null);
+      onSearch?.();
+    } catch (err) {
+      console.error("❌ Lỗi cập nhật ảnh:", err);
+      alert(language === "vi" ? "Cập nhật ảnh thất bại!" : "Failed to update image!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Xóa ảnh
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm(
+      language === "vi"
+        ? "Bạn có chắc muốn xóa ảnh này?"
+        : "Are you sure to delete this image?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      setLoading(true);
+      await apiarea.delete(`${API_ROUTE.DETELE_IMGE}`, {
+        params: { detal_ids: id },
+      });
+
+      setImages(prev => prev.filter(img => img.id !== id));
+      if (selectedImage === images.find(img => img.id === id)?.image_url) {
+        setSelectedImage(images[0]?.image_url || null);
+      }
+      onSearch?.();
+    } catch (err) {
+      console.error(err);
+      alert(language === "vi" ? "Xóa ảnh thất bại!" : "Failed to delete image!");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div>
+    <div style={{ position: "relative" }}>
+      <LoadingOverlay visible={loading} />
+
       <h2>
         {language === "vi"
-          ? "Hình ảnh chi tiết của nhà!"
-          : "Detailed Images of the House!"}
+          ? "Hình ảnh chi tiết của nhà"
+          : "Detailed Images of the House"}
       </h2>
 
       <div
@@ -66,10 +180,7 @@ export default function CustomerDetails({
           gap: 10,
         }}
       >
-        {/* Ảnh lớn */}
-
-
-        {/* Bảng thumbnail */}
+        {/* Bảng ảnh */}
         <Table
           highlightOnHover
           withTableBorder
@@ -78,34 +189,90 @@ export default function CustomerDetails({
         >
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>Ảnh Thumbnail</Table.Th>
-              <Table.Th>Trạng thái</Table.Th>
+              <Table.Th>{language === "vi" ? "Ảnh" : "Image"}</Table.Th>
+              <Table.Th>{language === "vi" ? "Hành động" : "Actions"}</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {images.map((url, idx) => (
-              <Table.Tr key={idx}>
+            {images.map((img, idx) => (
+              <Table.Tr key={img.id}>
                 <Table.Td>
                   <Image
-                    src={url}
+                    src={previewUrl && editingImage?.id === img.id ? previewUrl : img.image_url}
                     alt={`Thumbnail ${idx}`}
                     width={80}
                     height={60}
-                    style={{
-                      cursor: "pointer",
-                  
-                      objectFit: "cover",
-                    }}
-                   
+                    style={{ cursor: "pointer", objectFit: "cover" }}
+                    onClick={() => setSelectedImage(img.image_url)}
                   />
                 </Table.Td>
                 <Table.Td>
-                  {selectedImage === url ? "Đang chọn" : "Chưa chọn"}
+                  <Group>
+                    <Tooltip label={language === "vi" ? "Sửa" : "Edit"}>
+                      <ActionIcon color="blue" variant="subtle" onClick={() => handleEditClick(img)}>
+                        <IconPencil size={18} />
+                      </ActionIcon>
+                    </Tooltip>
+                    <Tooltip label={language === "vi" ? "Xóa" : "Delete"}>
+                      <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(img.id)}>
+                        <IconTrash size={18} />
+                      </ActionIcon>
+                    </Tooltip>
+                  </Group>
                 </Table.Td>
               </Table.Tr>
             ))}
           </Table.Tbody>
         </Table>
+
+        {/* Form sửa ảnh */}
+        {editingImage && (
+          <div style={{ marginTop: "1rem", width: "500px" }}>
+            <h3>{language === "vi" ? "Sửa hình ảnh" : "Edit Image"}</h3>
+
+            {previewUrl && (
+              <div style={{ marginBottom: 10 }}>
+                <Image
+                  src={previewUrl}
+                  alt="Preview"
+                  width={100}
+                  height={50}
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
+            )}
+
+            <FileInput
+              label={language === "vi" ? "Chọn file ảnh" : "Select image file"}
+              placeholder={language === "vi" ? "Chọn file" : "Select file"}
+              accept="image/*"
+              {...form.getInputProps("image", {
+                onChange: (file: File | null) => {
+                  if (file) setPreviewUrl(URL.createObjectURL(file));
+                  else setPreviewUrl(editingImage?.image_url || null);
+                },
+              })}
+              mt="sm"
+            />
+
+            <Group mt="md">
+              <Button onClick={() => handleSaveEdit(form.values.image)}>
+                {language === "vi" ? "Lưu" : "Save"}
+              </Button>
+              <Button
+                variant="outline"
+                color="gray"
+                onClick={() => {
+                  setEditingImage(null);
+                  setPreviewUrl(null);
+                  form.reset();
+                }}
+              >
+                {language === "vi" ? "Hủy" : "Cancel"}
+              </Button>
+            </Group>
+          </div>
+        )}
       </div>
     </div>
   );
