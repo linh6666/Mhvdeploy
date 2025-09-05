@@ -5,6 +5,7 @@ import { Tabs } from "@mantine/core";
 import { apiarea } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
 import ZoneTabContent from "./Matrix";
+import AllBuilding from "./AllBuilding";
 import AmenityContent from "./AmenityContent";
 import HouseTypeContent from "./HouseTypeConten";
 import Note from "./tai-lieu";
@@ -22,17 +23,15 @@ interface RecordItem {
   building_type: string;
   amenity: string;
   amenity_type: string;
-  price:string;
-direction:string;
-bedroom:string;
-
-
+  price: string;
+  direction: string;
+  bedroom: string;
 }
 
 export default function Managent({ projectId }: AppProps) {
   const [records, setRecords] = useState<RecordItem[]>([]);
   const [zoneNames, setZoneNames] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<string | null>(null);
+const [activeTab, setActiveTab] = useState<string | null>("all");// ✅ mặc định là "all"
   const [activeView, setActiveView] = useState<string>("warehouse");
 
   useEffect(() => {
@@ -73,9 +72,7 @@ export default function Managent({ projectId }: AppProps) {
 
         const uniqueZoneNames = Array.from(zoneSet);
         setZoneNames(uniqueZoneNames);
-        if (uniqueZoneNames.length > 0) {
-          setActiveTab(uniqueZoneNames[0]);
-        }
+        // ❌ bỏ setActiveTab(uniqueZoneNames[0]);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu phân khu:", error);
       }
@@ -112,7 +109,7 @@ export default function Managent({ projectId }: AppProps) {
         >
           Danh sách giá
         </h1>
-         <h1
+        <h1
           className={`${styles.titleTab} ${
             activeView === "note" ? styles.titleTabActive : ""
           }`}
@@ -132,30 +129,44 @@ export default function Managent({ projectId }: AppProps) {
           className={styles.tabList}
         >
           <Tabs.List>
-            {zoneNames.map((zoneName) => (
-              <Tabs.Tab
-                key={zoneName}
-                value={zoneName}
-                className={styles.customTab}
-              >
-                {zoneName}
-              </Tabs.Tab>
-            ))}
+            <Tabs.Tab key="all" value="all" className={styles.customTab}>
+              All
+            </Tabs.Tab>
+
+            {[...zoneNames]
+              .sort((a, b) => {
+                const numA = parseInt(a.replace(/\D/g, ""), 10);
+                const numB = parseInt(b.replace(/\D/g, ""), 10);
+                return numA - numB;
+              })
+              .map((zoneName) => (
+                <Tabs.Tab
+                  key={zoneName}
+                  value={zoneName}
+                  className={styles.customTab}
+                >
+                  {zoneName}
+                </Tabs.Tab>
+              ))}
           </Tabs.List>
 
-          <ZoneTabContent
-            zoneNames={zoneNames}
-            activeTab={activeTab}
-            records={records}
-            projectId={projectId}
-          />
+          {/* 👉 chỉ render component phù hợp */}
+          {activeTab === "all" ? (
+            <AllBuilding projectId={projectId} />
+          ) : (
+            <ZoneTabContent
+              zoneNames={zoneNames}
+              activeTab={activeTab}
+              records={records}
+              projectId={projectId}
+            />
+          )}
         </Tabs>
       )}
 
       {activeView === "amenities" && <AmenityContent projectId={projectId} />}
       {activeView === "houseType" && <HouseTypeContent projectId={projectId} />}
-        {activeView === "note" && <Note projectId={projectId} />}
+      {activeView === "note" && <Note projectId={projectId} />}
     </div>
   );
 }
-
