@@ -37,43 +37,38 @@ export default function ZoneTabContent({ zoneNames, projectId }: ZoneTabContentP
   const router = useRouter();
 
   useEffect(() => {
-    const fetchAllData = async () => {
-      if (!projectId) return;
+  const fetchAllData = async () => {
+    if (!projectId) return;
 
-      setLoading(true);
-      try {
-        const token = localStorage.getItem("access_token");
-        const fullData: RecordItem[] = [];
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("access_token");
+      const fullData: RecordItem[] = [];
 
-        for (const zone of zoneNames) {
-          const zoneParam = "pk"; // giả sử slug phân khu
-          const zoneNamePath = encodeURIComponent(zone);
+      for (const zone of zoneNames) {
+        const endpoint = API_ROUTE.GET_LIST_DETAIL_ECOPARK;
 
-          const endpoint = API_ROUTE.GET_AREA_DETAIL
-            .replace("{project_id}", projectId)
-            .replace("{zone_param}", zoneParam)
-            .replace("{zone_name_path}", zoneNamePath);
+        const res = await apiarea.get(endpoint, {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { lang: "vi" },
+        });
 
-          const res = await apiarea.get(endpoint, {
-            headers: { Authorization: `Bearer ${token}` },
-            params: { lang: "vi" },
-          });
-
-          if (Array.isArray(res.data)) {
-            fullData.push(...res.data);
-          }
+        // ⚡ Lấy data trong items thay vì res.data
+        if (res.data && Array.isArray(res.data.items)) {
+          fullData.push(...res.data.items);
         }
-
-        setAllData(fullData);
-      } catch (error) {
-        console.error("Lỗi khi gọi API:", error);
-      } finally {
-        setLoading(false);
       }
-    };
 
-    fetchAllData();
-  }, [projectId, zoneNames]);
+      setAllData(fullData);
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchAllData();
+}, [projectId, zoneNames]);
 
 const handleGoToDetailPage = (buildingData: RecordItem) => {
   const encodedName = encodeURIComponent(buildingData.building_name);

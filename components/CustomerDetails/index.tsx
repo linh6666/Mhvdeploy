@@ -20,6 +20,7 @@ interface RecordItem {
   status?: string;
   bedroom?: number | string;
   price?: number | string;
+  description:string;
   port?: number;
 }
 
@@ -155,7 +156,7 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
         return (
           <div className={styles.container} key={index}>
             <h1 style={{ marginBottom: "1rem" }}>
-              Chi tiết các căn: {buildingName}
+              Chi tiết căn: {buildingName}
             </h1>
 
             <div className={styles.box}>
@@ -181,6 +182,14 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
                   )}
                   {isValid(item.status) && (
                     <li><strong>Trạng thái:</strong> {item.status}</li>
+                  )}
+                    {isValid(item.description) && (
+              <li>
+  <strong>Ghi chú:</strong>{" "}
+  <span style={{ whiteSpace: "pre-line", display: "inline-block" }}>
+    {item.description}
+  </span>
+</li>
                   )}
                 </ul>
               </div>

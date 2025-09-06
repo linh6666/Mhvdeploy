@@ -9,16 +9,13 @@ import {
   EuiFlexItem,
   EuiButtonIcon,
   Criteria,
-  EuiFormRow,
-  EuiComboBox,
-  EuiButton,
 } from '@elastic/eui';
-import { Divider } from '@mantine/core';
+import { Divider, Menu, Button, Text } from '@mantine/core';
+import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 
 import { getListRoles } from '../../../api/apigetlistdetailproject';
 import CreateView from './CreateView';
-// import DeleteView from './DeleteView';
 import EditView from './EditView';
 import View from './View';
 import AppAction from '../../../common/AppAction';
@@ -38,33 +35,35 @@ type Role = {
 };
 
 const RoleTable = () => {
-  const [allRoles, setAllRoles] = useState<Role[]>([]); // toàn bộ dữ liệu từ server
-  const [displayRoles, setDisplayRoles] = useState<Role[]>([]); // dữ liệu sau filter + pagination
+  const [allRoles, setAllRoles] = useState<Role[]>([]);
+  const [displayRoles, setDisplayRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  // Xóa selectedItems vì chưa dùng
-  // const [selectedItems, setSelectedItems] = useState<Role[]>([]);
   const [pagination, setPagination] = useState<PaginationOptions>(paginationBase);
   const [language, setLanguage] = useState<'vi' | 'en'>('vi');
 
-  // --- Filter options ---
-  const [zoneOptions, setZoneOptions] = useState<{ label: string }[]>([]);
-  const [buildingTypeOptions, setBuildingTypeOptions] = useState<{ label: string }[]>([]);
-  const [statusOptions, setStatusOptions] = useState<{ label: string }[]>([]);
-  const [directionOptions, setDirectionOptions] = useState<{ label: string }[]>([]);
+  // Filter options
+  const [zoneOptions, setZoneOptions] = useState<string[]>([]);
+  const [buildingTypeOptions, setBuildingTypeOptions] = useState<string[]>([]);
+  const [statusOptions, setStatusOptions] = useState<string[]>([]);
+  const [directionOptions, setDirectionOptions] = useState<string[]>([]);
 
-  // --- Selected filter values ---
-  const [selectedZones, setSelectedZones] = useState<{ label: string }[]>([]);
-  const [selectedBuildingTypes, setSelectedBuildingTypes] = useState<{ label: string }[]>([]);
-  const [selectedStatuses, setSelectedStatuses] = useState<{ label: string }[]>([]);
-  const [selectedDirections, setSelectedDirections] = useState<{ label: string }[]>([]);
+  // Selected filter values
+  const [selectedZones, setSelectedZones] = useState<string[]>([]);
+  const [selectedBuildingTypes, setSelectedBuildingTypes] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [selectedDirections, setSelectedDirections] = useState<string[]>([]);
 
-  // --- Fetch all data from server ---
+  // Fetch data
   const fetchAllRoles = useCallback(async () => {
     setLoading(true);
     const token = localStorage.getItem('access_token');
     if (!token) {
-      setError(language === 'vi' ? '⚠️ Không tìm thấy token. Vui lòng đăng nhập.' : '⚠️ Token not found. Please login.');
+      setError(
+        language === 'vi'
+          ? '⚠️ Không tìm thấy token. Vui lòng đăng nhập.'
+          : '⚠️ Token not found. Please login.'
+      );
       setLoading(false);
       return;
     }
@@ -77,26 +76,36 @@ const RoleTable = () => {
 
       do {
         const res = await getListRoles({ token, lang: language, skip, limit });
-        allData = [...allData, ...(res.items
- || [])];
+        allData = [...allData, ...(res.items || [])];
         total = res.total;
         skip += limit;
       } while (skip < total);
 
       setAllRoles(allData);
 
-      // --- set options filter ---
-      setZoneOptions(Array.from(new Set(allData.map(r => r.zone_name || '').filter(v => v !== ''))).map(v => ({ label: v })));
-      setBuildingTypeOptions(Array.from(new Set(allData.map(r => r.building_type || '').filter(v => v !== ''))).map(v => ({ label: v })));
-      setStatusOptions(Array.from(new Set(allData.map(r => r.status || '').filter(v => v !== ''))).map(v => ({ label: v })));
-      setDirectionOptions(Array.from(new Set(allData.map(r => r.direction || '').filter(v => v !== ''))).map(v => ({ label: v })));
+      // set filter options
+      setZoneOptions(
+        Array.from(new Set(allData.map((r) => r.zone_name || '').filter((v) => v !== '')))
+      );
+      setBuildingTypeOptions(
+        Array.from(new Set(allData.map((r) => r.building_type || '').filter((v) => v !== '')))
+      );
+      setStatusOptions(
+        Array.from(new Set(allData.map((r) => r.status || '').filter((v) => v !== '')))
+      );
+      setDirectionOptions(
+        Array.from(new Set(allData.map((r) => r.direction || '').filter((v) => v !== '')))
+      );
 
-      setPagination(prev => ({ ...prev, totalItemCount: allData.length }));
+      setPagination((prev) => ({ ...prev, totalItemCount: allData.length }));
       setError(null);
     } catch (err: unknown) {
       console.error('❌ Lỗi fetchAllRoles:', err);
       if (err instanceof Error) setError(err.message);
-      else setError(language === 'vi' ? 'Đã xảy ra lỗi khi tải dữ liệu.' : 'An error occurred while loading data.');
+      else
+        setError(
+          language === 'vi' ? 'Đã xảy ra lỗi khi tải dữ liệu.' : 'An error occurred while loading data.'
+        );
     } finally {
       setLoading(false);
     }
@@ -106,13 +115,17 @@ const RoleTable = () => {
     fetchAllRoles();
   }, [fetchAllRoles]);
 
-  // --- Apply filter & pagination ---
+  // Apply filter & pagination
   useEffect(() => {
-    const filtered = allRoles.filter(role => {
-      const matchZone = selectedZones.length === 0 || selectedZones.some(z => z.label === role.zone_name);
-      const matchBuildingType = selectedBuildingTypes.length === 0 || selectedBuildingTypes.some(bt => bt.label === role.building_type);
-      const matchStatus = selectedStatuses.length === 0 || selectedStatuses.some(s => s.label === role.status);
-      const matchDirection = selectedDirections.length === 0 || selectedDirections.some(d => d.label === role.direction);
+    const filtered = allRoles.filter((role) => {
+      const matchZone =
+        selectedZones.length === 0 || selectedZones.includes(role.zone_name);
+      const matchBuildingType =
+        selectedBuildingTypes.length === 0 || selectedBuildingTypes.includes(role.building_type);
+      const matchStatus =
+        selectedStatuses.length === 0 || selectedStatuses.includes(role.status);
+      const matchDirection =
+        selectedDirections.length === 0 || selectedDirections.includes(role.direction);
       return matchZone && matchBuildingType && matchStatus && matchDirection;
     });
 
@@ -120,16 +133,23 @@ const RoleTable = () => {
     const end = start + pagination.pageSize;
     setDisplayRoles(filtered.slice(start, end));
 
-    setPagination(prev => ({ ...prev, totalItemCount: filtered.length }));
-  }, [allRoles, selectedZones, selectedBuildingTypes, selectedStatuses, selectedDirections, pagination.pageIndex, pagination.pageSize]);
+    setPagination((prev) => ({ ...prev, totalItemCount: filtered.length }));
+  }, [
+    allRoles,
+    selectedZones,
+    selectedBuildingTypes,
+    selectedStatuses,
+    selectedDirections,
+    pagination.pageIndex,
+    pagination.pageSize,
+  ]);
 
-  // --- Columns ---
+  // Columns
   const columns: Array<EuiBasicTableColumn<Role>> = [
     { field: 'zone_name', name: language === 'vi' ? 'Tên Khu' : 'Zone Name', truncateText: true, width: '20%' },
-     { field: 'building_type', name: language === 'vi' ? 'Loại nhà' : 'Building Type', truncateText: true, width: '25%' },
+    { field: 'building_type', name: language === 'vi' ? 'Loại nhà' : 'Building Type', truncateText: true, width: '25%' },
     { field: 'building_name', name: language === 'vi' ? 'Tên nhà' : 'Building Name', truncateText: true, width: '25%' },
     { field: 'bedroom', name: language === 'vi' ? 'Số phòng' : 'Bedroom', truncateText: true, width: '15%' },
-
     { field: 'direction', name: language === 'vi' ? 'Hướng nhà' : 'Direction', truncateText: true, width: '20%' },
     {
       field: 'status',
@@ -161,17 +181,27 @@ const RoleTable = () => {
       render: (role: Role) => (
         <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
           <EuiFlexItem grow={false}>
-            <EuiButtonIcon iconType="documentEdit" aria-label="Edit" color="success" onClick={() => openEditUserModal(role)} />
+            <EuiButtonIcon
+              iconType="documentEdit"
+              aria-label="Edit"
+              color="success"
+              onClick={() => openEditUserModal(role)}
+            />
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
-            <EuiButtonIcon iconType="eye" aria-label="View" color="success" onClick={() => openDetaileUserModal(role)} />
+            <EuiButtonIcon
+              iconType="eye"
+              aria-label="View"
+              color="success"
+              onClick={() => openDetaileUserModal(role)}
+            />
           </EuiFlexItem>
         </EuiFlexGroup>
       ),
     },
   ];
 
-  // --- Modal handlers ---
+  // Modal handlers
   const openModal = () => {
     modals.openConfirmModal({
       title: <div style={{ fontWeight: 600, fontSize: 18 }}>{language === 'vi' ? 'Thêm dự án mới' : 'Add New Project'}</div>,
@@ -192,42 +222,36 @@ const RoleTable = () => {
     });
   };
 
-const openDetaileUserModal = (role: Role) => {
-  const id = modals.openConfirmModal({
-    title: (
-      <div style={{ fontWeight: 600, fontSize: 18 }}>
-        {language === "vi" ? "Hình ảnh" : "Image"}
-      </div>
-    ),
-    children: (
-      <View
-        idItem={role.id}
-        port={Number(role.port)}
-        language={language}
-        onSearch={() => {
-          console.log("Search");
-          modals.close(id); // ✅ đóng modal khi thành công
-        }}
-      />
-    ),
-    confirmProps: { display: "none" },
-    cancelProps: { display: "none" },
-    size: "50%",
-  });
-};
+  const openDetaileUserModal = (role: Role) => {
+    const id = modals.openConfirmModal({
+      title: <div style={{ fontWeight: 600, fontSize: 18 }}>{language === 'vi' ? 'Hình ảnh' : 'Image'}</div>,
+      children: (
+        <View
+          idItem={role.id}
+          port={Number(role.port)}
+          language={language}
+          onSearch={() => {
+            modals.close(id);
+          }}
+        />
+      ),
+      confirmProps: { display: 'none' },
+      cancelProps: { display: 'none' },
+      size: '50%',
+    });
+  };
 
-  // --- Table selection ---
+  // Table selection
   const selection = {
     selectable: () => true,
     onSelectionChange: (items: Role[]) => {
-      // Chỉ log ra console, không cần state
       console.log('Selected items:', items);
     },
   };
 
-  // --- Table pagination ---
+  // Table pagination
   const onTableChange = ({ page }: Criteria<Role>) => {
-    if (page) setPagination(prev => ({ ...prev, pageIndex: page.index ?? 0, pageSize: page.size ?? prev.pageSize }));
+    if (page) setPagination((prev) => ({ ...prev, pageIndex: page.index ?? 0, pageSize: page.size ?? prev.pageSize }));
   };
 
   const clearFilters = () => {
@@ -237,11 +261,69 @@ const openDetaileUserModal = (role: Role) => {
     setSelectedDirections([]);
   };
 
+  // ✅ Component FilterItem giống mẫu
+  const FilterItem = ({
+    label,
+    options,
+    selected,
+    setSelected,
+  }: {
+    label: string;
+    options: string[];
+    selected: string[];
+    setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+  }) => {
+    const [opened, setOpened] = useState(false);
+
+    return (
+      <Menu shadow="md" width={200} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
+        <Menu.Target>
+          <Text
+            size="sm"
+            fw={500}
+            style={{
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              color: selected.length > 0 ? '#1E88E5' : '#555',
+            }}
+          >
+            {selected.length > 0 ? selected.join(', ') : label}
+            {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+          </Text>
+        </Menu.Target>
+        <Menu.Dropdown>
+          {options.map((opt) => (
+            <Menu.Item
+              key={opt}
+              onClick={() => {
+                setSelected((prev) =>
+                  prev.includes(opt) ? prev.filter((v) => v !== opt) : [...prev, opt]
+                );
+              }}
+            >
+              <Text
+                size="sm"
+                fw={selected.includes(opt) ? 600 : 400}
+                c={selected.includes(opt) ? 'blue' : 'black'}
+              >
+                {opt}
+              </Text>
+            </Menu.Item>
+          ))}
+        </Menu.Dropdown>
+      </Menu>
+    );
+  };
+
   return (
     <>
       {/* Language */}
       <div style={{ marginBottom: 12 }}>
-        <label htmlFor="language-select" style={{ marginRight: 8 }}>{language === 'vi' ? 'Chọn ngôn ngữ:' : 'Select Language:'}</label>
+        <label htmlFor="language-select" style={{ marginRight: 8 }}>
+          {language === 'vi' ? 'Chọn ngôn ngữ:' : 'Select Language:'}
+        </label>
         <select id="language-select" value={language} onChange={(e) => setLanguage(e.target.value as 'vi' | 'en')}>
           <option value="vi">Tiếng Việt</option>
           <option value="en">English</option>
@@ -254,83 +336,47 @@ const openDetaileUserModal = (role: Role) => {
 
       {/* Filters */}
       <EuiFlexGroup style={{ marginBottom: '12px' }} alignItems="flexEnd" gutterSize="m">
-        {/* Zone Filter */}
-        <EuiFlexItem grow={3}>
-          <EuiFormRow label={language === 'vi' ? 'Chọn khu vực:' : 'Select Zone:'} fullWidth>
-            <EuiComboBox
-              placeholder={language === 'vi' ? 'Chọn khu vực:' : 'Select Zone:'}
-              options={Array.from(
-                new Map(
-                  zoneOptions.map(option => [
-                    option.label.split('.')[0],
-                    { label: option.label.split('.')[0], value: option.label.split('.')[0] },
-                  ])
-                ).values()
-              )}
-              selectedOptions={selectedZones}
-              onChange={(options) => setSelectedZones(options as { label: string; value?: string }[])}
-              isClearable
-              fullWidth
-              isDisabled={loading}
-            />
-          </EuiFormRow>
+        <EuiFlexItem grow={false}>
+          <FilterItem
+            label={language === 'vi' ? 'Chọn khu vực' : 'Select Zone'}
+            options={zoneOptions}
+            selected={selectedZones}
+            setSelected={setSelectedZones}
+          />
         </EuiFlexItem>
-
-        {/* Building Type Filter */}
-        <EuiFlexItem grow={3}>
-          <EuiFormRow label={language === 'vi' ? 'Chọn loại nhà:' : 'Select Building Type:'} fullWidth>
-            <EuiComboBox
-              placeholder={language === 'vi' ? 'Chọn loại nhà:' : 'Select Building Type:'}
-              options={buildingTypeOptions}
-              selectedOptions={selectedBuildingTypes}
-              onChange={(options) => setSelectedBuildingTypes(options as { label: string }[])}
-              isClearable
-              fullWidth
-              isDisabled={loading}
-            />
-          </EuiFormRow>
+        <EuiFlexItem grow={false}>
+          <FilterItem
+            label={language === 'vi' ? 'Chọn loại nhà' : 'Select Building Type'}
+            options={buildingTypeOptions}
+            selected={selectedBuildingTypes}
+            setSelected={setSelectedBuildingTypes}
+          />
         </EuiFlexItem>
-
-        {/* Status Filter */}
-        <EuiFlexItem grow={3}>
-          <EuiFormRow label={language === 'vi' ? 'Chọn trạng thái:' : 'Select Status:'} fullWidth>
-            <EuiComboBox
-              placeholder={language === 'vi' ? 'Chọn trạng thái:' : 'Select Status:'}
-              options={statusOptions}
-              selectedOptions={selectedStatuses}
-              onChange={(options) => setSelectedStatuses(options as { label: string }[])}
-              isClearable
-              fullWidth
-              isDisabled={loading}
-            />
-          </EuiFormRow>
+        <EuiFlexItem grow={false}>
+          <FilterItem
+            label={language === 'vi' ? 'Chọn trạng thái' : 'Select Status'}
+            options={statusOptions}
+            selected={selectedStatuses}
+            setSelected={setSelectedStatuses}
+          />
         </EuiFlexItem>
-
-        {/* Direction Filter */}
-        <EuiFlexItem grow={3}>
-          <EuiFormRow label={language === 'vi' ? 'Chọn hướng nhà:' : 'Select Direction:'} fullWidth>
-            <EuiComboBox
-              placeholder={language === 'vi' ? 'Chọn hướng nhà:' : 'Select Direction:'}
-              options={directionOptions}
-              selectedOptions={selectedDirections}
-              onChange={(options) => setSelectedDirections(options as { label: string }[])}
-              isClearable
-              fullWidth
-              isDisabled={loading}
-            />
-          </EuiFormRow>
+        <EuiFlexItem grow={false}>
+          <FilterItem
+            label={language === 'vi' ? 'Chọn hướng nhà' : 'Select Direction'}
+            options={directionOptions}
+            selected={selectedDirections}
+            setSelected={setSelectedDirections}
+          />
         </EuiFlexItem>
-
-        {/* Clear Filters Button */}
-        <EuiFlexItem grow={1}>
-          <EuiButton
-            iconType="trash"
-            style={{ backgroundColor: "#406c88", color: "#fff" }}
-            isLoading={loading}
+        <EuiFlexItem grow={false}>
+          <Button
+            leftSection={<span>🗑️</span>}
+            style={{ backgroundColor: '#406c88', color: '#fff' }}
+            loading={loading}
             onClick={clearFilters}
           >
             {language === 'vi' ? 'Xóa' : 'Clear'}
-          </EuiButton>
+          </Button>
         </EuiFlexItem>
       </EuiFlexGroup>
 
@@ -349,8 +395,12 @@ const openDetaileUserModal = (role: Role) => {
           error
             ? error
             : loading
-            ? language === 'vi' ? 'Đang tải dữ liệu...' : 'Loading data...'
-            : language === 'vi' ? 'Không có dự án nào.' : 'No projects found.'
+            ? language === 'vi'
+              ? 'Đang tải dữ liệu...'
+              : 'Loading data...'
+            : language === 'vi'
+            ? 'Không có dự án nào.'
+            : 'No projects found.'
         }
         pagination={{
           pageIndex: pagination.pageIndex,
@@ -365,5 +415,6 @@ const openDetaileUserModal = (role: Role) => {
 };
 
 export default RoleTable;
+
 
 
