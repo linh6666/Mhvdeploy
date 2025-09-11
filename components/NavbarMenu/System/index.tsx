@@ -86,6 +86,13 @@ const RoleTable = () => {
       truncateText: true,
       width: "30%",
     },
+     {
+      field: "rank_total",
+      name: "Cấp bậc",
+      width: "20%",
+      render: (rank: number) => <EuiHealth color="success">{rank}</EuiHealth>,
+      truncateText: true,
+    },
     {
       field: "description",
       name: "Mô tả",
@@ -97,13 +104,7 @@ const RoleTable = () => {
         enlarge: true,
       },
     },
-    {
-      field: "rank_total",
-      name: "Cấp bậc",
-      width: "20%",
-      render: (rank: number) => <EuiHealth color="success">{rank}</EuiHealth>,
-      truncateText: true,
-    },
+   
     {
       name: "Thao tác",
       width: "20%",

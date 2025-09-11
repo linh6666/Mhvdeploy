@@ -30,10 +30,34 @@ interface Project {
   image_url?: string;
 }
 
+interface RequestState {
+  [projectId: string]: {
+    loading: boolean;
+    sent: boolean;
+    status?: "pending" | "approved" | "rejected";
+    requestId?: string;
+  };
+}
+
+interface Role {
+  id: string;
+  name: string;
+}
+
+interface RequestItem {
+  id: string;
+  status: "pending" | "approved" | "rejected";
+  created_at: string;
+}
+
 export default function DetailInteractive() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [token, setToken] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [requestState, setRequestState] = useState<RequestState>({});
+  const [openedProjectId, setOpenedProjectId] = useState<string | null>(null);
+  const [formData, setFormData] = useState({ role_id: "", request_message: "" });
+  const [roleOptions, setRoleOptions] = useState<Role[]>([]);
 
   const projectPaths = [
     "/chi-tiet-du-an",
@@ -47,7 +71,7 @@ export default function DetailInteractive() {
     setToken(storedToken);
 
     if (!storedToken) {
-      setShowLoginModal(true); // ❌ chưa có token → bật popup
+      setShowLoginModal(true);
       return;
     }
 
@@ -65,6 +89,72 @@ export default function DetailInteractive() {
 
     fetchProjects();
   }, []);
+
+  useEffect(() => {
+    if (openedProjectId) {
+      const fetchRoles = async () => {
+        try {
+          const currentToken = localStorage.getItem("access_token");
+          const res = await apiarea.get("/api/v1/roles/", {
+            headers: { Authorization: `Bearer ${currentToken}` },
+          });
+          setRoleOptions(res.data.data);
+        } catch (error) {
+          console.error("Lỗi khi fetch roles:", error);
+        }
+      };
+      fetchRoles();
+    }
+  }, [openedProjectId]);
+
+  // gửi request
+  const handleSendRequest = async (projectId: string) => {
+    setRequestState(prev => ({
+      ...prev,
+      [projectId]: { ...prev[projectId], loading: true },
+    }));
+
+    try {
+      const url = `https://www.mohinhviet.com.vn/api/v1/req/${projectId}`;
+      const currentToken = localStorage.getItem("access_token");
+
+      await apiarea.post(url, formData, {
+        headers: { Authorization: `Bearer ${currentToken}` },
+      });
+
+      const reqRes = await apiarea.get(
+        `${API_ROUTE.GET_LIST_REQUEST}?skip=0&limit=100&lang=vi&project_id=${projectId}`,
+        { headers: { Authorization: `Bearer ${currentToken}` } }
+      );
+
+      const requests: RequestItem[] = reqRes.data.data;
+      const myReq = requests
+        .sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        )[0];
+
+      setRequestState(prev => ({
+        ...prev,
+        [projectId]: {
+          loading: false,
+          sent: true,
+          status: myReq?.status,
+          requestId: myReq?.id,
+        },
+      }));
+
+      setOpenedProjectId(null);
+      alert("Gửi yêu cầu thành công!");
+    } catch (error) {
+      console.error(error);
+      alert("Gửi yêu cầu thất bại, thử lại sau.");
+      setRequestState(prev => ({
+        ...prev,
+        [projectId]: { ...prev[projectId], loading: false },
+      }));
+    }
+  };
 
   return (
     <AppContainer>
@@ -86,7 +176,40 @@ export default function DetailInteractive() {
           </Button>
         </Modal>
 
-        {/* Nếu có token thì hiển thị giao diện tìm kiếm + danh sách */}
+        {/* Modal gửi yêu cầu */}
+        <Modal
+          opened={!!openedProjectId}
+          onClose={() => setOpenedProjectId(null)}
+          title="Gửi yêu cầu truy cập dự án"
+          centered
+        >
+          <Select
+            label="Chọn vai trò"
+            placeholder="Chọn vai trò"
+            data={roleOptions.map(r => ({ value: r.id, label: r.name }))}
+            value={formData.role_id}
+            onChange={value =>
+              setFormData(prev => ({ ...prev, role_id: value || "" }))
+            }
+            mb="md"
+          />
+          <TextInput
+            label="Lời nhắn"
+            placeholder="Nhập lời nhắn"
+            value={formData.request_message}
+            onChange={e =>
+              setFormData(prev => ({ ...prev, request_message: e.target.value }))
+            }
+            mb="md"
+          />
+          <Button
+            fullWidth
+            onClick={() => openedProjectId && handleSendRequest(openedProjectId)}
+          >
+            Gửi
+          </Button>
+        </Modal>
+
         {token && (
           <>
             {/* Thanh tìm kiếm */}
@@ -114,47 +237,75 @@ export default function DetailInteractive() {
 
             {/* Danh sách dự án */}
             <div className={styles.cardGrid}>
-              {projects.map((project, index) => (
-                <Card
-                  key={project.id}
-                  shadow="sm"
-                  radius="md"
-                  withBorder
-                  padding="0"
-                  className={styles.card}
-                >
-                  <Image
-                    src={
-                      project.image_url ||
-                      "https://via.placeholder.com/800x400?text=No+Image"
-                    }
-                    alt={project.name}
-                    fallbackSrc="https://via.placeholder.com/800x400?text=No+Image"
-                    className={styles.cardImage}
-                  />
+              {projects.map((project, index) => {
+                const { loading, status } = requestState[project.id] || {
+                  loading: false,
+                  status: undefined,
+                };
 
-                  <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
-                    <Text fw={500}>{project.name}</Text>
-                    <Text size="sm" c="dimmed">
-                      {project.address}
-                    </Text>
-                    <Text size="sm" c="dimmed">
-                      {project.type}
-                    </Text>
-                  </Stack>
-
-                  <Button
-                    onClick={() => {
-                      localStorage.setItem("project_id", project.id);
-                      const path = projectPaths[index] || "/chi-tiet-du-an";
-                      window.location.href = `${path}?pageId=${project.id}`;
-                    }}
-                    className={`${styles.baseButton} ${styles.primaryButton}`}
+                return (
+                  <Card
+                    key={project.id}
+                    shadow="sm"
+                    radius="md"
+                    withBorder
+                    padding="0"
+                    className={styles.card}
                   >
-                    Đi tới dự án
-                  </Button>
-                </Card>
-              ))}
+                    <Image
+                      src={
+                        project.image_url ||
+                        "https://via.placeholder.com/800x400?text=No+Image"
+                      }
+                      alt={project.name}
+                      fallbackSrc="https://via.placeholder.com/800x400?text=No+Image"
+                      className={styles.cardImage}
+                    />
+                    <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
+                      <Text fw={500}>{project.name}</Text>
+                      <Text size="sm" c="dimmed">
+                        {project.address}
+                      </Text>
+                      <Text size="sm" c="dimmed">
+                        {project.type}
+                      </Text>
+                    </Stack>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "8px",
+                        padding: "0 16px 16px",
+                      }}
+                    >
+                      <Button
+                        style={{
+                          backgroundColor: "#406c88",
+                          color: "white",
+                          flex: 1,
+                        }}
+                        onClick={() => {
+                          if (status === "approved") {
+                            const path =
+                              projectPaths[index] || "/chi-tiet-quan-ly";
+                            window.location.href = `${path}?pageId=${project.id}`;
+                          } else {
+                            setFormData({ role_id: "", request_message: "" });
+                            setOpenedProjectId(project.id);
+                          }
+                        }}
+                        disabled={status === "pending" || loading}
+                        loading={loading}
+                      >
+                        {status === "pending"
+                          ? "Đang chờ xác nhận"
+                          : status === "approved"
+                          ? "Đi tới dự án"
+                          : "Gửi yêu cầu"}
+                      </Button>
+                    </div>
+                  </Card>
+                );
+              })}
             </div>
           </>
         )}

@@ -93,8 +93,13 @@ EDIT_LIST_DETAIL_ECOPARK:"/api/v1/ecopark/{ecopark_id}",
 //// thêm mới + sửa ảnh cho từng nhà 
 CREATE_IMGE_BUILDING:"/api/v1/ecopark/add_multiple_images/{port}",
 EDIT_IMGE_BUILING:"/api/v1/update_image/{detal_id}",
-DETELE_IMGE:"/api/v1/ecopark/bulk_delete"
+DETELE_IMGE:"/api/v1/ecopark/bulk_delete",
 
+///// Request
+CREATE_REQUEST:"/api/v1/req/{project_id}",
+GET_LIST_REQUEST:"/api/v1/req/",
+EDIT_REQUEST:"/api/v1/req/{project_id}/{request_id}",
+DELETE_REQUEST:"/api/v1/req/{project_id}/{request_id}",
 
 ///Bản Tiếng Anh
 

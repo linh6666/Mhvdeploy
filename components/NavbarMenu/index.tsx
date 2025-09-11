@@ -22,15 +22,15 @@ const mockdata = [
     icon: IconNotes,
     initiallyOpened: true,
     links: [
-      { label: 'Vai trò người dùng', link: 'user-role-project' },
-      { label: 'Vai trò người dùng trong dự án', link: 'project' },
+      { label: 'Định danh vai trò trong hệ thống', link: 'user-role-project' },
+      { label: 'Định danh vai trò trong dự án', link: 'project' },
     ],
   },
   {
     label: 'Phân quyền',
     icon: IconUser,
     initiallyOpened: true,
-    links: [{ label: 'Phân quyền người dùng', link: 'permission' }],
+    links: [{ label: 'Quản lý vai trò người dùng trong hệ thống.', link: 'permission' }],
   },
 ];
 
@@ -48,7 +48,9 @@ const footerData = [
     label: 'Phân quyền người dùng trong dự án',
     icon: IconUser,
     initiallyOpened: true,
-    links: [{ label: 'Danh sách người dùng', link: 'user-list' }],
+    links: [{ label: 'Quản lý vai trò người dùng dự án', link: 'user-list' },
+     
+    ],
   },
 ];
 
@@ -72,6 +74,7 @@ export function NavbarSimple() {
         return <ProjectManagere />;
       case 'user-list':
         return <UserProject />;
+         
       default:
         return <h2>Chào mừng bạn đến với trang quản trị !!!</h2>;
     }

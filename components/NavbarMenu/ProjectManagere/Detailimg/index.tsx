@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import {
   Table,
@@ -44,8 +44,8 @@ export default function CustomerDetails({
     initialValues: { image: null },
   });
 
-  // Fetch ảnh từ API
-  const fetchImages = async () => {
+  // ✅ Fetch ảnh từ API (dùng useCallback để fix warning)
+  const fetchImages = useCallback(async () => {
     if (!port) return;
     try {
       setLoading(true);
@@ -64,11 +64,11 @@ export default function CustomerDetails({
     } finally {
       setLoading(false);
     }
-  };
+  }, [port, language]);
 
   useEffect(() => {
     fetchImages();
-  }, [port, language]);
+  }, [fetchImages]); // ✅ warning gone
 
   if (!port)
     return (
@@ -90,7 +90,8 @@ export default function CustomerDetails({
     if (!file) {
       notifications.show({
         title: language === "vi" ? "Lỗi" : "Error",
-        message: language === "vi" ? "Chọn file trước khi lưu!" : "Select a file first!",
+        message:
+          language === "vi" ? "Chọn file trước khi lưu!" : "Select a file first!",
         color: "red",
       });
       return;
@@ -116,8 +117,8 @@ export default function CustomerDetails({
         ? res.data.image_url + "?t=" + new Date().getTime()
         : editingImage.image_url;
 
-      setImages(prev =>
-        prev.map(img =>
+      setImages((prev) =>
+        prev.map((img) =>
           img.id === editingImage.id ? { ...img, image_url: updatedUrl } : img
         )
       );
@@ -132,14 +133,20 @@ export default function CustomerDetails({
       // 🔔 Thông báo thành công
       notifications.show({
         title: language === "vi" ? "Thành công" : "Success",
-        message: language === "vi" ? "Cập nhật ảnh thành công!" : "Image updated successfully!",
+        message:
+          language === "vi"
+            ? "Cập nhật ảnh thành công!"
+            : "Image updated successfully!",
         color: "green",
       });
     } catch (err) {
       console.error("❌ Lỗi cập nhật ảnh:", err);
       notifications.show({
         title: language === "vi" ? "Thất bại" : "Failed",
-        message: language === "vi" ? "Cập nhật ảnh thất bại!" : "Failed to update image!",
+        message:
+          language === "vi"
+            ? "Cập nhật ảnh thất bại!"
+            : "Failed to update image!",
         color: "red",
       });
     } finally {
@@ -162,23 +169,28 @@ export default function CustomerDetails({
         params: { detal_ids: id },
       });
 
-      setImages(prev => prev.filter(img => img.id !== id));
-      if (selectedImage === images.find(img => img.id === id)?.image_url) {
+      setImages((prev) => prev.filter((img) => img.id !== id));
+      if (selectedImage === images.find((img) => img.id === id)?.image_url) {
         setSelectedImage(images[0]?.image_url || null);
       }
       onSearch?.();
 
-      // 🔔 Thông báo thành công
       notifications.show({
         title: language === "vi" ? "Thành công" : "Success",
-        message: language === "vi" ? "Xóa ảnh thành công!" : "Image deleted successfully!",
+        message:
+          language === "vi"
+            ? "Xóa ảnh thành công!"
+            : "Image deleted successfully!",
         color: "green",
       });
     } catch (err) {
       console.error(err);
       notifications.show({
         title: language === "vi" ? "Thất bại" : "Failed",
-        message: language === "vi" ? "Xóa ảnh thất bại!" : "Failed to delete image!",
+        message:
+          language === "vi"
+            ? "Xóa ảnh thất bại!"
+            : "Failed to delete image!",
         color: "red",
       });
     } finally {
@@ -224,7 +236,11 @@ export default function CustomerDetails({
               <Table.Tr key={img.id}>
                 <Table.Td>
                   <Image
-                    src={previewUrl && editingImage?.id === img.id ? previewUrl : img.image_url}
+                    src={
+                      previewUrl && editingImage?.id === img.id
+                        ? previewUrl
+                        : img.image_url
+                    }
                     alt={`Thumbnail ${idx}`}
                     width={80}
                     height={60}
@@ -235,12 +251,20 @@ export default function CustomerDetails({
                 <Table.Td>
                   <Group>
                     <Tooltip label={language === "vi" ? "Sửa" : "Edit"}>
-                      <ActionIcon color="blue" variant="subtle" onClick={() => handleEditClick(img)}>
+                      <ActionIcon
+                        color="blue"
+                        variant="subtle"
+                        onClick={() => handleEditClick(img)}
+                      >
                         <IconPencil size={18} />
                       </ActionIcon>
                     </Tooltip>
                     <Tooltip label={language === "vi" ? "Xóa" : "Delete"}>
-                      <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(img.id)}>
+                      <ActionIcon
+                        color="red"
+                        variant="subtle"
+                        onClick={() => handleDelete(img.id)}
+                      >
                         <IconTrash size={18} />
                       </ActionIcon>
                     </Tooltip>
@@ -269,7 +293,9 @@ export default function CustomerDetails({
             )}
 
             <FileInput
-              label={language === "vi" ? "Chọn file ảnh" : "Select image file"}
+              label={
+                language === "vi" ? "Chọn file ảnh" : "Select image file"
+              }
               placeholder={language === "vi" ? "Chọn file" : "Select file"}
               accept="image/*"
               {...form.getInputProps("image", {

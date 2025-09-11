@@ -137,10 +137,10 @@ const RoleTable = () => {
 
   /* ==== Bảng dữ liệu ==== */
   const columns: Array<EuiBasicTableColumn<Role>> = [
-    { field: 'user_email', name: 'Email', truncateText: true, width: '25%' },
-    { field: 'project_id', name: 'ID Dự Án', truncateText: true, width: '22%' },
+    { field: 'user_email', name: 'Email', truncateText: true, width: '30%' },
+
     { field: 'project_name', name: 'Tên Dự Án', truncateText: true, width: '25%' },
-    { field: 'role_id', name: 'ID Vai Trò', truncateText: true, width: '20%' },
+ 
     { field: 'role_name', name: 'Tên Vai Trò', truncateText: true, width: '20%' },
     {
       field: 'role_rank',

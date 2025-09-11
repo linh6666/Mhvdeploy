@@ -18,6 +18,9 @@ import { getListRoles } from '../../../api/apigetlistprojects';
 import CreateView from './CreateView';
 import DeleteView from './DeleteView';
 import EditView from './EditView';
+import Announcement from './announcement';
+
+
 import AppAction from '../../../common/AppAction';
 import AppSearch from '../../../common/AppSearch';
 import { paginationBase, PaginationOptions } from '../../../_base/model/BaseTable';
@@ -167,6 +170,14 @@ const ProjectTable = () => {
               onClick={() => openDeleteProjectModal(project)}
             />
           </EuiFlexItem>
+          <EuiFlexItem grow={false}>
+  <EuiButtonIcon
+    iconType="bell"
+    aria-label={language === 'vi' ? 'Thông báo' : 'Notification'}
+    color="primary"
+    onClick={() => openNotification(project)}
+  />
+</EuiFlexItem>
         </EuiFlexGroup>
       ),
     },
@@ -218,6 +229,22 @@ const ProjectTable = () => {
     });
   };
 
+   const openNotification = (project: Project) => {
+    modals.openConfirmModal({
+      title: (
+        <div style={{ fontWeight: 600, fontSize: 18 }}>
+          {language === 'vi' ? 'Danh sách yêu cầu' : 'Delete Project'}
+        </div>
+      ),
+      children: (
+        <Announcement idItem={[project.id]}  language={language} />
+      ),
+      confirmProps: { display: 'none' },
+      cancelProps: { display: 'none' },
+      size: '50%',
+    });
+  };
+
   // Phân trang
   const onTableChange = ({ page }: Criteria<Project>) => {
     if (page) {
@@ -251,7 +278,6 @@ const ProjectTable = () => {
 
       <Divider
         my="sm"
-        label={language === 'vi' ? 'Danh sách dự án' : 'Project List'}
         labelPosition="center"
       />
       <AppSearch language={language} />

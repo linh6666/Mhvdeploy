@@ -68,6 +68,7 @@ export default function RegisterPage() {
   });
 
   const handleSubmit = async (values: typeof form.values) => {
+    
     try {
       const res = await registerUser(
         values.email,

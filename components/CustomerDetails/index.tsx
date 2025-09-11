@@ -156,7 +156,7 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
         return (
           <div className={styles.container} key={index}>
             <h1 style={{ marginBottom: "1rem" }}>
-              Chi tiết căn: {buildingName}
+            <strong> Chi tiết căn: {buildingName}</strong>  
             </h1>
 
             <div className={styles.box}>

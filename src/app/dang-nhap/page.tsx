@@ -14,13 +14,11 @@ import {
 import { useForm } from "@mantine/form";
 import { loginUser } from "../../../api/apiLogin";
 import axios from "axios";
-// import { useRouter } from "next/navigation"; // Xóa dòng này nếu không sử dụng
+import { notifications } from "@mantine/notifications";
 
 import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
-  // const router = useRouter(); // Xóa dòng này nếu không sử dụng
-
   const form = useForm({
     initialValues: {
       username: "",
@@ -28,9 +26,9 @@ export default function LoginPage() {
     },
     validate: {
       username: (value) =>
-        /^\S+@\S+\.\S+$/.test(value.trim()) ? null : "Invalid email format",
+        /^\S+@\S+\.\S+$/.test(value.trim()) ? null : "Email không hợp lệ",
       password: (value) =>
-        value.trim().length >= 8 ? null : "Password must be at least 8 characters",
+        value.trim().length >= 8 ? null : "Mật khẩu phải ít nhất 8 ký tự",
     },
   });
 
@@ -40,20 +38,27 @@ export default function LoginPage() {
 
       if (response?.access_token) {
         localStorage.setItem("access_token", response.access_token);
-
-        // ✅ Chuyển hướng về trang chủ và reload ngay
-        window.location.href = "/";  // Sử dụng window.location.href để chuyển và reload
+        window.location.href = "/";
       } else {
-        console.error("Đăng nhập không có access_token");
+        notifications.show({
+          title: "Đăng nhập thất bại",
+          message: "Sai tài khoản hoặc mật khẩu, vui lòng thử lại.",
+          color: "red",
+        });
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        console.error(
-          "Login failed:",
-          error.response?.data?.detail || "Unknown error"
-        );
+        notifications.show({
+          title: "Lỗi đăng nhập",
+          message: error.response?.data?.detail || "Sai tài khoản hoặc mật khẩu",
+          color: "red",
+        });
       } else {
-        console.error("Login failed:", (error as Error).message || "Unknown error");
+        notifications.show({
+          title: "Lỗi hệ thống",
+          message: (error as Error).message || "Có lỗi xảy ra, vui lòng thử lại",
+          color: "red",
+        });
       }
     }
   };
@@ -62,10 +67,6 @@ export default function LoginPage() {
     <Box className={styles.container}>
       <Paper p="xl" className={styles.paper}>
         <Stack align="center" className={styles.stack}>
-          {/* <Text size="xl" fw={700} className={styles.title}>
-            Chào Mừng
-          </Text> */}
-
           <Image
             src="/assets/logo/LOGO_login.png"
             alt="MHV Logo"
@@ -75,34 +76,29 @@ export default function LoginPage() {
           />
 
           <Text size="sm" className={styles.description}>
-            
-Vui lòng{" "}
+            Vui lòng{" "}
             <a href="/dang-ky" className={styles.registerLink}>
               Đăng Ký
             </a>{" "}
-           
-để truy cập Mô Hình Việt
+            để truy cập Mô Hình Việt
             <br />
-           Nếu bạn đã đăng ký, vui lòng đăng nhập bên dưới.
+            Nếu bạn đã đăng ký, vui lòng đăng nhập bên dưới.
           </Text>
 
           <form onSubmit={form.onSubmit(handleSubmit)} style={{ width: "100%" }}>
             <SimpleGrid cols={1} spacing="sm" verticalSpacing="xs">
-              <div>
-                <Input
-                  type="text"
-                  placeholder="Email/Số Điện Thoại"
-                  classNames={{ input: styles.customInput }}
-                  {...form.getInputProps("username")}
-                />
-              </div>
-              <div>
-                <PasswordInput
-                  placeholder="Mật Khẩu"
-                  classNames={{ input: styles.customInput }}
-                  {...form.getInputProps("password")}
-                />
-              </div>
+              <Input
+                type="text"
+                placeholder="Email/Số Điện Thoại"
+                classNames={{ input: styles.customInput }}
+                {...form.getInputProps("username")}
+              />
+
+              <PasswordInput
+                placeholder="Mật Khẩu"
+                classNames={{ input: styles.customInput }}
+                {...form.getInputProps("password")}
+              />
 
               <Button
                 type="submit"

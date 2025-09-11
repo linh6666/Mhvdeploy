@@ -97,22 +97,54 @@ export default function AllList({ projectId }: AllListProps) {
     return zoneMatch && buildingTypeMatch && statusMatch && directionMatch;
   });
 
+  // ----- Helpers -----
+  const extractNumberFromZone = (zoneName?: string): number | null => {
+    if (!zoneName) return null;
+    const match = zoneName.match(/(\d+(\.\d+)?)/); // bắt số trong tên phân khu
+    if (match) return Number(match[1]);
+    const digits = zoneName.replace(/[^\d.]/g, "");
+    return digits ? Number(digits) : null;
+  };
+
+  const parsePriceNumber = (p?: string): number => {
+    if (!p) return 0;
+    const cleaned = String(p).replace(/\s/g, "").replace(/[₫VND,]/gi, "");
+    const digitsOnly = cleaned.replace(/[^\d.-]/g, "");
+    const n = Number(digitsOnly);
+    return isNaN(n) ? 0 : n;
+  };
+
   // ✅ Sort logic
-  let sortedData = [...filteredData];
+  const sortedData = [...filteredData];
 
-  if (sortZone) {
+  if (sortZone || sortPrice) {
     sortedData.sort((a, b) => {
-      if (a.zone_name < b.zone_name) return sortZone === "asc" ? -1 : 1;
-      if (a.zone_name > b.zone_name) return sortZone === "asc" ? 1 : -1;
+      // 1) sort theo zone
+      if (sortZone) {
+        const na = extractNumberFromZone(a.zone_name);
+        const nb = extractNumberFromZone(b.zone_name);
+
+        if (na !== null && nb !== null && na !== nb) {
+          return sortZone === "asc" ? na - nb : nb - na;
+        }
+        if (na !== null && nb === null) return sortZone === "asc" ? -1 : 1;
+        if (na === null && nb !== null) return sortZone === "asc" ? 1 : -1;
+
+        const cmp = (a.zone_name || "").localeCompare(b.zone_name || "", undefined, {
+          sensitivity: "base",
+          numeric: true,
+        });
+        if (cmp !== 0) return sortZone === "asc" ? cmp : -cmp;
+      }
+
+      // 2) sort theo giá
+      if (sortPrice) {
+        const pa = parsePriceNumber(a.price);
+        const pb = parsePriceNumber(b.price);
+        if (pa !== pb) return sortPrice === "asc" ? pa - pb : pb - pa;
+      }
+
       return 0;
-    });
-  }
-
-  if (sortPrice) {
-    sortedData.sort((a, b) => {
-      const priceA = Number(a.price) || 0;
-      const priceB = Number(b.price) || 0;
-      return sortPrice === "asc" ? priceA - priceB : priceB - priceA;
     });
   }
 
@@ -241,40 +273,40 @@ export default function AllList({ projectId }: AllListProps) {
     const [opened, setOpened] = useState(false);
 
     return (
-       <Menu shadow="md" width={180} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
-      <Menu.Target>
-        <Text
-          size="sm"
-          fw={500}
-          style={{
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            color: sortZone ? "#1E88E5" : "#555",
-          }}
-        >
-          {sortZone === "asc"
-            ? "Phân khu ↑ (tăng dần)"
-            : sortZone === "desc"
-            ? "Phân khu ↓ (giảm dần)"
-            : "Sắp xếp phân khu"}
-          {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
-        </Text>
-      </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Item onClick={() => setSortZone("asc")}>
-          <Text c={sortZone === "asc" ? "blue" : "black"} fw={sortZone === "asc" ? 600 : 400}>
-            Tăng dần theo số phân khu
+      <Menu shadow="md" width={180} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
+        <Menu.Target>
+          <Text
+            size="sm"
+            fw={500}
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              color: sortZone ? "#1E88E5" : "#555",
+            }}
+          >
+            {sortZone === "asc"
+              ? "Phân khu ↑ (tăng dần)"
+              : sortZone === "desc"
+              ? "Phân khu ↓ (giảm dần)"
+              : "Sắp xếp phân khu"}
+            {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
           </Text>
-        </Menu.Item>
-        <Menu.Item onClick={() => setSortZone("desc")}>
-          <Text c={sortZone === "desc" ? "blue" : "black"} fw={sortZone === "desc" ? 600 : 400}>
-            Giảm dần theo số phân khu
-          </Text>
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item onClick={() => setSortZone("asc")}>
+            <Text c={sortZone === "asc" ? "blue" : "black"} fw={sortZone === "asc" ? 600 : 400}>
+              Tăng dần theo số phân khu
+            </Text>
+          </Menu.Item>
+          <Menu.Item onClick={() => setSortZone("desc")}>
+            <Text c={sortZone === "desc" ? "blue" : "black"} fw={sortZone === "desc" ? 600 : 400}>
+              Giảm dần theo số phân khu
+            </Text>
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
     );
   };
 
@@ -341,9 +373,9 @@ export default function AllList({ projectId }: AllListProps) {
                   <span className={styles.buildingName}>{item.zone_name}</span>
                 </div>
                 <div className={styles.buildingDetails}>
-                  <p>Tên nhà: {item.building_name ?? "Chưa có"}</p>
-                  <p>Phòng ngủ: {item.bedroom ?? "Chưa có"}</p>
-                  <p>
+                  <p style={{ fontSize: "14px" }}>Tên nhà: {item.building_name ?? "Chưa có"}</p>
+                  <p style={{ fontSize: "14px" }}>Phòng ngủ: {item.bedroom ?? "Chưa có"}</p>
+                  <p style={{ fontSize: "14px" }}>
                     Giá:{" "}
                     {item.price
                       ? new Intl.NumberFormat("vi-VN", {
@@ -352,7 +384,7 @@ export default function AllList({ projectId }: AllListProps) {
                         }).format(Number(item.price))
                       : "Chưa có"}
                   </p>
-                  <p>Hướng: {item.direction ?? "Chưa có"}</p>
+                  <p style={{ fontSize: "14px" }}>Hướng: {item.direction ?? "Chưa có"}</p>
                 </div>
                 <div
                   className={styles.statusBadge}
@@ -385,3 +417,4 @@ export default function AllList({ projectId }: AllListProps) {
     </div>
   );
 }
+

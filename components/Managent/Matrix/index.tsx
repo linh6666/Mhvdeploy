@@ -46,6 +46,7 @@ export default function ZoneTabContent({ zoneNames, projectId }: ZoneTabContentP
       const fullData: RecordItem[] = [];
 
       for (const zone of zoneNames) {
+          console.log("Đang fetch:", zone); 
         const endpoint = API_ROUTE.GET_LIST_DETAIL_ECOPARK;
 
         const res = await apiarea.get(endpoint, {
@@ -122,17 +123,23 @@ const handleGoToDetailPage = (buildingData: RecordItem) => {
                       <IconHome size={20} className={styles.buildingNameIcon} />
                       <span className={styles.buildingName}>{name}</span>
                     </div>
-                    <div className={styles.buildingDetails}>
-                       <p>Phòng ngủ: {matchedItem?.bedroom ?? "Chưa có"}</p>
-    <p>
-  Giá:{" "}
-  {matchedItem?.price
-    ? new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(Number(matchedItem.price))
-    : "Chưa có"}
-</p>
-    <p>Hướng: {matchedItem?.direction ?? "Chưa có"}</p>
-   
-  </div>  
+                                    <div className={styles.buildingDetails}>
+  <p style={{ fontSize: "14px" }}>
+    Phòng ngủ: {matchedItem?.bedroom ?? "Chưa có"}
+  </p>
+  <p style={{ fontSize: "14px" }}>
+    Giá:{" "}
+    {matchedItem?.price
+      ? new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(Number(matchedItem.price))
+      : "Chưa có"}
+  </p>
+  <p style={{ fontSize: "14px" }}>
+    Hướng: {matchedItem?.direction ?? "Chưa có"}
+  </p>
+</div> 
                     <div
                       className={styles.statusBadge}
                       style={{

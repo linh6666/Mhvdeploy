@@ -80,7 +80,7 @@ const RoleTable = () => {
   const columns: Array<EuiBasicTableColumn<Role>> = [
     {
       field: 'name',
-      name: 'Tên quyền',
+      name: 'Tên',
       truncateText: true,
       width: '30%',
     },

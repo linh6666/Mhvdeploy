@@ -13,8 +13,8 @@ import {
 import { Divider, Menu, Button, Text } from '@mantine/core';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
-
-import { getListRoles } from '../../../api/apigetlistdetailproject';
+import { apiarea } from '../../../library/axios';
+import { API_ROUTE } from '../../../const/apiRouter';
 import CreateView from './CreateView';
 import EditView from './EditView';
 import View from './View';
@@ -69,35 +69,33 @@ const RoleTable = () => {
     }
 
     try {
-      let allData: Role[] = [];
-      let skip = 0;
-      const limit = 50;
-      let total = 0;
+      const endpoint = API_ROUTE.GET_LIST_DETAIL_ECOPARK; // Đường dẫn API
+      const res = await apiarea.get(endpoint, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { lang: language },
+      });
 
-      do {
-        const res = await getListRoles({ token, lang: language, skip, limit });
-        allData = [...allData, ...(res.items || [])];
-        total = res.total;
-        skip += limit;
-      } while (skip < total);
+      if (Array.isArray(res.data.items)) {
+        setAllRoles(res.data.items);
+      } else {
+        setAllRoles([]);
+      }
 
-      setAllRoles(allData);
-
-      // set filter options
+      // Set filter options
       setZoneOptions(
-        Array.from(new Set(allData.map((r) => r.zone_name || '').filter((v) => v !== '')))
+        Array.from(new Set(res.data.items.map((r: Role) => r.zone_name?.split('.')[0] || '').filter(Boolean)))
       );
       setBuildingTypeOptions(
-        Array.from(new Set(allData.map((r) => r.building_type || '').filter((v) => v !== '')))
+        Array.from(new Set(res.data.items.map((r: Role) => r.building_type).filter(Boolean)))
       );
       setStatusOptions(
-        Array.from(new Set(allData.map((r) => r.status || '').filter((v) => v !== '')))
+        Array.from(new Set(res.data.items.map((r: Role) => r.status).filter(Boolean)))
       );
       setDirectionOptions(
-        Array.from(new Set(allData.map((r) => r.direction || '').filter((v) => v !== '')))
+        Array.from(new Set(res.data.items.map((r: Role) => r.direction).filter(Boolean)))
       );
 
-      setPagination((prev) => ({ ...prev, totalItemCount: allData.length }));
+      setPagination((prev) => ({ ...prev, totalItemCount: res.data.items.length }));
       setError(null);
     } catch (err: unknown) {
       console.error('❌ Lỗi fetchAllRoles:', err);
@@ -261,7 +259,7 @@ const RoleTable = () => {
     setSelectedDirections([]);
   };
 
-  // ✅ Component FilterItem giống mẫu
+  // ✅ Component FilterItem
   const FilterItem = ({
     label,
     options,
@@ -415,6 +413,3 @@ const RoleTable = () => {
 };
 
 export default RoleTable;
-
-
-
