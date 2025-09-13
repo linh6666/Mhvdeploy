@@ -13,9 +13,10 @@ import {
   Badge,
   Button,
   Group,
-  Menu,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
+import { modals } from "@mantine/modals";
+import styles from "./Announcement.module.css";
 
 interface NotificationItem {
   id: string;
@@ -31,17 +32,11 @@ interface AnnouncementProps {
 export default function Announcement({ idItem, language }: AnnouncementProps) {
   const [data, setData] = useState<NotificationItem[]>([]);
   const [newCount, setNewCount] = useState(0);
+  const [actions, setActions] = useState<Record<string, string>>({});
 
   const skip = 0;
   const limit = 100;
 
-  const options = [
-    { value: "approved", label: "Duyệt" },
-    { value: "pending", label: "Chờ" },
-    { value: "rejected", label: "Từ chối" },
-  ];
-
-  // ✅ Lấy danh sách thông báo (dùng useCallback để fix warning)
   const fetchData = useCallback(async () => {
     try {
       const token = localStorage.getItem("access_token");
@@ -65,68 +60,82 @@ export default function Announcement({ idItem, language }: AnnouncementProps) {
     } catch (error) {
       console.error("Lỗi gọi API GET_LIST_REQUEST:", error);
     }
-  }, [idItem, language]); // ✅ thêm deps
+  }, [idItem, language]);
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]); // ✅ fix warning
+  }, [fetchData]);
 
-  // Xử lý xác nhận thông báo bằng JSON
-  const handleConfirm = async (requestId: string, status: string) => {
+  const handleConfirm = async (
+    requestId: string,
+    status: string,
+    label: string
+  ) => {
     try {
       const token = localStorage.getItem("access_token");
       if (!token || idItem.length === 0) return;
 
       const projectId = idItem[0];
-
-      const url = API_ROUTE.EDIT_REQUEST
-        .replace("{project_id}", projectId)
-        .replace("{request_id}", requestId);
-
-      console.log("PUT URL:", apiarea.defaults.baseURL + url);
+      const url =
+        API_ROUTE.EDIT_REQUEST.replace("{project_id}", projectId)
+          .replace("{request_id}", requestId) + `?lang=${language}`;
 
       await apiarea.put(
         url,
-        {
-          status,
-          response_message: "Đã xử lý",
-          approver_id: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // TODO: thay bằng id thật từ user login
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { lang: language },
-        }
+        { status },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      setActions((prev) => ({ ...prev, [requestId]: status }));
+
       showNotification({
-        title: "Thành công",
-        message: `Xác nhận: ${status}`,
+        title: language === "vi" ? "Thành công" : "Success",
+        message: (language === "vi" ? "Đã " : "Done: ") + label,
         color: "green",
       });
-      fetchData(); // reload dữ liệu
     } catch (error) {
       console.error("Lỗi khi xác nhận thông báo:", error);
       showNotification({
-        title: "Lỗi",
-        message: "Xác nhận thất bại",
+        title: language === "vi" ? "Lỗi" : "Error",
+        message: language === "vi" ? "Xác nhận thất bại" : "Failed to confirm",
         color: "red",
       });
     }
   };
 
-  // Xử lý xóa thông báo
+  const handleActionSelect = (
+    requestId: string,
+    action: string,
+    label: string
+  ) => {
+    modals.openConfirmModal({
+      title: language === "vi" ? "Xác nhận" : "Confirm",
+      centered: true,
+      children: (
+        <Text size="sm">
+          {language === "vi"
+            ? `Bạn có đồng ý ${label.toLowerCase()} không?`
+            : `Do you agree to ${label.toLowerCase()}?`}
+        </Text>
+      ),
+      labels: {
+        confirm: language === "vi" ? "Đồng ý" : "Agree",
+        cancel: language === "vi" ? "Hủy" : "Cancel",
+      },
+      confirmProps: { color: action === "approved" ? "green" : "red" },
+      onConfirm: () => handleConfirm(requestId, action, label),
+    });
+  };
+
   const handleDelete = async (requestId: string) => {
     try {
       const token = localStorage.getItem("access_token");
       if (!token || idItem.length === 0) return;
 
       const projectId = idItem[0];
-
       const url = API_ROUTE.DELETE_REQUEST
         .replace("{project_id}", projectId)
         .replace("{request_id}", requestId);
-
-      console.log("DELETE URL:", apiarea.defaults.baseURL + url);
 
       await apiarea.delete(url, {
         headers: { Authorization: `Bearer ${token}` },
@@ -137,41 +146,67 @@ export default function Announcement({ idItem, language }: AnnouncementProps) {
       setNewCount((prev) => Math.max(prev - 1, 0));
 
       showNotification({
-        title: "Thành công",
-        message: "Đã xóa thông báo",
+        title: language === "vi" ? "Thành công" : "Success",
+        message:
+          language === "vi" ? "Đã xóa thông báo" : "Notification deleted",
         color: "green",
       });
     } catch (error) {
       console.error("Lỗi khi xóa thông báo:", error);
       showNotification({
-        title: "Lỗi",
-        message: "Xóa thông báo thất bại",
+        title: language === "vi" ? "Lỗi" : "Error",
+        message:
+          language === "vi"
+            ? "Xóa thông báo thất bại"
+            : "Failed to delete notification",
         color: "red",
       });
     }
   };
 
+  const openDeleteConfirm = (requestId: string) => {
+    modals.openConfirmModal({
+      title: language === "vi" ? "Xác nhận xóa" : "Confirm delete",
+      centered: true,
+      children: (
+        <Text size="sm">
+          {language === "vi"
+            ? "Bạn có chắc chắn muốn xóa thông báo này không?"
+            : "Are you sure you want to delete this notification?"}
+        </Text>
+      ),
+      labels: {
+        confirm: language === "vi" ? "Xóa" : "Delete",
+        cancel: language === "vi" ? "Hủy" : "Cancel",
+      },
+      confirmProps: { color: "red" },
+      onConfirm: async () => {
+        await handleDelete(requestId);
+        modals.closeAll();
+      },
+    });
+  };
+
   return (
     <Card shadow="sm" p="md" radius="md" withBorder>
-      {/* Header */}
       <Group justify="space-between" mb="sm">
         <Text fw={600} size="lg">
-          Thông báo
+          {language === "vi" ? "Thông báo" : "Notifications"}
         </Text>
         {newCount > 0 && <Badge color="red">{newCount} mới</Badge>}
       </Group>
       <Divider mb="sm" />
 
-      {/* Nội dung */}
       {data.length === 0 ? (
         <Text size="sm" c="dimmed">
-          Không có thông báo
+          {language === "vi" ? "Không có thông báo" : "No notifications"}
         </Text>
       ) : (
         <ScrollArea h={300}>
           <Stack gap="sm">
             {data.map((item, index) => {
               const isNew = index < newCount;
+              const selectedAction = actions[item.id];
 
               return (
                 <Card
@@ -186,11 +221,14 @@ export default function Announcement({ idItem, language }: AnnouncementProps) {
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "flex-start" }}>
-                    <IconUser
-                      size={20}
-                      style={{ marginRight: 8, marginTop: 2 }}
-                    />
-                    {/* Nội dung thông báo */}
+                    <div
+                      className={`${styles.userIconWrapper} ${
+                        isNew ? styles.new : ""
+                      }`}
+                    >
+                      <IconUser className={styles.userIcon} />
+                    </div>
+
                     <div style={{ flex: 1 }}>
                       <Text size="sm" fw={isNew ? 700 : 500}>
                         {item.request_message || "Không có nội dung"}
@@ -209,33 +247,49 @@ export default function Announcement({ idItem, language }: AnnouncementProps) {
                       </Text>
                     </div>
 
-                    {/* Nút xác nhận + xóa */}
-                    <Group style={{ marginLeft: "auto" }}>
-                      <Menu shadow="sm" width={140}>
-                        <Menu.Target>
-                          <Button size="xs" color="green" variant="light">
-                            Xác nhận
-                          </Button>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                          {options.map((opt) => (
-                            <Menu.Item
-                              key={opt.value}
-                              onClick={() => handleConfirm(item.id, opt.value)}
-                            >
-                              {opt.label}
-                            </Menu.Item>
-                          ))}
-                        </Menu.Dropdown>
-                      </Menu>
-
+                    <Group style={{ marginLeft: "auto" }} gap="xs" wrap="nowrap">
+                      {/* ✅ Nút Duyệt */}
                       <Button
                         size="xs"
-                        color="red"
-                        variant="light"
-                        onClick={() => handleDelete(item.id)}
+                        color={selectedAction === "approved" ? "green" : "green.6"}
+                        variant={selectedAction === "approved" ? "filled" : "light"}
+                        disabled={selectedAction === "approved"} // Disable nếu đã approve
+                        onClick={() =>
+                          handleActionSelect(
+                            item.id,
+                            "approved",
+                            language === "vi" ? "Duyệt" : "Approve"
+                          )
+                        }
                       >
-                        Xóa
+                        {language === "vi" ? "Duyệt" : "Approve"}
+                      </Button>
+
+                      {/* ✅ Nút Từ chối */}
+                      <Button
+                        size="xs"
+                        color={selectedAction === "rejected" ? "red" : "red.6"}
+                        variant={selectedAction === "rejected" ? "filled" : "light"}
+                        disabled={selectedAction === "rejected"} // Disable nếu đã rejected
+                        onClick={() =>
+                          handleActionSelect(
+                            item.id,
+                            "rejected",
+                            language === "vi" ? "Từ chối" : "Reject"
+                          )
+                        }
+                      >
+                        {language === "vi" ? "Từ chối" : "Reject"}
+                      </Button>
+
+                      {/* ✅ Nút Xóa */}
+                      <Button
+                        size="xs"
+                        color="#bb8d38"
+                        variant="light"
+                        onClick={() => openDeleteConfirm(item.id)}
+                      >
+                        {language === "vi" ? "Xóa" : "Delete"}
                       </Button>
                     </Group>
                   </div>

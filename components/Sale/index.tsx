@@ -46,9 +46,16 @@ interface RequestItem {
   created_at: string;
 }
 
+interface UserInfo {
+  id: string;
+  name: string;
+  system_rank: number;
+}
+
 export default function DetailInteractive() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [token, setToken] = useState<string | null>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [requestState, setRequestState] = useState<RequestState>({});
   const [openedProjectId, setOpenedProjectId] = useState<string | null>(null);
@@ -62,7 +69,7 @@ export default function DetailInteractive() {
     "/chi-tiet/1",
   ];
 
-  // fetch projects + requests
+  // fetch user info + projects + requests
   useEffect(() => {
     const storedToken = localStorage.getItem("access_token");
     setToken(storedToken);
@@ -72,37 +79,37 @@ export default function DetailInteractive() {
       return;
     }
 
-    const fetchProjectsAndRequests = async (lang: "vi" | "en" = "vi") => {
+    const fetchData = async (lang: "vi" | "en" = "vi") => {
       try {
-        const currentToken = localStorage.getItem("access_token");
+        // 1. Fetch user info
+        const userRes = await apiarea.get<UserInfo>("/api/v1/users/me", {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        });
+        setUserInfo(userRes.data);
 
-        // fetch projects có kèm lang
+        // 2. Fetch projects
         const projectRes = await apiarea.get(
           `${API_ROUTE.GET_PROJECT}?lang=${lang}`,
-          {
-            headers: { Authorization: `Bearer ${currentToken}` },
-          }
+          { headers: { Authorization: `Bearer ${storedToken}` } }
         );
         setProjects(projectRes.data.data);
 
-        // Lấy projectIds để call request
+        // 3. Fetch requests for all projects
         const projectIds = projectRes.data.data.map((p: Project) => p.id);
-
-        // fetch requests cho tất cả projectIds
         const initialState: RequestState = {};
+
         for (const projectId of projectIds) {
           const reqRes = await apiarea.get(
             `${API_ROUTE.GET_LIST_REQUEST}?skip=0&limit=100&lang=${lang}&project_id=${projectId}`,
-            { headers: { Authorization: `Bearer ${currentToken}` } }
+            { headers: { Authorization: `Bearer ${storedToken}` } }
           );
 
           const requests: RequestItem[] = reqRes.data.data;
-          const myReq = requests
-            .sort(
-              (a, b) =>
-                new Date(b.created_at).getTime() -
-                new Date(a.created_at).getTime()
-            )[0];
+          const myReq = requests.sort(
+            (a, b) =>
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime()
+          )[0];
 
           initialState[projectId] = {
             loading: false,
@@ -114,11 +121,11 @@ export default function DetailInteractive() {
 
         setRequestState(initialState);
       } catch (error) {
-        console.error(error);
+        console.error("Fetch data error:", error);
       }
     };
 
-    fetchProjectsAndRequests();
+    fetchData();
   }, []);
 
   // fetch roles khi mở modal
@@ -154,18 +161,17 @@ export default function DetailInteractive() {
         headers: { Authorization: `Bearer ${currentToken}` },
       });
 
-      // GET lại request list **chỉ cho project hiện tại**
+      // GET lại request list chỉ cho project hiện tại
       const reqRes = await apiarea.get(
         `${API_ROUTE.GET_LIST_REQUEST}?skip=0&limit=100&lang=vi&project_id=${projectId}`,
         { headers: { Authorization: `Bearer ${currentToken}` } }
       );
+
       const requests: RequestItem[] = reqRes.data.data;
-      const myReq = requests
-        .sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() -
-            new Date(a.created_at).getTime()
-        )[0];
+      const myReq = requests.sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )[0];
 
       setRequestState((prev) => ({
         ...prev,
@@ -318,7 +324,7 @@ export default function DetailInteractive() {
                           flex: 1,
                         }}
                         onClick={() => {
-                          if (status === "approved") {
+                          if (userInfo?.system_rank === 1 || status === "approved") {
                             const path =
                               projectPaths[index] || "/chi-tiet-quan-ly";
                             window.location.href = `${path}?pageId=${project.id}`;
@@ -327,10 +333,15 @@ export default function DetailInteractive() {
                             setOpenedProjectId(project.id);
                           }
                         }}
-                        disabled={status === "pending" || loading}
+                        disabled={
+                          userInfo?.system_rank !== 1 &&
+                          (status === "pending" || loading)
+                        }
                         loading={loading}
                       >
-                        {status === "pending"
+                        {userInfo?.system_rank === 1
+                          ? "Đi tới dự án"
+                          : status === "pending"
                           ? "Đang chờ xác nhận"
                           : status === "approved"
                           ? "Đi tới dự án"

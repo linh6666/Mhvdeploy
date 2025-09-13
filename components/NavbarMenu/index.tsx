@@ -30,7 +30,7 @@ const mockdata = [
     label: 'Phân quyền',
     icon: IconUser,
     initiallyOpened: true,
-    links: [{ label: 'Quản lý vai trò người dùng trong hệ thống.', link: 'permission' }],
+    links: [{ label: 'Quản lý vai trò người dùng trong hệ thống', link: 'permission' }],
   },
 ];
 

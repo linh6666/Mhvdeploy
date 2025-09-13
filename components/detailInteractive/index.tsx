@@ -50,6 +50,12 @@ interface RequestItem {
   created_at: string;
 }
 
+interface UserInfo {
+  id: string;
+  name: string;
+  system_rank: number;
+}
+
 export default function DetailInteractive() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [token, setToken] = useState<string | null>(null);
@@ -58,6 +64,7 @@ export default function DetailInteractive() {
   const [openedProjectId, setOpenedProjectId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ role_id: "", request_message: "" });
   const [roleOptions, setRoleOptions] = useState<Role[]>([]);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   const projectPaths = [
     "/chi-tiet-du-an",
@@ -66,6 +73,7 @@ export default function DetailInteractive() {
     "/chi-tiet",
   ];
 
+  // lấy token + fetch project
   useEffect(() => {
     const storedToken = localStorage.getItem("access_token");
     setToken(storedToken);
@@ -75,19 +83,26 @@ export default function DetailInteractive() {
       return;
     }
 
-    const fetchProjects = async () => {
+    const fetchData = async () => {
       try {
+        // fetch user info
+        const userRes = await apiarea.get("/api/v1/users/me", {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        });
+        setUserInfo(userRes.data);
+
+        // fetch project list
         const res = await apiarea.get(API_ROUTE.GET_PROJECT, {
           headers: { Authorization: `Bearer ${storedToken}` },
           params: { skip: 0, limit: 20, lang: "vi" },
         });
         setProjects(res.data.data);
       } catch (error) {
-        console.error("Lỗi khi fetch projects:", error);
+        console.error("Lỗi khi fetch dữ liệu:", error);
       }
     };
 
-    fetchProjects();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -284,7 +299,7 @@ export default function DetailInteractive() {
                           flex: 1,
                         }}
                         onClick={() => {
-                          if (status === "approved") {
+                          if (userInfo?.system_rank === 1 || status === "approved") {
                             const path =
                               projectPaths[index] || "/chi-tiet-quan-ly";
                             window.location.href = `${path}?pageId=${project.id}`;
@@ -293,10 +308,15 @@ export default function DetailInteractive() {
                             setOpenedProjectId(project.id);
                           }
                         }}
-                        disabled={status === "pending" || loading}
+                        disabled={
+                          userInfo?.system_rank !== 1 &&
+                          (status === "pending" || loading)
+                        }
                         loading={loading}
                       >
-                        {status === "pending"
+                        {userInfo?.system_rank === 1
+                          ? "Đi tới dự án"
+                          : status === "pending"
                           ? "Đang chờ xác nhận"
                           : status === "approved"
                           ? "Đi tới dự án"
@@ -313,3 +333,4 @@ export default function DetailInteractive() {
     </AppContainer>
   );
 }
+

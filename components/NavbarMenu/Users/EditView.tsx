@@ -6,32 +6,40 @@ import {
   Checkbox,
   Group,
   LoadingOverlay,
-
+  NativeSelect,
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconCheck, IconX } from "@tabler/icons-react";
-import { useEffect, useCallback, useRef } from "react";
+import { IconCheck, IconChevronDown, IconX } from "@tabler/icons-react";
+import { useEffect, useCallback, useRef, useState } from "react";
 import { API_ROUTE } from "../../../const/apiRouter";
 import { api } from "../../../library/axios";
-import { CreateUserPayload } from "../../../api/apicreateuser";
+import { CreateUserPayload } from "../../../api/apiEdituser";
 
 interface EditViewProps {
   onSearch: () => Promise<void>;
   id: string;
 }
 
+interface SystemOption {
+  id: number; // hoặc string, tùy thuộc vào API của bạn
+  name: string;
+}
+
 const EditView = ({ onSearch, id }: EditViewProps) => {
   const [visible, { open, close }] = useDisclosure(false);
+  const [systemOptions, setSystemOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
 
   const form = useForm<CreateUserPayload>({
     initialValues: {
       email: "",
       full_name: "",
       phone: "",
-     
+      system_id: "",
       is_active: false,
       is_superuser: false,
     },
@@ -42,7 +50,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
     },
   });
 
-  const formRef = useRef(form); // Sử dụng useRef để giữ form ổn định
+  const formRef = useRef(form);
 
   /** Submit cập nhật user */
   const handleSubmit = async (values: CreateUserPayload) => {
@@ -73,7 +81,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         email: userData.email || "",
         full_name: userData.full_name || "",
         phone: userData.phone || "",
-      
+        system_id: userData.system_id?.toString() || "", // ép về string để khớp NativeSelect
         is_active: userData.is_active ?? false,
         is_superuser: userData.is_superuser ?? false,
       });
@@ -84,12 +92,27 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
     } finally {
       close();
     }
-  }, [id, open, close]); // Không thêm form vào dependency để tránh loop
+  }, [id, open, close]);
 
-  /** Chỉ gọi khi id thay đổi */
+  /** Lấy danh sách chức vụ hệ thống */
+  const fetchSystemOptions = useCallback(async () => {
+    try {
+      const res = await api.get(API_ROUTE.GET_LIST_SYSTEM);
+      const rawData = Array.isArray(res.data) ? res.data : res.data.data;
+      const options = rawData.map((item: SystemOption) => ({
+        value: item.id.toString(),
+        label: item.name,
+      }));
+      setSystemOptions(options);
+    } catch (error) {
+      console.error("Lỗi khi load system options:", error);
+    }
+  }, []);
+
   useEffect(() => {
     fetchUserDetail();
-  }, [fetchUserDetail]);
+    fetchSystemOptions();
+  }, [fetchUserDetail, fetchSystemOptions]);
 
   return (
     <Box
@@ -128,21 +151,13 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         {...form.getInputProps("phone")}
       />
 
-      {/* <PasswordInput
-        label="Mật khẩu"
-        placeholder="Nhập mật khẩu"
-        withAsterisk
+      <NativeSelect
+        rightSection={<IconChevronDown size={16} />}
+        label="Chức vụ hệ thống"
+        data={systemOptions}
         mt="md"
-        {...form.getInputProps("password")}
+        {...form.getInputProps("system_id")}
       />
-
-      <PasswordInput
-        label="Xác nhận mật khẩu"
-        placeholder="Nhập lại mật khẩu"
-        withAsterisk
-        mt="md"
-        {...form.getInputProps("confirm_password")}
-      /> */}
 
       <Checkbox
         label="Hoạt động"

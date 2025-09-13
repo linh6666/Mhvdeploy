@@ -7,7 +7,7 @@ export interface CreateUserPayload {
   full_name: string;
   // password: string;
   // confirm_password: string;
-
+  system_id: string;
   phone: string;
   is_active: boolean;
   is_superuser: boolean;

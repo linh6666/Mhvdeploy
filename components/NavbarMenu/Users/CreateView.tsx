@@ -30,6 +30,7 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
       confirm_password: "",
       is_active: false,
       is_superuser: false,
+    
       phone: "", // ✅ thêm phone
     },
     validate: {
