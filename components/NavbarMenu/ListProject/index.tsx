@@ -38,10 +38,20 @@ type Project = {
 
 const ProjectTable = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+   const [allRoles, setAllRoles] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationOptions>(paginationBase);
   const [language, setLanguage] = useState<'vi' | 'en'>('vi');
+/// tìm kiếm
+  const [searchTerm, setSearchTerm] = useState<string>(''); // text input
+  const [searchValue, setSearchValue] = useState<string>(''); // text đã xác nhận
+
+
+
+   useEffect(() => {
+    console.log("🔍 Confirmed Search Value:", searchValue);
+  }, [searchValue]);
 
   // Fetch API
   const fetchProjects = useCallback(async () => {
@@ -72,6 +82,7 @@ const ProjectTable = () => {
 
       const { data, total } = res;
       setProjects(data || []);
+         setAllRoles(data || []);
       setPagination((prev) => ({
         ...prev,
         totalItemCount: total ?? data.length ?? 0,
@@ -95,7 +106,25 @@ const ProjectTable = () => {
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
+/// Tìm kiếm
+  const handleSearch = (value: string) => {
+    setSearchValue(value);
 
+    if (!value.trim()) {
+      setProjects(allRoles); // nếu trống thì reset
+      return;
+    }
+
+    const filtered = allRoles.filter(
+      (role) =>
+        role.name.toLowerCase().includes(value.toLowerCase()) ||
+        role.type.toLowerCase().includes(value.toLowerCase()) ||
+         role.investor.toLowerCase().includes(value.toLowerCase()) ||
+        role.address?.toLowerCase().includes(value.toLowerCase())||
+        role.rank.toString().toLowerCase().includes(value.toLowerCase())
+    );
+    setProjects(filtered);
+  };
   // Cột hiển thị
   const columns: Array<EuiBasicTableColumn<Project>> = [
     {
@@ -280,7 +309,11 @@ const ProjectTable = () => {
         my="sm"
         labelPosition="center"
       />
-      <AppSearch language={language} />
+    <AppSearch
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onSearch={handleSearch}
+      />
       <Divider my="sm" />
 
       <EuiBasicTable

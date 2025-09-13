@@ -30,11 +30,21 @@ type Role = {
 
 const RoleTable = () => {
   const [roles, setRoles] = useState<Role[]>([]);
+  const [allRoles, setAllRoles] = useState<Role[]>([]); // ✅ lưu dữ liệu gốc
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<Role[]>([]);
   const [pagination, setPagination] = useState<PaginationOptions>(paginationBase);
 
+  // State tìm kiếm
+  const [searchTerm, setSearchTerm] = useState<string>(''); // nhập trong input
+  const [searchValue, setSearchValue] = useState<string>(''); // khi bấm nút Search mới set
+
+ useEffect(() => {
+    console.log("🔍 Confirmed Search Value:", searchValue);
+  }, [searchValue]);
+
+  
   // Gọi API lấy danh sách vai trò
   const fetchRoles = useCallback(async () => {
     setLoading(true);
@@ -55,6 +65,7 @@ const RoleTable = () => {
       const { data, total } = res;
 
       setRoles(data || []);
+      setAllRoles(data || []); // ✅ lưu toàn bộ để search
       setPagination((prev) => ({
         ...prev,
         totalItemCount: total ?? data.length ?? 0,
@@ -75,6 +86,24 @@ const RoleTable = () => {
   useEffect(() => {
     fetchRoles();
   }, [fetchRoles]);
+
+  // ✅ Khi click tìm kiếm
+  const handleSearch = (value: string) => {
+    setSearchValue(value);
+
+    if (!value.trim()) {
+      // Nếu ô tìm kiếm rỗng → reset về allRoles
+      setRoles(allRoles);
+      return;
+    }
+
+    const filtered = allRoles.filter(
+      (role) =>
+        role.name.toLowerCase().includes(value.toLowerCase()) ||
+        role.description?.toLowerCase().includes(value.toLowerCase())
+    );
+    setRoles(filtered);
+  };
 
   // Các cột hiển thị
   const columns: Array<EuiBasicTableColumn<Role>> = [
@@ -163,7 +192,7 @@ const RoleTable = () => {
   const selection = {
     selectable: () => true,
     onSelectionChange: (items: Role[]) => setSelectedItems(items),
-    selected: selectedItems, // ✅ fix ESLint
+    selected: selectedItems,
   };
 
   // Xử lý phân trang
@@ -181,8 +210,15 @@ const RoleTable = () => {
     <>
       <AppAction openModal={openModal} />
 
-      <Divider my="sm" label="Danh sách vai trò" labelPosition="center" />
-      <AppSearch />
+      <Divider my="sm" labelPosition="center" />
+
+      {/* ✅ Tích hợp AppSearch */}
+      <AppSearch
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onSearch={handleSearch}
+      />
+
       <Divider my="sm" />
 
       <EuiBasicTable

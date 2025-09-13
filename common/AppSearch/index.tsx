@@ -113,7 +113,7 @@
 // };
 
 // export default AppSearch;
-'use client';
+"use client";
 
 import React from "react";
 import {
@@ -125,19 +125,38 @@ import {
 } from "@elastic/eui";
 
 interface AppSearchProps {
-  language?: 'vi' | 'en';
+  language?: "vi" | "en";
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearch?: (value: string) => void; // ✅ kiểu chính xác
 }
 
-const AppSearch: React.FC<AppSearchProps> = ({ language = 'vi' }) => {
+const AppSearch: React.FC<AppSearchProps> = ({
+  language = "vi",
+  value,
+  onChange,
+  onSearch,
+}) => {
+  const handleSearch = () => {
+    if (onSearch) {
+      onSearch(value); // ✅ trả ra value cho cha
+    }
+  };
+
   return (
     <EuiFlexGroup>
       <EuiFormRow style={{ maxWidth: "100%", height: "60px" }}>
         <EuiFlexGroup alignItems="flexEnd">
           <EuiFlexItem grow>
             <EuiFieldSearch
-              placeholder={language === 'vi' ? 'Nhập...' : 'Enter...'}
-              aria-label={language === 'vi' ? 'Trường tìm kiếm' : 'Search field'}
+              placeholder={
+                language === "vi" ? "Nhập từ khóa..." : "Enter keywords..."
+              }
+              aria-label={language === "vi" ? "Trường tìm kiếm" : "Search field"}
               fullWidth
+              value={value}
+              onChange={onChange}
+              onSearch={handleSearch} // ✅ gọi handleSearch
             />
           </EuiFlexItem>
 
@@ -150,8 +169,9 @@ const AppSearch: React.FC<AppSearchProps> = ({ language = 'vi' }) => {
                 backgroundColor: "rgb(64, 108, 136)",
                 color: "#fff",
               }}
+              onClick={handleSearch}
             >
-              {language === 'vi' ? 'Tìm kiếm' : 'Search'}
+              {language === "vi" ? "Tìm kiếm" : "Search"}
             </EuiButton>
           </EuiFlexItem>
         </EuiFlexGroup>

@@ -33,11 +33,26 @@ type Role = {
 
 const RoleTable = () => {
   const [roles, setRoles] = useState<Role[]>([]);
+  const [allRoles, setAllRoles] = useState<Role[]>([]); // ✅ lưu danh sách gốc để search
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<Role[]>([]);
   const [pagination, setPagination] = useState<PaginationOptions>(paginationBase);
 
+  // State tìm kiếm
+  const [searchTerm, setSearchTerm] = useState<string>(''); // text input
+  const [searchValue, setSearchValue] = useState<string>(''); // text đã xác nhận
+
+  // 👉 log state để tránh warning ESLint
+  useEffect(() => {
+    console.log("📌 Selected Items:", selectedItems);
+  }, [selectedItems]);
+
+  useEffect(() => {
+    console.log("🔍 Confirmed Search Value:", searchValue);
+  }, [searchValue]);
+
+  // Lấy danh sách từ API
   const fetchRoles = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -61,6 +76,7 @@ const RoleTable = () => {
 
       const { data, total } = res;
       setRoles(data || []);
+      setAllRoles(data || []); // ✅ lưu lại để search
       setPagination((prev) => ({
         ...prev,
         totalItemCount: total ?? data.length ?? 0,
@@ -81,13 +97,26 @@ const RoleTable = () => {
     fetchRoles();
   }, [fetchRoles]);
 
-  // 👉 đọc selectedItems để eslint không báo lỗi
-  useEffect(() => {
-    if (selectedItems.length > 0) {
-      console.log('Đã chọn:', selectedItems.map((u) => u.id));
-    }
-  }, [selectedItems]);
+  // 👉 dùng search
+  const handleSearch = (value: string) => {
+    setSearchValue(value);
+    console.log("🔍 Search Value:", value); // log ngay khi search
 
+    if (!value.trim()) {
+      setRoles(allRoles); // nếu trống thì reset
+      return;
+    }
+
+    const filtered = allRoles.filter(
+      (role) =>
+        role.full_name?.toLowerCase().includes(value.toLowerCase()) ||
+        role.email.toLowerCase().includes(value.toLowerCase()) ||
+        role.phone?.toLowerCase().includes(value.toLowerCase())
+    );
+    setRoles(filtered);
+  };
+
+  // Cột bảng
   const columns: Array<EuiBasicTableColumn<Role>> = [
     {
       field: 'full_name',
@@ -152,7 +181,7 @@ const RoleTable = () => {
     },
   ];
 
-  // 👉 chỉ giữ lại modal thêm
+  // Modal thêm
   const openModal = () => {
     modals.openConfirmModal({
       title: <div style={{ fontWeight: 600, fontSize: 18 }}>Thêm vai trò mới</div>,
@@ -199,11 +228,17 @@ const RoleTable = () => {
 
   return (
     <>
-      {/* 👉 AppAction chỉ còn nút Thêm */}
       <AppAction openModal={openModal} />
 
-      <Divider my="sm" label="Danh sách người dùng" labelPosition="center" />
-      <AppSearch />
+      <Divider my="sm" labelPosition="center" />
+
+      {/* ✅ thanh tìm kiếm */}
+      <AppSearch
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onSearch={handleSearch}
+      />
+
       <Divider my="sm" />
 
       <EuiBasicTable
@@ -235,3 +270,4 @@ const RoleTable = () => {
 };
 
 export default RoleTable;
+

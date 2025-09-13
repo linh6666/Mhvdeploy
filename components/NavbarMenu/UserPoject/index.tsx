@@ -42,11 +42,16 @@ export interface RoleApiResponse {
 
 const RoleTable = () => {
   const [roles, setRoles] = useState<Role[]>([]);
+  const [allRoles, setAllRoles] = useState<Role[]>([]); // Lưu danh sách gốc để tìm kiếm
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<Role[]>([]);
   const [pagination, setPagination] = useState<PaginationOptions>(paginationBase);
 
+  // State tìm kiếm
+  const [searchTerm, setSearchTerm] = useState<string>(''); // Text input
+
+  /* ==== Gọi API lấy danh sách ==== */
   const fetchRoles = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -64,13 +69,13 @@ const RoleTable = () => {
 
       const res: RoleApiResponse = await getListRoles({ token, skip, limit });
 
-      // Map lại user_project_role_id nếu API trả về id khác
       const rolesWithId = res.assignments.map((r) => ({
         ...r,
         user_project_role_id: r.user_project_role_id || r.id,
       }));
 
       setRoles(rolesWithId);
+      setAllRoles(rolesWithId); // Lưu danh sách gốc
       setPagination((prev) => ({
         ...prev,
         totalItemCount: res.total ?? res.assignments.length ?? 0,
@@ -86,6 +91,28 @@ const RoleTable = () => {
   useEffect(() => {
     fetchRoles();
   }, [fetchRoles]);
+
+  /* ==== Hàm tìm kiếm ==== */
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+
+    if (!value.trim()) {
+      setRoles(allRoles); // Reset nếu không có từ khóa
+      return;
+    }
+
+    const lowerValue = value.toLowerCase();
+
+    const filtered = allRoles.filter(
+      (role) =>
+        (role.user_email ?? '').toLowerCase().includes(lowerValue) ||
+        (role.project_name ?? '').toLowerCase().includes(lowerValue) ||
+        (role.role_name ?? '').toLowerCase().includes(lowerValue) ||
+        (role.role_rank ?? '').toString().toLowerCase().includes(lowerValue)
+    );
+
+    setRoles(filtered);
+  };
 
   /* ==== Hàm modal ==== */
   const openModal = () => {
@@ -125,10 +152,7 @@ const RoleTable = () => {
     modals.openConfirmModal({
       title: <div style={{ fontWeight: 600, fontSize: 18 }}>Xóa người dùng dự án</div>,
       children: (
-        <DeleteView
-          idItem={[role.user_project_role_id]}
-          onSearch={fetchRoles}
-        />
+        <DeleteView idItem={[role.user_project_role_id]} onSearch={fetchRoles} />
       ),
       confirmProps: { display: 'none' },
       cancelProps: { display: 'none' },
@@ -138,9 +162,7 @@ const RoleTable = () => {
   /* ==== Bảng dữ liệu ==== */
   const columns: Array<EuiBasicTableColumn<Role>> = [
     { field: 'user_email', name: 'Email', truncateText: true, width: '30%' },
-
     { field: 'project_name', name: 'Tên Dự Án', truncateText: true, width: '25%' },
- 
     { field: 'role_name', name: 'Tên Vai Trò', truncateText: true, width: '20%' },
     {
       field: 'role_rank',
@@ -179,7 +201,7 @@ const RoleTable = () => {
   const selection = {
     selectable: () => true,
     onSelectionChange: (items: Role[]) => setSelectedItems(items),
-    selected: selectedItems, // ✅ thêm dòng này để fix lỗi ESLint
+    selected: selectedItems,
   };
 
   const onTableChange = ({ page }: Criteria<Role>) => {
@@ -194,11 +216,15 @@ const RoleTable = () => {
 
   return (
     <>
-      {/* ✅ Chỉ còn nút Thêm */}
+      {/* ✅ Nút thêm */}
       <AppAction openModal={openModal} />
 
-      <Divider my="sm" label="Danh sách người dùng dự án" labelPosition="center" />
-      <AppSearch />
+      <Divider my="sm" labelPosition="center" />
+      <AppSearch
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onSearch={handleSearch}
+      />
       <Divider my="sm" />
 
       <EuiBasicTable

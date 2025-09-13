@@ -30,6 +30,9 @@ type Role = {
 
 const RoleTable = () => {
   const [roles, setRoles] = useState<Role[]>([]);
+  const [filteredRoles, setFilteredRoles] = useState<Role[]>([]);
+  const [searchInput, setSearchInput] = useState<string>(""); // 👉 người dùng nhập
+  const [searchQuery, setSearchQuery] = useState<string>(""); // 👉 thực sự lọc
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<Role[]>([]);
@@ -50,26 +53,18 @@ const RoleTable = () => {
       const skip = pagination.pageIndex * pagination.pageSize;
       const limit = pagination.pageSize;
 
-      const res = await getListRoles({
-        token,
-        skip,
-        limit,
-      });
-
+      const res = await getListRoles({ token, skip, limit });
       const { data, total } = res;
 
       setRoles(data || []);
+      setFilteredRoles(data || []);
       setPagination((prev) => ({
         ...prev,
         totalItemCount: total ?? data.length ?? 0,
       }));
     } catch (err: unknown) {
       console.error("❌ Lỗi gọi API:", err);
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Đã xảy ra lỗi khi tải dữ liệu.");
-      }
+      setError(err instanceof Error ? err.message : "Đã xảy ra lỗi khi tải dữ liệu.");
     } finally {
       setLoading(false);
     }
@@ -79,6 +74,22 @@ const RoleTable = () => {
     fetchRoles();
   }, [fetchRoles]);
 
+  // 👉 Lọc dữ liệu CHỈ khi searchQuery thay đổi
+  useEffect(() => {
+    if (!searchQuery) {
+      setFilteredRoles(roles);
+    } else {
+      const lowerSearch = searchQuery.toLowerCase();
+      const filtered = roles.filter(
+        (role) =>
+          role.name.toLowerCase().includes(lowerSearch) ||
+          role.description.toLowerCase().includes(lowerSearch) ||
+          role.rank_total.toString().includes(lowerSearch)
+      );
+      setFilteredRoles(filtered);
+    }
+  }, [searchQuery, roles]);
+
   const columns: Array<EuiBasicTableColumn<Role>> = [
     {
       field: "name",
@@ -86,7 +97,7 @@ const RoleTable = () => {
       truncateText: true,
       width: "30%",
     },
-     {
+    {
       field: "rank_total",
       name: "Cấp bậc",
       width: "20%",
@@ -97,14 +108,7 @@ const RoleTable = () => {
       field: "description",
       name: "Mô tả",
       width: "30%",
-      "data-test-subj": "descriptionCell",
-      mobileOptions: {
-        show: true,
-        header: true,
-        enlarge: true,
-      },
     },
-   
     {
       name: "Thao tác",
       width: "20%",
@@ -131,7 +135,7 @@ const RoleTable = () => {
     },
   ];
 
-  // 👉 Modal thêm vai trò
+  // 👉 Modal thêm
   const openModal = () => {
     modals.openConfirmModal({
       title: <div style={{ fontWeight: 600, fontSize: 18 }}>Thêm vai trò mới</div>,
@@ -168,7 +172,7 @@ const RoleTable = () => {
   const selection = {
     selectable: () => true,
     onSelectionChange: (items: Role[]) => setSelectedItems(items),
-    selected: selectedItems, // ✅ dùng selected để tránh ESLint warning
+    selected: selectedItems,
   };
 
   const onTableChange = ({ page }: Criteria<Role>) => {
@@ -183,17 +187,23 @@ const RoleTable = () => {
 
   return (
     <>
-      {/* 👉 AppAction chỉ còn nút thêm */}
       <AppAction openModal={openModal} />
 
-      <Divider my="sm" label="Danh sách vai trò" labelPosition="center" />
-      <AppSearch />
+      <Divider my="sm" labelPosition="center" />
+
+      {/* 👉 Search bar */}
+      <AppSearch
+        value={searchInput} // 👉 chỉ hiển thị input
+        onChange={(e) => setSearchInput(e.target.value)} // 👉 cập nhật input
+        onSearch={(val) => setSearchQuery(val)} // 👉 chỉ khi click nút / Enter thì mới setQuery
+      />
+
       <Divider my="sm" />
 
       <EuiBasicTable
         tableCaption="Danh sách vai trò hệ thống"
         responsiveBreakpoint={false}
-        items={roles}
+        items={filteredRoles}
         columns={columns}
         loading={loading}
         itemId="id"
@@ -209,7 +219,7 @@ const RoleTable = () => {
         pagination={{
           pageIndex: pagination.pageIndex,
           pageSize: pagination.pageSize,
-          totalItemCount: pagination.totalItemCount ?? 0,
+          totalItemCount: filteredRoles.length ?? 0,
           pageSizeOptions: pagination.pageSizeOptions ?? [10, 20, 50, 150, 200],
         }}
         onChange={onTableChange}
@@ -219,4 +229,6 @@ const RoleTable = () => {
 };
 
 export default RoleTable;
+
+
 

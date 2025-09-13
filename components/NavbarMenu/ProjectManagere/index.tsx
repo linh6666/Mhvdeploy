@@ -330,7 +330,7 @@ const RoleTable = () => {
 
       <AppAction openModal={openModal} language={language} />
 
-      <Divider my="sm" label={language === 'vi' ? 'Danh sách dự án' : 'Project List'} labelPosition="center" />
+      <Divider my="sm"  labelPosition="center" />
 
       {/* Filters */}
       <EuiFlexGroup style={{ marginBottom: '12px' }} alignItems="flexEnd" gutterSize="m">
