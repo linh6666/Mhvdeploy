@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { apiarea } from "../../../library/axios";
 import { API_ROUTE } from "../../../const/apiRouter";
 import { useRouter } from "next/navigation";
-import { Pagination, Loader, Grid, Menu, Text } from "@mantine/core";
+import { Pagination, Loader, Grid, Menu, Text, Pill } from "@mantine/core"; // Thêm Pill vào import
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import styles from "./App.module.css";
 
@@ -198,20 +198,20 @@ export default function AllList({ projectId }: AllListProps) {
     return (
       <Menu shadow="md" width={200} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
         <Menu.Target>
-          <Text
-            size="sm"
-            fw={500}
-            style={{
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              color: selected.length > 0 ? "#1E88E5" : "#555",
-            }}
-          >
-            {selected.length > 0 ? selected.join(", ") : label}
-            {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
-          </Text>
+         <Text
+  size="sm"
+  fw={500}
+  style={{
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    color: "#555", // Hoặc bạn có thể điều chỉnh màu nếu cần
+  }}
+>
+  {label} {/* Chỉ hiển thị nhãn */}
+  {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+</Text>
         </Menu.Target>
         <Menu.Dropdown>
           {options.map((opt) => (
@@ -310,12 +310,50 @@ export default function AllList({ projectId }: AllListProps) {
     );
   };
 
+  // Hàm để xóa giá trị đã chọn
+  const handleRemoveSelected = (value: string) => {
+    setSelectedZones((prev) => prev.filter((v) => v !== value));
+    setSelectedBuildingTypes((prev) => prev.filter((v) => v !== value));
+    setSelectedStatuses((prev) => prev.filter((v) => v !== value));
+    setSelectedDirections((prev) => prev.filter((v) => v !== value));
+  };
+
+  // Hàm để xóa tất cả các giá trị đã chọn
+  const handleClearAll = () => {
+    setSelectedZones([]);
+    setSelectedBuildingTypes([]);
+    setSelectedStatuses([]);
+    setSelectedDirections([]);
+  };
+
+  // Kiểm tra xem có giá trị nào được chọn không
+  const hasSelectedItems = [
+    ...selectedZones,
+    ...selectedBuildingTypes,
+    ...selectedStatuses,
+    ...selectedDirections,
+  ].length > 0;
+
   return (
     <div className={styles.wrapper}>
-      {loading ? (
-        <Loader />
-      ) : sortedData.length > 0 ? (
-        <>
+
+         <div style={{ marginBottom: 20 }}>
+            <h2>
+              Chọn theo tiêu chí:
+              {[...selectedZones, ...selectedBuildingTypes, ...selectedStatuses, ...selectedDirections].map((item) => (
+                <Pill key={item} withRemoveButton onRemove={() => handleRemoveSelected(item)}>
+                  {item}
+                </Pill>
+              ))}
+              {/* Nút xóa tất cả chỉ hiển thị khi có ít nhất một giá trị được chọn */}
+              {hasSelectedItems && (
+                <Pill onClick={handleClearAll} variant="outline" color="red" style={{ marginLeft: '8px' }}>
+                  Xóa tất cả
+                </Pill>
+              )}
+            </h2>
+          </div>
+
           {/* Filters */}
           <div style={{ marginBottom: 20 }}>
             <Grid>
@@ -359,6 +397,12 @@ export default function AllList({ projectId }: AllListProps) {
               </Grid.Col>
             </Grid>
           </div>
+      {loading ? (
+        <Loader />
+      ) : sortedData.length > 0 ? (
+        <>
+          {/* Hiển thị tiêu chí đã chọn */}
+       
 
           {/* Cards */}
           <div className={styles.gridContainer}>
@@ -417,4 +461,3 @@ export default function AllList({ projectId }: AllListProps) {
     </div>
   );
 }
-
