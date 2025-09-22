@@ -5,7 +5,7 @@ import { apiarea } from "../../../library/axios";
 import { API_ROUTE } from "../../../const/apiRouter";
 import { useRouter } from "next/navigation";
 import { Pagination, Loader, Grid, Menu, Text, Pill } from "@mantine/core"; // Thêm Pill vào import
-import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronUp, IconFilterFilled } from "@tabler/icons-react";
 import styles from "./App.module.css";
 
 interface RecordItem {
@@ -255,12 +255,12 @@ export default function AllList({ projectId }: AllListProps) {
         <Menu.Dropdown>
           <Menu.Item onClick={() => setSortPrice("asc")}>
             <Text c={sortPrice === "asc" ? "blue" : "black"} fw={sortPrice === "asc" ? 600 : 400}>
-              Giá tăng dần
+              Giá tăng - Thấp
             </Text>
           </Menu.Item>
           <Menu.Item onClick={() => setSortPrice("desc")}>
             <Text c={sortPrice === "desc" ? "blue" : "black"} fw={sortPrice === "desc" ? 600 : 400}>
-              Giá giảm dần
+              Giá giảm - Cao
             </Text>
           </Menu.Item>
         </Menu.Dropdown>
@@ -297,12 +297,12 @@ export default function AllList({ projectId }: AllListProps) {
         <Menu.Dropdown>
           <Menu.Item onClick={() => setSortZone("asc")}>
             <Text c={sortZone === "asc" ? "blue" : "black"} fw={sortZone === "asc" ? 600 : 400}>
-              Tăng dần theo số phân khu
+              Phân khu tăng - giảm
             </Text>
           </Menu.Item>
           <Menu.Item onClick={() => setSortZone("desc")}>
             <Text c={sortZone === "desc" ? "blue" : "black"} fw={sortZone === "desc" ? 600 : 400}>
-              Giảm dần theo số phân khu
+              Phân khu giảm - tăng
             </Text>
           </Menu.Item>
         </Menu.Dropdown>
@@ -341,8 +341,13 @@ export default function AllList({ projectId }: AllListProps) {
             <h2>
               Chọn theo tiêu chí:
               {[...selectedZones, ...selectedBuildingTypes, ...selectedStatuses, ...selectedDirections].map((item) => (
-                <Pill key={item} withRemoveButton onRemove={() => handleRemoveSelected(item)}>
-                  {item}
+                <Pill key={item} withRemoveButton onRemove={() => handleRemoveSelected(item)}
+                 
+                >
+                 <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+      <IconFilterFilled size={12} />
+      <span>{item}</span>
+    </div>
                 </Pill>
               ))}
               {/* Nút xóa tất cả chỉ hiển thị khi có ít nhất một giá trị được chọn */}

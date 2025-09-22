@@ -32,6 +32,7 @@ type Role = {
   price: number | string;
   direction: string;
   description: string;
+  
 };
 
 const RoleTable = () => {
@@ -188,7 +189,7 @@ const RoleTable = () => {
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
             <EuiButtonIcon
-              iconType="eye"
+              iconType="image"
               aria-label="View"
               color="success"
               onClick={() => openDetaileUserModal(role)}
@@ -220,24 +221,29 @@ const RoleTable = () => {
     });
   };
 
-  const openDetaileUserModal = (role: Role) => {
-    const id = modals.openConfirmModal({
-      title: <div style={{ fontWeight: 600, fontSize: 18 }}>{language === 'vi' ? 'Hình ảnh' : 'Image'}</div>,
-      children: (
-        <View
-          idItem={role.id}
-          port={Number(role.port)}
-          language={language}
-          onSearch={() => {
-            modals.close(id);
-          }}
-        />
-      ),
-      confirmProps: { display: 'none' },
-      cancelProps: { display: 'none' },
-      size: '50%',
-    });
-  };
+ const openDetaileUserModal = (role: Role) => {
+  modals.openConfirmModal({
+    title: (
+      <div style={{ fontWeight: 600, fontSize: 18 }}>
+        {language === 'vi' ? 'Hình ảnh' : 'Image'}
+      </div>
+    ),
+    children: (
+      <View
+        idItem={role.id}
+        port={Number(role.port)}
+        language={language}
+        onSearch={() => {
+          // Chỉ refresh dữ liệu bên trong component View, modal vẫn giữ mở
+          console.log("refresh data only");
+        }}
+      />
+    ),
+    confirmProps: { display: 'none' }, // ẩn nút xác nhận
+    cancelProps: { display: 'none' },  // ẩn nút hủy
+    size: '50%',
+  });
+};
 
   // Table selection
   const selection = {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Button, FileInput, Group, LoadingOverlay} from '@mantine/core';
+import { Box, Button, FileInput, Group, LoadingOverlay } from '@mantine/core';
 import { IconCheck, IconX, IconPlus } from '@tabler/icons-react';
 import { apiarea } from "../../../../library/axios";
 import { API_ROUTE } from "../../../../const/apiRouter";
@@ -9,24 +9,23 @@ import type { AxiosError } from "axios";
 
 type CreateProps = {
   port?: number;
-  onSearch: () => void;
+  onSearch: () => void; // Hàm để cập nhật danh sách ảnh
   language: 'vi' | 'en';
   onClose?: () => void;
 };
 
 const ViewCreate = ({ port, onSearch, language, onClose }: CreateProps) => {
-  // mỗi phần tử là danh sách file của 1 input
   const [fileInputs, setFileInputs] = useState<File[][]>([[]]);
   const [loading, setLoading] = useState(false);
 
-  // cập nhật files cho input cụ thể
+  // Cập nhật files cho input cụ thể
   const handleFileChange = (index: number, value: File[] | null) => {
     const newInputs = [...fileInputs];
     newInputs[index] = value ?? [];
     setFileInputs(newInputs);
   };
 
-  // thêm 2 input mới
+  // Thêm 2 input mới
   const handleAddInputs = () => {
     setFileInputs((prev) => [...prev, [], []]);
   };
@@ -34,7 +33,7 @@ const ViewCreate = ({ port, onSearch, language, onClose }: CreateProps) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // gom tất cả file từ các input
+    // Gom tất cả file từ các input
     const allFiles = fileInputs.flat();
 
     if (allFiles.length < 1) {
@@ -64,11 +63,6 @@ const ViewCreate = ({ port, onSearch, language, onClose }: CreateProps) => {
         }
       });
 
-      // Debug log
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
-
       const url = `${API_ROUTE.CREATE_IMGE_BUILDING.replace("{port}", String(port))}?lang=${language}`;
       const res = await apiarea.put(url, formData, {
         headers: {
@@ -77,9 +71,12 @@ const ViewCreate = ({ port, onSearch, language, onClose }: CreateProps) => {
       });
 
       console.log("✅ Upload success:", res.data);
-      onSearch();
+      onSearch();  // Cập nhật trạng thái hình ảnh
       alert(language === "vi" ? "Tải ảnh thành công!" : "Upload successful!");
-      if (onClose) onClose();
+
+      // Xóa dữ liệu ở ô input
+      setFileInputs([[]]);  // Đặt lại trạng thái input về trạng thái ban đầu
+
     } catch (err: unknown) {
       console.error("❌ Upload error:", err);
 
@@ -98,7 +95,7 @@ const ViewCreate = ({ port, onSearch, language, onClose }: CreateProps) => {
     <Box component="form" miw={321} mx="auto" onSubmit={handleSubmit}>
       <LoadingOverlay visible={loading} zIndex={1001} overlayProps={{ radius: "sm", blur: 2 }} />
 
-      {/* render các input file */}
+      {/* Render các input file */}
       {fileInputs.map((files, index) => (
         <FileInput
           key={index}
@@ -111,7 +108,7 @@ const ViewCreate = ({ port, onSearch, language, onClose }: CreateProps) => {
         />
       ))}
 
-      {/* nút thêm input */}
+      {/* Nút thêm input */}
       <Button
         type="button"
         variant="light"
@@ -147,7 +144,6 @@ const ViewCreate = ({ port, onSearch, language, onClose }: CreateProps) => {
 };
 
 export default ViewCreate;
-
 
 
 

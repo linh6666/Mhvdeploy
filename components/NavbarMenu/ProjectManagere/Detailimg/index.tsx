@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import {
   Table,
@@ -27,14 +27,15 @@ interface CustomerDetailsProps {
   port?: number;
   language?: "vi" | "en";
   onSearch?: () => void;
+  images: ImageItem[]; // nhận từ parent
 }
 
 export default function CustomerDetails({
   port,
   language = "vi",
   onSearch,
+  images,
 }: CustomerDetailsProps) {
-  const [images, setImages] = useState<ImageItem[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [editingImage, setEditingImage] = useState<ImageItem | null>(null);
@@ -44,32 +45,6 @@ export default function CustomerDetails({
     initialValues: { image: null },
   });
 
-  // ✅ Fetch ảnh từ API (dùng useCallback để fix warning)
-  const fetchImages = useCallback(async () => {
-    if (!port) return;
-    try {
-      setLoading(true);
-      const res = await apiarea.get(API_ROUTE.GET_DETAIL_HOME, {
-        params: { port, lang: language },
-      });
-
-      const imageData: ImageItem[] = Array.isArray(res.data)
-        ? res.data
-        : res.data?.items || [];
-
-      setImages(imageData);
-      if (imageData.length > 0) setSelectedImage(imageData[0].image_url);
-    } catch (err) {
-      console.error("❌ Lỗi fetch ảnh:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [port, language]);
-
-  useEffect(() => {
-    fetchImages();
-  }, [fetchImages]); // ✅ warning gone
-
   if (!port)
     return (
       <div>
@@ -77,21 +52,18 @@ export default function CustomerDetails({
       </div>
     );
 
-  // Mở form sửa ảnh
   const handleEditClick = (img: ImageItem) => {
     setEditingImage(img);
     form.setFieldValue("image", null);
     setPreviewUrl(img.image_url);
   };
 
-  // Lưu sửa ảnh
   const handleSaveEdit = async (file: File | null) => {
     if (!editingImage) return;
     if (!file) {
       notifications.show({
         title: language === "vi" ? "Lỗi" : "Error",
-        message:
-          language === "vi" ? "Chọn file trước khi lưu!" : "Select a file first!",
+        message: language === "vi" ? "Chọn file trước khi lưu!" : "Select a file first!",
         color: "red",
       });
       return;
@@ -99,54 +71,32 @@ export default function CustomerDetails({
 
     try {
       setLoading(true);
-
       const formData = new FormData();
       formData.append("file", file);
       formData.append("lang", language);
 
-      // Gọi API PUT
-      const res = await apiarea.put(
+      await apiarea.put(
         `/api/v1/ecopark/update_image/${editingImage.id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      console.log("✅ PUT response:", res.data);
-
-      const updatedUrl = res.data?.image_url
-        ? res.data.image_url + "?t=" + new Date().getTime()
-        : editingImage.image_url;
-
-      setImages((prev) =>
-        prev.map((img) =>
-          img.id === editingImage.id ? { ...img, image_url: updatedUrl } : img
-        )
-      );
-
-      setSelectedImage(updatedUrl);
-      setPreviewUrl(updatedUrl);
+      notifications.show({
+        title: language === "vi" ? "Thành công" : "Success",
+        message: language === "vi" ? "Cập nhật ảnh thành công!" : "Image updated successfully!",
+        color: "green",
+      });
 
       form.reset();
       setEditingImage(null);
-      onSearch?.();
+      setPreviewUrl(null);
 
-      // 🔔 Thông báo thành công
-      notifications.show({
-        title: language === "vi" ? "Thành công" : "Success",
-        message:
-          language === "vi"
-            ? "Cập nhật ảnh thành công!"
-            : "Image updated successfully!",
-        color: "green",
-      });
+      if (onSearch) await onSearch(); // 🔹 gọi parent fetch lại ảnh
     } catch (err) {
-      console.error("❌ Lỗi cập nhật ảnh:", err);
+      console.error(err);
       notifications.show({
         title: language === "vi" ? "Thất bại" : "Failed",
-        message:
-          language === "vi"
-            ? "Cập nhật ảnh thất bại!"
-            : "Failed to update image!",
+        message: language === "vi" ? "Cập nhật ảnh thất bại!" : "Failed to update image!",
         color: "red",
       });
     } finally {
@@ -154,12 +104,9 @@ export default function CustomerDetails({
     }
   };
 
-  // Xóa ảnh
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
-      language === "vi"
-        ? "Bạn có chắc muốn xóa ảnh này?"
-        : "Are you sure to delete this image?"
+      language === "vi" ? "Bạn có chắc muốn xóa ảnh này?" : "Are you sure to delete this image?"
     );
     if (!confirmDelete) return;
 
@@ -169,28 +116,19 @@ export default function CustomerDetails({
         params: { detal_ids: id },
       });
 
-      setImages((prev) => prev.filter((img) => img.id !== id));
-      if (selectedImage === images.find((img) => img.id === id)?.image_url) {
-        setSelectedImage(images[0]?.image_url || null);
-      }
-      onSearch?.();
-
       notifications.show({
         title: language === "vi" ? "Thành công" : "Success",
-        message:
-          language === "vi"
-            ? "Xóa ảnh thành công!"
-            : "Image deleted successfully!",
+        message: language === "vi" ? "Xóa ảnh thành công!" : "Image deleted successfully!",
         color: "green",
       });
+
+      setSelectedImage(null);
+      if (onSearch) await onSearch(); // 🔹 gọi parent fetch lại ảnh
     } catch (err) {
       console.error(err);
       notifications.show({
         title: language === "vi" ? "Thất bại" : "Failed",
-        message:
-          language === "vi"
-            ? "Xóa ảnh thất bại!"
-            : "Failed to delete image!",
+        message: language === "vi" ? "Xóa ảnh thất bại!" : "Failed to delete image!",
         color: "red",
       });
     } finally {
@@ -218,7 +156,6 @@ export default function CustomerDetails({
           gap: 10,
         }}
       >
-        {/* Bảng ảnh */}
         <Table
           highlightOnHover
           withTableBorder
@@ -236,11 +173,7 @@ export default function CustomerDetails({
               <Table.Tr key={img.id}>
                 <Table.Td>
                   <Image
-                    src={
-                      previewUrl && editingImage?.id === img.id
-                        ? previewUrl
-                        : img.image_url
-                    }
+                    src={previewUrl && editingImage?.id === img.id ? previewUrl : img.image_url}
                     alt={`Thumbnail ${idx}`}
                     width={80}
                     height={60}
@@ -251,20 +184,12 @@ export default function CustomerDetails({
                 <Table.Td>
                   <Group>
                     <Tooltip label={language === "vi" ? "Sửa" : "Edit"}>
-                      <ActionIcon
-                        color="blue"
-                        variant="subtle"
-                        onClick={() => handleEditClick(img)}
-                      >
+                      <ActionIcon color="blue" variant="subtle" onClick={() => handleEditClick(img)}>
                         <IconPencil size={18} />
                       </ActionIcon>
                     </Tooltip>
                     <Tooltip label={language === "vi" ? "Xóa" : "Delete"}>
-                      <ActionIcon
-                        color="red"
-                        variant="subtle"
-                        onClick={() => handleDelete(img.id)}
-                      >
+                      <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(img.id)}>
                         <IconTrash size={18} />
                       </ActionIcon>
                     </Tooltip>
@@ -275,27 +200,41 @@ export default function CustomerDetails({
           </Table.Tbody>
         </Table>
 
-        {/* Form sửa ảnh */}
+        {selectedImage && (
+          <div style={{ marginTop: "2rem", textAlign: "center" }}>
+            <Image
+              src={selectedImage}
+              alt="Full view"
+              width={900}
+              height={500}
+              style={{
+                width: "700px",
+                height: "400px",
+                objectFit: "cover",
+                borderRadius: "8px",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
+              }}
+            />
+            <Group justify="center" mt="sm">
+              <Button variant="outline" color="red" onClick={() => setSelectedImage(null)}>
+                {language === "vi" ? "Đóng ảnh lớn" : "Close image"}
+              </Button>
+            </Group>
+          </div>
+        )}
+
         {editingImage && (
           <div style={{ marginTop: "1rem", width: "500px" }}>
             <h3>{language === "vi" ? "Sửa hình ảnh" : "Edit Image"}</h3>
 
             {previewUrl && (
               <div style={{ marginBottom: 10 }}>
-                <Image
-                  src={previewUrl}
-                  alt="Preview"
-                  width={100}
-                  height={50}
-                  style={{ objectFit: "cover" }}
-                />
+                <Image src={previewUrl} alt="Preview" width={100} height={50} style={{ objectFit: "cover" }} />
               </div>
             )}
 
             <FileInput
-              label={
-                language === "vi" ? "Chọn file ảnh" : "Select image file"
-              }
+              label={language === "vi" ? "Chọn file ảnh" : "Select image file"}
               placeholder={language === "vi" ? "Chọn file" : "Select file"}
               accept="image/*"
               {...form.getInputProps("image", {
