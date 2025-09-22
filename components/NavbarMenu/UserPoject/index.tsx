@@ -10,8 +10,9 @@ import {
   EuiButtonIcon,
   Criteria,
 } from '@elastic/eui';
-import { Divider } from '@mantine/core';
+import { Divider, Text, Menu } from '@mantine/core';
 import { modals } from '@mantine/modals';
+import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 
 import { getListRoles } from '../../../api/apiUserProjectRole';
 import CreateView from './CreateView';
@@ -22,7 +23,6 @@ import AppSearch from '../../../common/AppSearch';
 import { NotificationExtension } from '../../../common/extension/NotificationExtension';
 import { paginationBase, PaginationOptions } from '../../../_base/model/BaseTable';
 
-/* ==== Type cho API ==== */
 export type Role = {
   id: string;
   user_id: string;
@@ -42,16 +42,27 @@ export interface RoleApiResponse {
 
 const RoleTable = () => {
   const [roles, setRoles] = useState<Role[]>([]);
-  const [allRoles, setAllRoles] = useState<Role[]>([]); // Lưu danh sách gốc để tìm kiếm
+  const [allRoles, setAllRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<Role[]>([]);
   const [pagination, setPagination] = useState<PaginationOptions>(paginationBase);
 
-  // State tìm kiếm
-  const [searchTerm, setSearchTerm] = useState<string>(''); // Text input
+  // Search
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
-  /* ==== Gọi API lấy danh sách ==== */
+  // Filter states
+  const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
+  const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [selectedRanks, setSelectedRanks] = useState<string[]>([]);
+
+  const [emailOptions, setEmailOptions] = useState<string[]>([]);
+  const [projectOptions, setProjectOptions] = useState<string[]>([]);
+  const [roleOptions, setRoleOptions] = useState<string[]>([]);
+  const [rankOptions, setRankOptions] = useState<string[]>([]);
+
+  // Fetch API
   const fetchRoles = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -75,10 +86,17 @@ const RoleTable = () => {
       }));
 
       setRoles(rolesWithId);
-      setAllRoles(rolesWithId); // Lưu danh sách gốc
+      setAllRoles(rolesWithId);
+
+      // Set filter options
+      setEmailOptions([...new Set(rolesWithId.map(r => r.user_email))].filter(Boolean) as string[]);
+      setProjectOptions([...new Set(rolesWithId.map(r => r.project_name))].filter(Boolean) as string[]);
+      setRoleOptions([...new Set(rolesWithId.map(r => r.role_name))].filter(Boolean) as string[]);
+      setRankOptions([...new Set(rolesWithId.map(r => r.role_rank.toString()))].filter(Boolean) as string[]);
+
       setPagination((prev) => ({
         ...prev,
-        totalItemCount: res.total ?? res.assignments.length ?? 0,
+        totalItemCount: res.total ?? rolesWithId.length,
       }));
     } catch (err: unknown) {
       console.error('❌ Lỗi gọi API:', err);
@@ -92,29 +110,89 @@ const RoleTable = () => {
     fetchRoles();
   }, [fetchRoles]);
 
-  /* ==== Hàm tìm kiếm ==== */
-  const handleSearch = (value: string) => {
-    setSearchTerm(value);
+  // Filter + Search effect
+  useEffect(() => {
+    let filtered = allRoles;
 
-    if (!value.trim()) {
-      setRoles(allRoles); // Reset nếu không có từ khóa
-      return;
+    // Search
+    if (searchTerm) {
+      const lower = searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (r) =>
+          (r.user_email ?? '').toLowerCase().includes(lower) ||
+          (r.project_name ?? '').toLowerCase().includes(lower) ||
+          (r.role_name ?? '').toLowerCase().includes(lower) ||
+          (r.role_rank ?? '').toString().toLowerCase().includes(lower)
+      );
     }
 
-    const lowerValue = value.toLowerCase();
-
-    const filtered = allRoles.filter(
-      (role) =>
-        (role.user_email ?? '').toLowerCase().includes(lowerValue) ||
-        (role.project_name ?? '').toLowerCase().includes(lowerValue) ||
-        (role.role_name ?? '').toLowerCase().includes(lowerValue) ||
-        (role.role_rank ?? '').toString().toLowerCase().includes(lowerValue)
-    );
+    // Filters
+    if (selectedEmails.length > 0) filtered = filtered.filter(r => selectedEmails.includes(r.user_email));
+    if (selectedProjects.length > 0) filtered = filtered.filter(r => selectedProjects.includes(r.project_name));
+    if (selectedRoles.length > 0) filtered = filtered.filter(r => selectedRoles.includes(r.role_name));
+    if (selectedRanks.length > 0) filtered = filtered.filter(r => selectedRanks.includes(r.role_rank.toString()));
 
     setRoles(filtered);
+  }, [allRoles, searchTerm, selectedEmails, selectedProjects, selectedRoles, selectedRanks]);
+
+  const clearFilters = () => {
+    setSelectedEmails([]);
+    setSelectedProjects([]);
+    setSelectedRoles([]);
+    setSelectedRanks([]);
+    setSelectedItems([]);
+    setRoles(allRoles);
   };
 
-  /* ==== Hàm modal ==== */
+  // Filter dropdown component
+  const FilterItem = ({
+    label,
+    options,
+    selected,
+    setSelected,
+  }: {
+    label: string;
+    options: string[];
+    selected: string[];
+    setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+  }) => {
+    const [opened, setOpened] = useState(false);
+    return (
+      <Menu shadow="md" width={200} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
+        <Menu.Target>
+          <Text
+            size="sm"
+            fw={500}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: selected.length > 0 ? '#1E88E5' : '#555' }}
+          >
+            <EuiButtonIcon
+              iconType="filter"
+              aria-label={label}
+              color={selected.length > 0 ? 'primary' : 'text'}
+              size="s"
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
+            />
+            {selected.length > 0 ? selected.join(', ') : label}
+            {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+          </Text>
+        </Menu.Target>
+        <Menu.Dropdown>
+          {options.map(opt => (
+            <Menu.Item
+              key={opt}
+              onClick={() => setSelected(prev => prev.includes(opt) ? prev.filter(v => v !== opt) : [...prev, opt])}
+            >
+              <Text size="sm" fw={selected.includes(opt) ? 600 : 400} c={selected.includes(opt) ? 'blue' : 'black'}>
+                {opt}
+              </Text>
+            </Menu.Item>
+          ))}
+        </Menu.Dropdown>
+      </Menu>
+    );
+  };
+
+  // Modal handlers
   const openModal = () => {
     modals.openConfirmModal({
       title: <div style={{ fontWeight: 600, fontSize: 18 }}>Thêm dự án cho người dùng</div>,
@@ -151,17 +229,15 @@ const RoleTable = () => {
 
     modals.openConfirmModal({
       title: <div style={{ fontWeight: 600, fontSize: 18 }}>Xóa người dùng dự án</div>,
-      children: (
-        <DeleteView idItem={[role.user_project_role_id]} onSearch={fetchRoles} />
-      ),
+      children: <DeleteView idItem={[role.user_project_role_id]} onSearch={fetchRoles} />,
       confirmProps: { display: 'none' },
       cancelProps: { display: 'none' },
     });
   };
 
-  /* ==== Bảng dữ liệu ==== */
+  // Table columns
   const columns: Array<EuiBasicTableColumn<Role>> = [
-    { field: 'user_email', name: 'Email', truncateText: true, width: '30%' },
+    { field: 'user_email', name: 'Email', truncateText: true, width: '25%' },
     { field: 'project_name', name: 'Tên Dự Án', truncateText: true, width: '25%' },
     { field: 'role_name', name: 'Tên Vai Trò', truncateText: true, width: '20%' },
     {
@@ -173,31 +249,21 @@ const RoleTable = () => {
     },
     {
       name: 'Thao Tác',
-      width: '15%',
+      width: '20%',
       render: (role: Role) => (
         <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
           <EuiFlexItem grow={false}>
-            <EuiButtonIcon
-              iconType="documentEdit"
-              aria-label="Edit"
-              color="success"
-              onClick={() => openEditUserModal(role)}
-            />
+            <EuiButtonIcon iconType="documentEdit" aria-label="Edit" color="success" onClick={() => openEditUserModal(role)} />
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
-            <EuiButtonIcon
-              iconType="trash"
-              aria-label="Delete"
-              color="danger"
-              onClick={() => openDeleteUserModal(role)}
-            />
+            <EuiButtonIcon iconType="trash" aria-label="Delete" color="danger" onClick={() => openDeleteUserModal(role)} />
           </EuiFlexItem>
         </EuiFlexGroup>
       ),
     },
   ];
 
-  /* ==== Selection & Pagination ==== */
+  // Selection & pagination
   const selection = {
     selectable: () => true,
     onSelectionChange: (items: Role[]) => setSelectedItems(items),
@@ -216,15 +282,39 @@ const RoleTable = () => {
 
   return (
     <>
-      {/* ✅ Nút thêm */}
       <AppAction openModal={openModal} />
 
       <Divider my="sm" labelPosition="center" />
-      <AppSearch
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onSearch={handleSearch}
-      />
+      <AppSearch value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onSearch={setSearchTerm} />
+
+      {/* Filters + Clear */}
+      <EuiFlexGroup alignItems="center" gutterSize="m" style={{ margin: '12px 0' }}>
+        <EuiFlexItem grow={false}>
+          <FilterItem label="Chọn Email" options={emailOptions} selected={selectedEmails} setSelected={setSelectedEmails} />
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <FilterItem label="Chọn Dự Án" options={projectOptions} selected={selectedProjects} setSelected={setSelectedProjects} />
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <FilterItem label="Chọn Vai Trò" options={roleOptions} selected={selectedRoles} setSelected={setSelectedRoles} />
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <FilterItem label="Chọn Cấp bậc" options={rankOptions} selected={selectedRanks} setSelected={setSelectedRanks} />
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <Text
+            style={{
+              cursor: selectedEmails.length || selectedProjects.length || selectedRoles.length || selectedRanks.length ? 'pointer' : 'not-allowed',
+              color: selectedEmails.length || selectedProjects.length || selectedRoles.length || selectedRanks.length ? '#406c88' : '#aaa',
+              fontWeight: 500,
+            }}
+            onClick={() => clearFilters()}
+          >
+            Xóa filter
+          </Text>
+        </EuiFlexItem>
+      </EuiFlexGroup>
+
       <Divider my="sm" />
 
       <EuiBasicTable
@@ -256,4 +346,5 @@ const RoleTable = () => {
 };
 
 export default RoleTable;
+
 

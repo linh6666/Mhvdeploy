@@ -10,7 +10,7 @@ import {
   EuiButtonIcon,
   Criteria,
 } from '@elastic/eui';
-import { Divider, Menu, Button, Text } from '@mantine/core';
+import { Divider, Menu, Text } from '@mantine/core';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { apiarea } from '../../../library/axios';
@@ -32,7 +32,6 @@ type Role = {
   price: number | string;
   direction: string;
   description: string;
-  
 };
 
 const RoleTable = () => {
@@ -70,7 +69,7 @@ const RoleTable = () => {
     }
 
     try {
-      const endpoint = API_ROUTE.GET_LIST_DETAIL_ECOPARK; // Đường dẫn API
+      const endpoint = API_ROUTE.GET_LIST_DETAIL_ECOPARK;
       const res = await apiarea.get(endpoint, {
         headers: { Authorization: `Bearer ${token}` },
         params: { lang: language },
@@ -83,20 +82,19 @@ const RoleTable = () => {
       }
 
       // Set filter options
-    setZoneOptions(
-  Array.from(
-    new Set(
-      res.data.items
-        .map((r: Role) => (r.zone_name?.split('.')[0] || '') as string) // ép kiểu string
-        .filter(Boolean) as string[] // ép kiểu sau filter
-    )
-  ).sort((a, b) => {
-    const numA = parseInt(a.match(/\d+/)?.[0] || '0', 10);
-    const numB = parseInt(b.match(/\d+/)?.[0] || '0', 10);
-    return numA - numB;
-  })
-);
-
+      setZoneOptions(
+        Array.from(
+          new Set(
+            res.data.items
+              .map((r: Role) => (r.zone_name?.split('.')[0] || '') as string)
+              .filter(Boolean) as string[]
+          )
+        ).sort((a, b) => {
+          const numA = parseInt(a.match(/\d+/)?.[0] || '0', 10);
+          const numB = parseInt(b.match(/\d+/)?.[0] || '0', 10);
+          return numA - numB;
+        })
+      );
 
       setBuildingTypeOptions(
         Array.from(new Set(res.data.items.map((r: Role) => r.building_type).filter(Boolean)))
@@ -115,7 +113,9 @@ const RoleTable = () => {
       if (err instanceof Error) setError(err.message);
       else
         setError(
-          language === 'vi' ? 'Đã xảy ra lỗi khi tải dữ liệu.' : 'An error occurred while loading data.'
+          language === 'vi'
+            ? 'Đã xảy ra lỗi khi tải dữ liệu.'
+            : 'An error occurred while loading data.'
         );
     } finally {
       setLoading(false);
@@ -233,29 +233,28 @@ const RoleTable = () => {
     });
   };
 
- const openDetaileUserModal = (role: Role) => {
-  modals.openConfirmModal({
-    title: (
-      <div style={{ fontWeight: 600, fontSize: 18 }}>
-        {language === 'vi' ? 'Hình ảnh' : 'Image'}
-      </div>
-    ),
-    children: (
-      <View
-        idItem={role.id}
-        port={Number(role.port)}
-        language={language}
-        onSearch={() => {
-          // Chỉ refresh dữ liệu bên trong component View, modal vẫn giữ mở
-          console.log("refresh data only");
-        }}
-      />
-    ),
-    confirmProps: { display: 'none' }, // ẩn nút xác nhận
-    cancelProps: { display: 'none' },  // ẩn nút hủy
-    size: '50%',
-  });
-};
+  const openDetaileUserModal = (role: Role) => {
+    modals.openConfirmModal({
+      title: (
+        <div style={{ fontWeight: 600, fontSize: 18 }}>
+          {language === 'vi' ? 'Hình ảnh' : 'Image'}
+        </div>
+      ),
+      children: (
+        <View
+          idItem={role.id}
+          port={Number(role.port)}
+          language={language}
+          onSearch={() => {
+            console.log("refresh data only");
+          }}
+        />
+      ),
+      confirmProps: { display: 'none' },
+      cancelProps: { display: 'none' },
+      size: '50%',
+    });
+  };
 
   // Table selection
   const selection = {
@@ -277,17 +276,19 @@ const RoleTable = () => {
     setSelectedDirections([]);
   };
 
-  // ✅ Component FilterItem
+  // ✅ Component FilterItem (đã thêm iconType)
   const FilterItem = ({
     label,
     options,
     selected,
     setSelected,
+    iconType,
   }: {
     label: string;
     options: string[];
     selected: string[];
     setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+    iconType?: string;
   }) => {
     const [opened, setOpened] = useState(false);
 
@@ -305,10 +306,17 @@ const RoleTable = () => {
               color: selected.length > 0 ? '#1E88E5' : '#555',
             }}
           >
+            {iconType && (
+            <EuiButtonIcon
+  iconType={iconType}
+  color={selected.length > 0 ? 'primary' : 'text'} // sửa 'subdued' thành 'text'
+/>
+            )}
             {selected.length > 0 ? selected.join(', ') : label}
             {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
           </Text>
         </Menu.Target>
+
         <Menu.Dropdown>
           {options.map((opt) => (
             <Menu.Item
@@ -319,11 +327,7 @@ const RoleTable = () => {
                 );
               }}
             >
-              <Text
-                size="sm"
-                fw={selected.includes(opt) ? 600 : 400}
-                c={selected.includes(opt) ? 'blue' : 'black'}
-              >
+              <Text size="sm" fw={selected.includes(opt) ? 600 : 400} c={selected.includes(opt) ? 'blue' : 'black'}>
                 {opt}
               </Text>
             </Menu.Item>
@@ -348,7 +352,7 @@ const RoleTable = () => {
 
       <AppAction openModal={openModal} language={language} />
 
-      <Divider my="sm"  labelPosition="center" />
+      <Divider my="sm" labelPosition="center" />
 
       {/* Filters */}
       <EuiFlexGroup style={{ marginBottom: '12px' }} alignItems="flexEnd" gutterSize="m">
@@ -358,6 +362,7 @@ const RoleTable = () => {
             options={zoneOptions}
             selected={selectedZones}
             setSelected={setSelectedZones}
+            iconType="filter"
           />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
@@ -366,6 +371,7 @@ const RoleTable = () => {
             options={buildingTypeOptions}
             selected={selectedBuildingTypes}
             setSelected={setSelectedBuildingTypes}
+            iconType="filter"
           />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
@@ -374,6 +380,7 @@ const RoleTable = () => {
             options={statusOptions}
             selected={selectedStatuses}
             setSelected={setSelectedStatuses}
+            iconType="filter"
           />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
@@ -382,17 +389,47 @@ const RoleTable = () => {
             options={directionOptions}
             selected={selectedDirections}
             setSelected={setSelectedDirections}
+            iconType="filter"
           />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
-          <Button
-            leftSection={<span>🗑️</span>}
-            style={{ backgroundColor: '#406c88', color: '#fff' }}
-            loading={loading}
-            onClick={clearFilters}
-          >
-            {language === 'vi' ? 'Xóa' : 'Clear'}
-          </Button>
+         <Text
+  style={{
+    cursor:
+      selectedZones.length > 0 ||
+      selectedBuildingTypes.length > 0 ||
+      selectedStatuses.length > 0 ||
+      selectedDirections.length > 0
+        ? 'pointer'
+        : 'not-allowed',
+    color:
+      selectedZones.length > 0 ||
+      selectedBuildingTypes.length > 0 ||
+      selectedStatuses.length > 0 ||
+      selectedDirections.length > 0
+        ? '#406c88'
+        : '#aaa',
+    fontWeight: 500,
+  }}
+  onClick={() => {
+    if (
+      selectedZones.length ||
+      selectedBuildingTypes.length ||
+      selectedStatuses.length ||
+      selectedDirections.length
+    ) {
+      clearFilters();
+    }
+  }}
+>
+  {selectedZones.length > 0 ||
+  selectedBuildingTypes.length > 0 ||
+  selectedStatuses.length > 0 ||
+  selectedDirections.length > 0
+    ? 'Xóa đã chọn'
+    : 'Xóa filter'}
+</Text>
+
         </EuiFlexItem>
       </EuiFlexGroup>
 
