@@ -83,9 +83,21 @@ const RoleTable = () => {
       }
 
       // Set filter options
-      setZoneOptions(
-        Array.from(new Set(res.data.items.map((r: Role) => r.zone_name?.split('.')[0] || '').filter(Boolean)))
-      );
+    setZoneOptions(
+  Array.from(
+    new Set(
+      res.data.items
+        .map((r: Role) => (r.zone_name?.split('.')[0] || '') as string) // ép kiểu string
+        .filter(Boolean) as string[] // ép kiểu sau filter
+    )
+  ).sort((a, b) => {
+    const numA = parseInt(a.match(/\d+/)?.[0] || '0', 10);
+    const numB = parseInt(b.match(/\d+/)?.[0] || '0', 10);
+    return numA - numB;
+  })
+);
+
+
       setBuildingTypeOptions(
         Array.from(new Set(res.data.items.map((r: Role) => r.building_type).filter(Boolean)))
       );
