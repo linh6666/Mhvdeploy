@@ -10,7 +10,8 @@ import {
   EuiButtonIcon,
   Criteria,
 } from '@elastic/eui';
-import { Divider } from '@mantine/core';
+import { Divider, Text, Menu } from '@mantine/core';
+import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 
 import { getListRoles } from '../../../api/getlistrole';
@@ -30,22 +31,23 @@ type Role = {
 
 const RoleTable = () => {
   const [roles, setRoles] = useState<Role[]>([]);
-  const [allRoles, setAllRoles] = useState<Role[]>([]); // ✅ lưu dữ liệu gốc
+  const [allRoles, setAllRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<Role[]>([]);
   const [pagination, setPagination] = useState<PaginationOptions>(paginationBase);
 
-  // State tìm kiếm
-  const [searchTerm, setSearchTerm] = useState<string>(''); // nhập trong input
-  const [searchValue, setSearchValue] = useState<string>(''); // khi bấm nút Search mới set
+  // Search
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchValue, setSearchValue] = useState<string>('');
 
- useEffect(() => {
-    console.log("🔍 Confirmed Search Value:", searchValue);
-  }, [searchValue]);
+  // Filter states
+  const [selectedNames, setSelectedNames] = useState<string[]>([]);
+  const [selectedRanks, setSelectedRanks] = useState<string[]>([]);
+  const [nameOptions, setNameOptions] = useState<string[]>([]);
+  const [rankOptions, setRankOptions] = useState<string[]>([]);
 
-  
-  // Gọi API lấy danh sách vai trò
+  // Fetch roles
   const fetchRoles = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -60,24 +62,28 @@ const RoleTable = () => {
     try {
       const skip = pagination.pageIndex * pagination.pageSize;
       const limit = pagination.pageSize;
-
       const res = await getListRoles({ token, skip, limit });
       const { data, total } = res;
 
-      setRoles(data || []);
-      setAllRoles(data || []); // ✅ lưu toàn bộ để search
+      const list: Role[] = data || [];
+      setRoles(list);
+      setAllRoles(list);
+
+      // Set filter options
+      setNameOptions(Array.from(new Set(list.map(r => r.name))).sort());
+      setRankOptions(
+        Array.from(new Set(list.map(r => String(r.rank)))).sort(
+          (a, b) => parseInt(a) - parseInt(b)
+        )
+      );
+
       setPagination((prev) => ({
         ...prev,
-        totalItemCount: total ?? data.length ?? 0,
+        totalItemCount: total ?? list.length,
       }));
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error('❌ Lỗi gọi API:', err);
-        setError(err.message);
-      } else {
-        console.error('❌ Lỗi không xác định:', err);
-        setError('Đã xảy ra lỗi khi tải dữ liệu.');
-      }
+      if (err instanceof Error) setError(err.message);
+      else setError('Đã xảy ra lỗi khi tải dữ liệu.');
     } finally {
       setLoading(false);
     }
@@ -87,32 +93,106 @@ const RoleTable = () => {
     fetchRoles();
   }, [fetchRoles]);
 
-  // ✅ Khi click tìm kiếm
-  const handleSearch = (value: string) => {
-    setSearchValue(value);
+  // Search & Filter
+  useEffect(() => {
+    let filtered = allRoles;
 
-    if (!value.trim()) {
-      // Nếu ô tìm kiếm rỗng → reset về allRoles
-      setRoles(allRoles);
-      return;
+    if (searchValue) {
+      const lowerSearch = searchValue.toLowerCase();
+      filtered = filtered.filter(
+        (r) =>
+          r.name.toLowerCase().includes(lowerSearch) ||
+          r.description?.toLowerCase().includes(lowerSearch)
+      );
     }
 
-    const filtered = allRoles.filter(
-      (role) =>
-        role.name.toLowerCase().includes(value.toLowerCase()) ||
-        role.description?.toLowerCase().includes(value.toLowerCase())
-    );
+    if (selectedNames.length > 0) {
+      filtered = filtered.filter((r) => selectedNames.includes(r.name));
+    }
+
+    if (selectedRanks.length > 0) {
+      filtered = filtered.filter((r) => selectedRanks.includes(String(r.rank)));
+    }
+
     setRoles(filtered);
+  }, [allRoles, searchValue, selectedNames, selectedRanks]);
+
+  // Clear filters / selections
+  const clearFilters = () => {
+    setSelectedNames([]);
+    setSelectedRanks([]);
+    setSelectedItems([]);
+    setRoles(allRoles);
   };
 
-  // Các cột hiển thị
+  // FilterItem component
+  const FilterItem = ({
+    label,
+    options,
+    selected,
+    setSelected,
+    iconType = 'filter',
+  }: {
+    label: string;
+    options: string[];
+    selected: string[];
+    setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+    iconType?: string;
+  }) => {
+    const [opened, setOpened] = useState(false);
+
+    return (
+      <Menu shadow="md" width={200} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
+        <Menu.Target>
+          <Text
+            size="sm"
+            fw={500}
+            style={{
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              color: selected.length > 0 ? '#1E88E5' : '#555',
+            }}
+          >
+           <EuiButtonIcon
+  iconType={iconType}
+  aria-label={label}
+  color={selected.length > 0 ? 'primary' : 'text'}
+  size="s"
+  onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
+/>
+{selected.length > 0 ? selected.join(', ') : label}
+{opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+          </Text>
+        </Menu.Target>
+        <Menu.Dropdown>
+          {options.map((opt) => (
+            <Menu.Item
+              key={opt}
+              onClick={() =>
+                setSelected((prev) =>
+                  prev.includes(opt) ? prev.filter((v) => v !== opt) : [...prev, opt]
+                )
+              }
+            >
+              <Text
+                size="sm"
+                fw={selected.includes(opt) ? 600 : 400}
+                c={selected.includes(opt) ? 'blue' : 'black'}
+              >
+                {opt}
+              </Text>
+            </Menu.Item>
+          ))}
+        </Menu.Dropdown>
+      </Menu>
+    );
+  };
+
+  // Table columns
   const columns: Array<EuiBasicTableColumn<Role>> = [
-    {
-      field: 'name',
-      name: 'Tên',
-      truncateText: true,
-      width: '30%',
-    },
+    { field: 'name', name: 'Tên', truncateText: true, width: '30%' },
     {
       field: 'rank',
       name: 'Cấp bậc',
@@ -120,12 +200,7 @@ const RoleTable = () => {
       render: (rank: number) => <EuiHealth color="success">{rank}</EuiHealth>,
       truncateText: true,
     },
-    {
-      field: 'description',
-      name: 'Mô tả',
-      truncateText: true,
-      width: '30%',
-    },
+    { field: 'description', name: 'Mô tả', truncateText: true, width: '30%' },
     {
       name: 'Thao tác',
       width: '25%',
@@ -152,7 +227,7 @@ const RoleTable = () => {
     },
   ];
 
-  // Modal thêm mới
+  // Modal handlers
   const openModal = () => {
     modals.openConfirmModal({
       title: <div style={{ fontWeight: 600, fontSize: 18 }}>Thêm vai trò mới</div>,
@@ -163,22 +238,14 @@ const RoleTable = () => {
       cancelProps: { display: 'none' },
     });
   };
-
-  // Modal chỉnh sửa
   const openEditUserModal = (role: Role) => {
     modals.openConfirmModal({
-      title: (
-        <div style={{ fontWeight: 600, fontSize: 18 }}>
-          Chỉnh sửa vai trò: {role.description}
-        </div>
-      ),
+      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Chỉnh sửa vai trò: {role.description}</div>,
       children: <EditView id={role.id} onSearch={fetchRoles} />,
       confirmProps: { display: 'none' },
       cancelProps: { display: 'none' },
     });
   };
-
-  // Modal xóa
   const openDeleteUserModal = (role: Role) => {
     modals.openConfirmModal({
       title: <div style={{ fontWeight: 600, fontSize: 18 }}>Xóa vai trò</div>,
@@ -188,14 +255,12 @@ const RoleTable = () => {
     });
   };
 
-  // Lựa chọn trong bảng
   const selection = {
     selectable: () => true,
     onSelectionChange: (items: Role[]) => setSelectedItems(items),
     selected: selectedItems,
   };
 
-  // Xử lý phân trang
   const onTableChange = ({ page }: Criteria<Role>) => {
     if (page) {
       setPagination((prev) => ({
@@ -212,12 +277,55 @@ const RoleTable = () => {
 
       <Divider my="sm" labelPosition="center" />
 
-      {/* ✅ Tích hợp AppSearch */}
       <AppSearch
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        onSearch={handleSearch}
+        onSearch={(val) => setSearchValue(val)}
       />
+
+      {/* Filter + Clear Text */}
+      <EuiFlexGroup alignItems="center" gutterSize="m" style={{ margin: '12px 0' }}>
+        <EuiFlexItem grow={false}>
+          <FilterItem
+            label="Chọn Tên"
+            options={nameOptions}
+            selected={selectedNames}
+            setSelected={setSelectedNames}
+            iconType="filter"
+          />
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <FilterItem
+            label="Chọn Cấp bậc"
+            options={rankOptions}
+            selected={selectedRanks}
+            setSelected={setSelectedRanks}
+            iconType="filter"
+          />
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <Text
+            style={{
+              cursor:
+                selectedNames.length > 0 || selectedRanks.length > 0 || selectedItems.length > 0
+                  ? 'pointer'
+                  : 'not-allowed',
+              color:
+                selectedNames.length > 0 || selectedRanks.length > 0 || selectedItems.length > 0
+                  ? '#406c88'
+                  : '#aaa',
+              fontWeight: 500,
+            }}
+            onClick={() => {
+              if (selectedNames.length || selectedRanks.length || selectedItems.length) {
+                clearFilters();
+              }
+            }}
+          >
+            {selectedItems.length > 0 ? 'Xóa đã chọn' : 'Xóa filter'}
+          </Text>
+        </EuiFlexItem>
+      </EuiFlexGroup>
 
       <Divider my="sm" />
 
@@ -230,13 +338,7 @@ const RoleTable = () => {
         itemId="id"
         selection={selection}
         rowHeader="description"
-        noItemsMessage={
-          error
-            ? error
-            : loading
-            ? 'Đang tải dữ liệu...'
-            : 'Không có vai trò nào.'
-        }
+        noItemsMessage={error ? error : loading ? 'Đang tải dữ liệu...' : 'Không có vai trò nào.'}
         pagination={{
           pageIndex: pagination.pageIndex,
           pageSize: pagination.pageSize,
@@ -250,4 +352,3 @@ const RoleTable = () => {
 };
 
 export default RoleTable;
-
