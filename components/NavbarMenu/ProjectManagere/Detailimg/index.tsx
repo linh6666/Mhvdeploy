@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Table,
@@ -27,7 +27,7 @@ interface CustomerDetailsProps {
   port?: number;
   language?: "vi" | "en";
   onSearch?: () => void;
-  images: ImageItem[]; // nhận từ parent
+  images: ImageItem[];
 }
 
 export default function CustomerDetails({
@@ -44,6 +44,15 @@ export default function CustomerDetails({
   const form = useForm<{ image: File | null }>({
     initialValues: { image: null },
   });
+
+  // Cleanup URL object khi unmount hoặc thay đổi preview
+  useEffect(() => {
+    return () => {
+      if (previewUrl && previewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   if (!port)
     return (
@@ -91,7 +100,7 @@ export default function CustomerDetails({
       setEditingImage(null);
       setPreviewUrl(null);
 
-      if (onSearch) await onSearch(); // 🔹 gọi parent fetch lại ảnh
+      if (onSearch) await onSearch();
     } catch (err) {
       console.error(err);
       notifications.show({
@@ -123,7 +132,7 @@ export default function CustomerDetails({
       });
 
       setSelectedImage(null);
-      if (onSearch) await onSearch(); // 🔹 gọi parent fetch lại ảnh
+      if (onSearch) await onSearch();
     } catch (err) {
       console.error(err);
       notifications.show({
@@ -140,68 +149,65 @@ export default function CustomerDetails({
     <div style={{ position: "relative" }}>
       <LoadingOverlay visible={loading} />
 
-      <h2>
-        {language === "vi"
-          ? "Hình ảnh chi tiết của nhà"
-          : "Detailed Images of the House"}
-      </h2>
+      <h2>{language === "vi" ? "Hình ảnh chi tiết của nhà" : "Detailed Images of the House"}</h2>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          marginTop: "1.5rem",
-          gap: 10,
-        }}
-      >
-        <Table
-          highlightOnHover
-          withTableBorder
-          withColumnBorders
-          style={{ marginTop: "1.5rem", maxWidth: "500px" }}
-        >
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>{language === "vi" ? "Ảnh" : "Image"}</Table.Th>
-              <Table.Th>{language === "vi" ? "Hành động" : "Actions"}</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {images.map((img, idx) => (
-              <Table.Tr key={img.id}>
-                <Table.Td>
-                  <Image
-                    src={previewUrl && editingImage?.id === img.id ? previewUrl : img.image_url}
-                    alt={`Thumbnail ${idx}`}
-                    width={80}
-                    height={60}
-                    style={{ cursor: "pointer", objectFit: "cover" }}
-                    onClick={() => setSelectedImage(img.image_url)}
-                  />
-                </Table.Td>
-                <Table.Td>
-                  <Group>
-                    <Tooltip label={language === "vi" ? "Sửa" : "Edit"}>
-                      <ActionIcon color="blue" variant="subtle" onClick={() => handleEditClick(img)}>
-                        <IconPencil size={18} />
-                      </ActionIcon>
-                    </Tooltip>
-                    <Tooltip label={language === "vi" ? "Xóa" : "Delete"}>
-                      <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(img.id)}>
-                        <IconTrash size={18} />
-                      </ActionIcon>
-                    </Tooltip>
-                  </Group>
-                </Table.Td>
+      <div style={{ display: "flex", gap: "2rem", marginTop: "1.5rem" }}>
+        {/* Bảng ảnh */}
+        <div style={{ flex: 1 }}>
+          <Table
+            highlightOnHover
+            withTableBorder
+            withColumnBorders
+            style={{ maxWidth: "500px" }}
+          >
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>{language === "vi" ? "Ảnh" : "Image"}</Table.Th>
+                <Table.Th>{language === "vi" ? "Hành động" : "Actions"}</Table.Th>
               </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
+            </Table.Thead>
+            <Table.Tbody>
+              {images.map((img, idx) => (
+                <Table.Tr key={img.id}>
+                  <Table.Td>
+                   <Image
+  src={previewUrl && editingImage?.id === img.id ? previewUrl : img.image_url}
+  alt={`Thumbnail ${idx}`}
+  width={150} // chiều ngang cố định
+  height={100} // chiều cao cố định
+  style={{ 
+    cursor: "pointer", 
+    width: "80px",  // fix cứng chiều ngang
+    height: "40px", // fix cứng chiều cao
+    objectFit: "cover" 
+  }}
+  onClick={() => setSelectedImage(img.image_url)}
+/>
 
+                  </Table.Td>
+                  <Table.Td>
+                    <Group>
+                      <Tooltip label={language === "vi" ? "Sửa" : "Edit"}>
+                        <ActionIcon color="blue" variant="subtle" onClick={() => handleEditClick(img)}>
+                          <IconPencil size={18} />
+                        </ActionIcon>
+                      </Tooltip>
+                      <Tooltip label={language === "vi" ? "Xóa" : "Delete"}>
+                        <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(img.id)}>
+                          <IconTrash size={18} />
+                        </ActionIcon>
+                      </Tooltip>
+                    </Group>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </div>
+
+        {/* Ảnh lớn bên phải */}
         {selectedImage && (
-          <div style={{ marginTop: "2rem", textAlign: "center" }}>
+          <div style={{ flex: 1, textAlign: "center" }}>
             <Image
               src={selectedImage}
               alt="Full view"
@@ -222,49 +228,50 @@ export default function CustomerDetails({
             </Group>
           </div>
         )}
-
-        {editingImage && (
-          <div style={{ marginTop: "1rem", width: "500px" }}>
-            <h3>{language === "vi" ? "Sửa hình ảnh" : "Edit Image"}</h3>
-
-            {previewUrl && (
-              <div style={{ marginBottom: 10 }}>
-                <Image src={previewUrl} alt="Preview" width={100} height={50} style={{ objectFit: "cover" }} />
-              </div>
-            )}
-
-            <FileInput
-              label={language === "vi" ? "Chọn file ảnh" : "Select image file"}
-              placeholder={language === "vi" ? "Chọn file" : "Select file"}
-              accept="image/*"
-              {...form.getInputProps("image", {
-                onChange: (file: File | null) => {
-                  if (file) setPreviewUrl(URL.createObjectURL(file));
-                  else setPreviewUrl(editingImage?.image_url || null);
-                },
-              })}
-              mt="sm"
-            />
-
-            <Group mt="md">
-              <Button onClick={() => handleSaveEdit(form.values.image)}>
-                {language === "vi" ? "Lưu" : "Save"}
-              </Button>
-              <Button
-                variant="outline"
-                color="gray"
-                onClick={() => {
-                  setEditingImage(null);
-                  setPreviewUrl(null);
-                  form.reset();
-                }}
-              >
-                {language === "vi" ? "Hủy" : "Cancel"}
-              </Button>
-            </Group>
-          </div>
-        )}
       </div>
+
+      {/* Form edit ảnh */}
+      {editingImage && (
+        <div style={{ marginTop: "1rem", width: "500px" }}>
+          <h3>{language === "vi" ? "Sửa hình ảnh" : "Edit Image"}</h3>
+
+          {previewUrl && (
+            <div style={{ marginBottom: 10 }}>
+              <Image src={previewUrl} alt="Preview" width={100} height={50} style={{ objectFit: "cover" }} />
+            </div>
+          )}
+
+          <FileInput
+            label={language === "vi" ? "Chọn file ảnh" : "Select image file"}
+            placeholder={language === "vi" ? "Chọn file" : "Select file"}
+            accept="image/*"
+            {...form.getInputProps("image", {
+              onChange: (file: File | null) => {
+                if (file) setPreviewUrl(URL.createObjectURL(file));
+                else setPreviewUrl(editingImage?.image_url || null);
+              },
+            })}
+            mt="sm"
+          />
+
+          <Group mt="md">
+            <Button onClick={() => handleSaveEdit(form.values.image)}>
+              {language === "vi" ? "Lưu" : "Save"}
+            </Button>
+            <Button
+              variant="outline"
+              color="gray"
+              onClick={() => {
+                setEditingImage(null);
+                setPreviewUrl(null);
+                form.reset();
+              }}
+            >
+              {language === "vi" ? "Hủy" : "Cancel"}
+            </Button>
+          </Group>
+        </div>
+      )}
     </div>
   );
 }
