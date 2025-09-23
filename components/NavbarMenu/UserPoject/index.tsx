@@ -49,7 +49,8 @@ const RoleTable = () => {
   const [pagination, setPagination] = useState<PaginationOptions>(paginationBase);
 
   // Search
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [tempSearchTerm, setTempSearchTerm] = useState<string>(''); // State tạm cho tìm kiếm
+  const [searchTerm, setSearchTerm] = useState<string>(''); // State chính cho tìm kiếm
 
   // Filter states
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
@@ -142,6 +143,10 @@ const RoleTable = () => {
     setSelectedRanks([]);
     setSelectedItems([]);
     setRoles(allRoles);
+  };
+
+  const handleSearch = () => {
+    setSearchTerm(tempSearchTerm); // Cập nhật giá trị tìm kiếm chính thức khi nhấn nút
   };
 
   // Filter dropdown component
@@ -285,7 +290,11 @@ const RoleTable = () => {
       <AppAction openModal={openModal} />
 
       <Divider my="sm" labelPosition="center" />
-      <AppSearch value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onSearch={setSearchTerm} />
+      <AppSearch 
+        value={tempSearchTerm} 
+        onChange={(e) => setTempSearchTerm(e.target.value)} // Cập nhật giá trị tạm
+        onSearch={handleSearch} // Gọi hàm tìm kiếm khi nhấn nút
+      />
 
       {/* Filters + Clear */}
       <EuiFlexGroup alignItems="center" gutterSize="m" style={{ margin: '12px 0' }}>
@@ -346,5 +355,4 @@ const RoleTable = () => {
 };
 
 export default RoleTable;
-
 
