@@ -8,6 +8,9 @@ export const API_ROUTE = {
   REGISTER:"/api/v1/users/signup",
     SENDEMAIL: "/api/v1/password-recovery/{email}",
     LOGIN_USERNAME:"/api/v1/users/me",
+
+    CHANGE_PASSWORD:"/api/v1/users/me/password",
+    
     /////apiarea
     // GET_AREA:"/192.168.100.101/zone/pk",
     // GET_AREA_DETAIL:"/192.168.100.101/zone/pk/Phân Khu",
