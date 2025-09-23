@@ -10,8 +10,8 @@ import {
   EuiButtonIcon,
   Criteria,
 } from '@elastic/eui';
-import { Divider, Menu, Text } from '@mantine/core';
-import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import { Divider, Menu, Text, Pill } from '@mantine/core';
+import { IconChevronDown, IconChevronUp, IconFilterFilled } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { apiarea } from '../../../library/axios';
 import { API_ROUTE } from '../../../const/apiRouter';
@@ -276,7 +276,7 @@ const RoleTable = () => {
     setSelectedDirections([]);
   };
 
-  // ✅ Component FilterItem (đã thêm iconType)
+  // ✅ Component FilterItem
   const FilterItem = ({
     label,
     options,
@@ -307,12 +307,12 @@ const RoleTable = () => {
             }}
           >
             {iconType && (
-            <EuiButtonIcon
-  iconType={iconType}
-  color={selected.length > 0 ? 'primary' : 'text'} // sửa 'subdued' thành 'text'
-/>
+              <EuiButtonIcon
+                iconType={iconType}
+                color={selected.length > 0 ? 'primary' : 'text'}
+              />
             )}
-            {selected.length > 0 ? selected.join(', ') : label}
+            {label}
             {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
           </Text>
         </Menu.Target>
@@ -354,6 +354,45 @@ const RoleTable = () => {
 
       <Divider my="sm" labelPosition="center" />
 
+      {/* ✅ Hiển thị Lọc theo tiêu chí */}
+      <div style={{ marginBottom: 12 }}>
+        <h3 style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          {language === 'vi' ? 'Lọc theo tiêu chí:' : 'Filters:'}
+          {[...selectedZones, ...selectedBuildingTypes, ...selectedStatuses, ...selectedDirections].map((item) => (
+            <Pill
+              key={item}
+              withRemoveButton
+              onRemove={() => {
+                setSelectedZones((prev) => prev.filter((z) => z !== item));
+                setSelectedBuildingTypes((prev) => prev.filter((t) => t !== item));
+                setSelectedStatuses((prev) => prev.filter((s) => s !== item));
+                setSelectedDirections((prev) => prev.filter((d) => d !== item));
+              }}
+              style={{ marginLeft: 4 }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <IconFilterFilled size={12} />
+                <span>{item}</span>
+              </div>
+            </Pill>
+          ))}
+
+          {(selectedZones.length > 0 ||
+            selectedBuildingTypes.length > 0 ||
+            selectedStatuses.length > 0 ||
+            selectedDirections.length > 0) && (
+            <Pill
+              onClick={clearFilters}
+              variant="outline"
+              color="red"
+              style={{ marginLeft: 8, cursor: "pointer" }}
+            >
+              {language === 'vi' ? 'Xóa tất cả' : 'Clear All'}
+            </Pill>
+          )}
+        </h3>
+      </div>
+
       {/* Filters */}
       <EuiFlexGroup style={{ marginBottom: '12px' }} alignItems="flexEnd" gutterSize="m">
         <EuiFlexItem grow={false}>
@@ -362,7 +401,7 @@ const RoleTable = () => {
             options={zoneOptions}
             selected={selectedZones}
             setSelected={setSelectedZones}
-            iconType="filter"
+            // iconType="filter"
           />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
@@ -371,7 +410,7 @@ const RoleTable = () => {
             options={buildingTypeOptions}
             selected={selectedBuildingTypes}
             setSelected={setSelectedBuildingTypes}
-            iconType="filter"
+            // iconType="filter"
           />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
@@ -380,7 +419,7 @@ const RoleTable = () => {
             options={statusOptions}
             selected={selectedStatuses}
             setSelected={setSelectedStatuses}
-            iconType="filter"
+            // iconType="filter"
           />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
@@ -389,47 +428,8 @@ const RoleTable = () => {
             options={directionOptions}
             selected={selectedDirections}
             setSelected={setSelectedDirections}
-            iconType="filter"
+            // iconType="filter"
           />
-        </EuiFlexItem>
-        <EuiFlexItem grow={false}>
-         <Text
-  style={{
-    cursor:
-      selectedZones.length > 0 ||
-      selectedBuildingTypes.length > 0 ||
-      selectedStatuses.length > 0 ||
-      selectedDirections.length > 0
-        ? 'pointer'
-        : 'not-allowed',
-    color:
-      selectedZones.length > 0 ||
-      selectedBuildingTypes.length > 0 ||
-      selectedStatuses.length > 0 ||
-      selectedDirections.length > 0
-        ? '#406c88'
-        : '#aaa',
-    fontWeight: 500,
-  }}
-  onClick={() => {
-    if (
-      selectedZones.length ||
-      selectedBuildingTypes.length ||
-      selectedStatuses.length ||
-      selectedDirections.length
-    ) {
-      clearFilters();
-    }
-  }}
->
-  {selectedZones.length > 0 ||
-  selectedBuildingTypes.length > 0 ||
-  selectedStatuses.length > 0 ||
-  selectedDirections.length > 0
-    ? 'Xóa đã chọn'
-    : 'Xóa filter'}
-</Text>
-
         </EuiFlexItem>
       </EuiFlexGroup>
 

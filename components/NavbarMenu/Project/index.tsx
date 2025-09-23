@@ -10,8 +10,8 @@ import {
   EuiButtonIcon,
   Criteria,
 } from '@elastic/eui';
-import { Divider, Text, Menu } from '@mantine/core';
-import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import { Divider, Text, Menu, Pill } from '@mantine/core';
+import { IconChevronDown, IconChevronUp, IconFilterFilled } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 
 import { getListRoles } from '../../../api/getlistrole';
@@ -125,70 +125,77 @@ const RoleTable = () => {
     setRoles(allRoles);
   };
 
+  const handleRemoveSelected = (value: string) => {
+    setSelectedNames((prev) => prev.filter((v) => v !== value));
+    setSelectedRanks((prev) => prev.filter((v) => v !== value));
+  };
+
   // FilterItem component
-  const FilterItem = ({
+const FilterItem = ({
     label,
     options,
     selected,
     setSelected,
-    iconType = 'filter',
-  }: {
+    iconType, // Không cần đặt giá trị mặc định
+}: {
     label: string;
     options: string[];
     selected: string[];
     setSelected: React.Dispatch<React.SetStateAction<string[]>>;
-    iconType?: string;
-  }) => {
+    iconType?: string;  // Đặt là optional
+}) => {
     const [opened, setOpened] = useState(false);
 
     return (
-      <Menu shadow="md" width={200} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
-        <Menu.Target>
-          <Text
-            size="sm"
-            fw={500}
-            style={{
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              color: selected.length > 0 ? '#1E88E5' : '#555',
-            }}
-          >
-           <EuiButtonIcon
-  iconType={iconType}
-  aria-label={label}
-  color={selected.length > 0 ? 'primary' : 'text'}
-  size="s"
-  onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
-/>
-{selected.length > 0 ? selected.join(', ') : label}
-{opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
-          </Text>
-        </Menu.Target>
-        <Menu.Dropdown>
-          {options.map((opt) => (
-            <Menu.Item
-              key={opt}
-              onClick={() =>
-                setSelected((prev) =>
-                  prev.includes(opt) ? prev.filter((v) => v !== opt) : [...prev, opt]
-                )
-              }
-            >
-              <Text
-                size="sm"
-                fw={selected.includes(opt) ? 600 : 400}
-                c={selected.includes(opt) ? 'blue' : 'black'}
-              >
-                {opt}
-              </Text>
-            </Menu.Item>
-          ))}
-        </Menu.Dropdown>
-      </Menu>
+        <Menu shadow="md" width={200} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
+            <Menu.Target>
+                <Text
+                    size="sm"
+                    fw={500}
+                    style={{
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        color: selected.length > 0 ? '#1E88E5' : '#555',
+                    }}
+                >
+                    {iconType && (
+                        <EuiButtonIcon
+                            iconType={iconType}
+                            aria-label={label}
+                            color={selected.length > 0 ? 'primary' : 'text'}
+                            size="s"
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
+                        />
+                    )}
+                    {label}
+                    {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+                </Text>
+            </Menu.Target>
+            <Menu.Dropdown>
+                {options.map((opt) => (
+                    <Menu.Item
+                        key={opt}
+                        onClick={() =>
+                            setSelected((prev) =>
+                                prev.includes(opt) ? prev.filter((v) => v !== opt) : [...prev, opt]
+                            )
+                        }
+                    >
+                        <Text
+                            size="sm"
+                            fw={selected.includes(opt) ? 600 : 400}
+                            c={selected.includes(opt) ? 'blue' : 'black'}
+                        >
+                            {opt}
+                        </Text>
+                    </Menu.Item>
+                ))}
+            </Menu.Dropdown>
+        </Menu>
     );
-  };
+};
 
   // Table columns
   const columns: Array<EuiBasicTableColumn<Role>> = [
@@ -271,10 +278,14 @@ const RoleTable = () => {
     }
   };
 
+  // Selected filters for pill
+  const selectedFilters = [...selectedNames, ...selectedRanks];
+  const hasSelectedItems =
+    selectedNames.length > 0 || selectedRanks.length > 0 || selectedItems.length > 0;
+
   return (
     <>
       <AppAction openModal={openModal} />
-
       <Divider my="sm" labelPosition="center" />
 
       <AppSearch
@@ -283,7 +294,47 @@ const RoleTable = () => {
         onSearch={(val) => setSearchValue(val)}
       />
 
-      {/* Filter + Clear Text */}
+      {/* 🔹 Hiển thị Lọc theo tiêu chí */}
+      <div style={{ marginBottom: 12 }}>
+        <h2>
+          Lọc theo tiêu chí:
+          {selectedFilters.map((item) => (
+            <span
+              key={item}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                marginLeft: 8,
+                padding: '2px 6px',
+                borderRadius: 12,
+                background: '#f0f0f0',
+                fontSize: 13,
+              }}
+            >
+              <span style={{ marginRight: 4 }}>     <IconFilterFilled size={12} /></span>
+              {item}
+              <span
+                onClick={() => handleRemoveSelected(item)}
+                style={{
+                  marginLeft: 6,
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                }}
+              >
+                ×
+              </span>
+            </span>
+          ))}
+          {hasSelectedItems && (
+           
+             <Pill  onClick={clearFilters} variant="outline" color="red" style={{ marginLeft: '8px' }}>
+                  Xóa tất cả
+                </Pill>
+          )}
+        </h2>
+      </div>
+
+      {/* Filters */}
       <EuiFlexGroup alignItems="center" gutterSize="m" style={{ margin: '12px 0' }}>
         <EuiFlexItem grow={false}>
           <FilterItem
@@ -291,7 +342,7 @@ const RoleTable = () => {
             options={nameOptions}
             selected={selectedNames}
             setSelected={setSelectedNames}
-            iconType="filter"
+            // iconType="filter"
           />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
@@ -300,30 +351,8 @@ const RoleTable = () => {
             options={rankOptions}
             selected={selectedRanks}
             setSelected={setSelectedRanks}
-            iconType="filter"
+            // iconType="filter"
           />
-        </EuiFlexItem>
-        <EuiFlexItem grow={false}>
-          <Text
-            style={{
-              cursor:
-                selectedNames.length > 0 || selectedRanks.length > 0 || selectedItems.length > 0
-                  ? 'pointer'
-                  : 'not-allowed',
-              color:
-                selectedNames.length > 0 || selectedRanks.length > 0 || selectedItems.length > 0
-                  ? '#406c88'
-                  : '#aaa',
-              fontWeight: 500,
-            }}
-            onClick={() => {
-              if (selectedNames.length || selectedRanks.length || selectedItems.length) {
-                clearFilters();
-              }
-            }}
-          >
-            {selectedItems.length > 0 ? 'Xóa đã chọn' : 'Xóa filter'}
-          </Text>
         </EuiFlexItem>
       </EuiFlexGroup>
 
@@ -352,3 +381,4 @@ const RoleTable = () => {
 };
 
 export default RoleTable;
+

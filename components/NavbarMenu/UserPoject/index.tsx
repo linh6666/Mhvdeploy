@@ -10,9 +10,9 @@ import {
   EuiButtonIcon,
   Criteria,
 } from '@elastic/eui';
-import { Divider, Text, Menu } from '@mantine/core';
+import { Divider, Text, Menu, Pill } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import { IconChevronDown, IconChevronUp, IconFilterFilled } from '@tabler/icons-react';
 
 import { getListRoles } from '../../../api/apiUserProjectRole';
 import CreateView from './CreateView';
@@ -49,8 +49,8 @@ const RoleTable = () => {
   const [pagination, setPagination] = useState<PaginationOptions>(paginationBase);
 
   // Search
-  const [tempSearchTerm, setTempSearchTerm] = useState<string>(''); // State tạm cho tìm kiếm
-  const [searchTerm, setSearchTerm] = useState<string>(''); // State chính cho tìm kiếm
+  const [tempSearchTerm, setTempSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   // Filter states
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
@@ -151,51 +151,45 @@ const RoleTable = () => {
 
   // Filter dropdown component
   const FilterItem = ({
-    label,
-    options,
-    selected,
-    setSelected,
-  }: {
-    label: string;
-    options: string[];
-    selected: string[];
-    setSelected: React.Dispatch<React.SetStateAction<string[]>>;
-  }) => {
-    const [opened, setOpened] = useState(false);
-    return (
-      <Menu shadow="md" width={200} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
-        <Menu.Target>
-          <Text
-            size="sm"
-            fw={500}
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: selected.length > 0 ? '#1E88E5' : '#555' }}
+  label,
+  options,
+  selected,
+  setSelected,
+}: {
+  label: string;
+  options: string[];
+  selected: string[];
+  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+}) => {
+  const [opened, setOpened] = useState(false);
+  return (
+    <Menu shadow="md" width={200} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
+      <Menu.Target>
+        <Text
+          size="sm"
+          fw={500}
+          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: selected.length > 0 ? '#1E88E5' : '#555' }}
+        >
+          {/* <EuiButtonIcon iconType="filter" aria-label={label} color={selected.length > 0 ? 'primary' : 'text'} size="s" onClick={(e) => e.stopPropagation()} /> */}
+          {label}
+          {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+        </Text>
+      </Menu.Target>
+      <Menu.Dropdown>
+        {options.map(opt => (
+          <Menu.Item
+            key={opt}
+            onClick={() => setSelected(prev => prev.includes(opt) ? prev.filter(v => v !== opt) : [...prev, opt])}
           >
-            <EuiButtonIcon
-              iconType="filter"
-              aria-label={label}
-              color={selected.length > 0 ? 'primary' : 'text'}
-              size="s"
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
-            />
-            {selected.length > 0 ? selected.join(', ') : label}
-            {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
-          </Text>
-        </Menu.Target>
-        <Menu.Dropdown>
-          {options.map(opt => (
-            <Menu.Item
-              key={opt}
-              onClick={() => setSelected(prev => prev.includes(opt) ? prev.filter(v => v !== opt) : [...prev, opt])}
-            >
-              <Text size="sm" fw={selected.includes(opt) ? 600 : 400} c={selected.includes(opt) ? 'blue' : 'black'}>
-                {opt}
-              </Text>
-            </Menu.Item>
-          ))}
-        </Menu.Dropdown>
-      </Menu>
-    );
-  };
+            <Text size="sm" fw={selected.includes(opt) ? 600 : 400} c={selected.includes(opt) ? 'blue' : 'black'}>
+              {opt}
+            </Text>
+          </Menu.Item>
+        ))}
+      </Menu.Dropdown>
+    </Menu>
+  );
+};
 
   // Modal handlers
   const openModal = () => {
@@ -284,6 +278,17 @@ const RoleTable = () => {
       }));
     }
   };
+    const handleRemoveSelected = (value: string) => {
+    setSelectedEmails((prev) => prev.filter((v) => v !== value));
+                  setSelectedProjects((prev) => prev.filter((v) => v !== value));
+                  setSelectedRoles((prev) => prev.filter((v) => v !== value));
+                  setSelectedRanks((prev) => prev.filter((v) => v !== value));
+  };
+
+  // Selected filters for pill
+  const selectedFilters = [...selectedEmails, ...selectedProjects, ...selectedRoles, ...selectedRanks];
+  const hasSelectedItems =
+    selectedEmails.length > 0 || selectedProjects.length > 0 || selectedRoles.length > 0 || selectedRanks.length > 0 || selectedItems.length > 0;
 
   return (
     <>
@@ -292,35 +297,84 @@ const RoleTable = () => {
       <Divider my="sm" labelPosition="center" />
       <AppSearch 
         value={tempSearchTerm} 
-        onChange={(e) => setTempSearchTerm(e.target.value)} // Cập nhật giá trị tạm
-        onSearch={handleSearch} // Gọi hàm tìm kiếm khi nhấn nút
+        onChange={(e) => setTempSearchTerm(e.target.value)} 
+        onSearch={handleSearch} 
       />
 
-      {/* Filters + Clear */}
+      {/* Hiển thị Lọc theo tiêu chí */}
+      <div style={{ marginBottom: 12 }}>
+        <h2>
+          Lọc theo tiêu chí:
+          {selectedFilters.map((item) => (
+            <span
+              key={item}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                marginLeft: 8,
+                padding: '2px 6px',
+                borderRadius: 12,
+                background: '#f0f0f0',
+                fontSize: 13,
+              }}
+            >
+              <span style={{ marginRight: 4 }}>
+                <IconFilterFilled size={12} />
+              </span>
+              {item}
+              <span
+                onClick={() => handleRemoveSelected(item)}
+                style={{
+                  marginLeft: 6,
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                }}
+              >
+                ×
+              </span>
+            </span>
+          ))}
+          {hasSelectedItems && (
+            <Pill onClick={clearFilters} variant="outline" color="red" style={{ marginLeft: '8px' }}>
+              Xóa tất cả
+            </Pill>
+          )}
+        </h2>
+      </div>
+
+      {/* Filters */}
       <EuiFlexGroup alignItems="center" gutterSize="m" style={{ margin: '12px 0' }}>
         <EuiFlexItem grow={false}>
-          <FilterItem label="Chọn Email" options={emailOptions} selected={selectedEmails} setSelected={setSelectedEmails} />
+          <FilterItem
+            label="Chọn Email"
+            options={emailOptions}
+            selected={selectedEmails}
+            setSelected={setSelectedEmails}
+          />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
-          <FilterItem label="Chọn Dự Án" options={projectOptions} selected={selectedProjects} setSelected={setSelectedProjects} />
+          <FilterItem
+            label="Chọn Dự Án"
+            options={projectOptions}
+            selected={selectedProjects}
+            setSelected={setSelectedProjects}
+          />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
-          <FilterItem label="Chọn Vai Trò" options={roleOptions} selected={selectedRoles} setSelected={setSelectedRoles} />
+          <FilterItem
+            label="Chọn Vai Trò"
+            options={roleOptions}
+            selected={selectedRoles}
+            setSelected={setSelectedRoles}
+          />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
-          <FilterItem label="Chọn Cấp bậc" options={rankOptions} selected={selectedRanks} setSelected={setSelectedRanks} />
-        </EuiFlexItem>
-        <EuiFlexItem grow={false}>
-          <Text
-            style={{
-              cursor: selectedEmails.length || selectedProjects.length || selectedRoles.length || selectedRanks.length ? 'pointer' : 'not-allowed',
-              color: selectedEmails.length || selectedProjects.length || selectedRoles.length || selectedRanks.length ? '#406c88' : '#aaa',
-              fontWeight: 500,
-            }}
-            onClick={() => clearFilters()}
-          >
-            Xóa filter
-          </Text>
+          <FilterItem
+            label="Chọn Cấp bậc"
+            options={rankOptions}
+            selected={selectedRanks}
+            setSelected={setSelectedRanks}
+          />
         </EuiFlexItem>
       </EuiFlexGroup>
 
@@ -355,4 +409,3 @@ const RoleTable = () => {
 };
 
 export default RoleTable;
-

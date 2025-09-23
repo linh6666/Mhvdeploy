@@ -10,8 +10,8 @@ import {
   EuiButtonIcon,
   Criteria,
 } from "@elastic/eui";
-import { Divider, Text, Menu} from "@mantine/core";
-import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import { Divider, Text, Menu, Pill } from "@mantine/core";
+import { IconChevronDown, IconChevronUp, IconFilterFilled } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
 
 import { getListRoles } from "../../../api/apigetlistsystym";
@@ -72,7 +72,9 @@ const RoleTable = () => {
       const ranks: string[] = list.map((r) => String(r.rank_total));
 
       setNameOptions(Array.from(new Set(names)).sort());
-      setRankOptions(Array.from(new Set(ranks)).sort((a, b) => parseInt(a) - parseInt(b)));
+      setRankOptions(
+        Array.from(new Set(ranks)).sort((a, b) => parseInt(a) - parseInt(b))
+      );
 
       setPagination((prev) => ({
         ...prev,
@@ -80,7 +82,9 @@ const RoleTable = () => {
       }));
     } catch (err: unknown) {
       console.error("❌ Lỗi gọi API:", err);
-      setError(err instanceof Error ? err.message : "Đã xảy ra lỗi khi tải dữ liệu.");
+      setError(
+        err instanceof Error ? err.message : "Đã xảy ra lỗi khi tải dữ liệu."
+      );
     } finally {
       setLoading(false);
     }
@@ -109,7 +113,9 @@ const RoleTable = () => {
     }
 
     if (selectedRanks.length > 0) {
-      filtered = filtered.filter((r) => selectedRanks.includes(r.rank_total.toString()));
+      filtered = filtered.filter((r) =>
+        selectedRanks.includes(r.rank_total.toString())
+      );
     }
 
     setFilteredRoles(filtered);
@@ -132,7 +138,12 @@ const RoleTable = () => {
     const [opened, setOpened] = useState(false);
 
     return (
-      <Menu shadow="md" width={200} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
+      <Menu
+        shadow="md"
+        width={200}
+        onOpen={() => setOpened(true)}
+        onClose={() => setOpened(false)}
+      >
         <Menu.Target>
           <Text
             size="sm"
@@ -146,17 +157,17 @@ const RoleTable = () => {
             }}
           >
             {iconType && (
-              <EuiButtonIcon
-                iconType={iconType}
-                aria-label={label}
-                color={selected.length > 0 ? "primary" : "text"}
-                onClick={(e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
-                  e.stopPropagation();
-                }}
-                size="s"
-              />
-            )}
-            {selected.length > 0 ? selected.join(", ") : label}
+  <EuiButtonIcon
+    iconType={iconType}
+    aria-label={label}
+    color={selected.length > 0 ? "primary" : "text"}
+    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+    }}
+    size="s"
+  />
+)} 
+          {label}
             {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
           </Text>
         </Menu.Target>
@@ -166,11 +177,17 @@ const RoleTable = () => {
               key={opt}
               onClick={() =>
                 setSelected((prev) =>
-                  prev.includes(opt) ? prev.filter((v) => v !== opt) : [...prev, opt]
+                  prev.includes(opt)
+                    ? prev.filter((v) => v !== opt)
+                    : [...prev, opt]
                 )
               }
             >
-              <Text size="sm" fw={selected.includes(opt) ? 600 : 400} c={selected.includes(opt) ? "blue" : "black"}>
+              <Text
+                size="sm"
+                fw={selected.includes(opt) ? 600 : 400}
+                c={selected.includes(opt) ? "blue" : "black"}
+              >
                 {opt}
               </Text>
             </Menu.Item>
@@ -178,6 +195,68 @@ const RoleTable = () => {
         </Menu.Dropdown>
       </Menu>
     );
+  };
+
+  // Modal handlers (giữ nguyên)
+  const openModal = () => {
+    modals.openConfirmModal({
+      title: (
+        <div style={{ fontWeight: 600, fontSize: 18 }}>Thêm vai trò mới</div>
+      ),
+      children: <CreateView onSearch={fetchRoles} />,
+      size: "lg",
+      radius: "md",
+      confirmProps: { display: "none" },
+      cancelProps: { display: "none" },
+    });
+  };
+
+  const openEditUserModal = (role: Role) => {
+    modals.openConfirmModal({
+      title: (
+        <div style={{ fontWeight: 600, fontSize: 18 }}>
+          Chỉnh sửa vai trò: {role.description}
+        </div>
+      ),
+      children: <EditView id={role.id} onSearch={fetchRoles} />,
+      confirmProps: { display: "none" },
+      cancelProps: { display: "none" },
+    });
+  };
+
+  const openDeleteUserModal = (role: Role) => {
+    modals.openConfirmModal({
+      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Xóa vai trò</div>,
+      children: <DeleteView idItem={[role.id]} onSearch={fetchRoles} />,
+      confirmProps: { display: "none" },
+      cancelProps: { display: "none" },
+    });
+  };
+
+  // Clear filters
+  const clearFilters = () => {
+    setSelectedNames([]);
+    setSelectedRanks([]);
+    setSelectedItems([]);
+  };
+
+  // Tạo danh sách filter đã chọn (giống code bạn gửi)
+  const selectedFilters = [
+    ...selectedNames,
+    ...selectedRanks.map((r) => `Cấp ${r}`),
+  ];
+  const hasSelectedItems =
+    selectedFilters.length > 0 || selectedItems.length > 0;
+
+  const handleRemoveSelected = (item: string) => {
+    setSelectedNames((prev) => prev.filter((n) => n !== item));
+    setSelectedRanks((prev) =>
+      prev.filter((r) => `Cấp ${r}` !== item && r !== item)
+    );
+  };
+
+  const handleClearAll = () => {
+    clearFilters();
   };
 
   // Table columns
@@ -217,43 +296,6 @@ const RoleTable = () => {
     },
   ];
 
-  // Modal handlers
-  const openModal = () => {
-    modals.openConfirmModal({
-      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Thêm vai trò mới</div>,
-      children: <CreateView onSearch={fetchRoles} />,
-      size: "lg",
-      radius: "md",
-      confirmProps: { display: "none" },
-      cancelProps: { display: "none" },
-    });
-  };
-
-  const openEditUserModal = (role: Role) => {
-    modals.openConfirmModal({
-      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Chỉnh sửa vai trò: {role.description}</div>,
-      children: <EditView id={role.id} onSearch={fetchRoles} />,
-      confirmProps: { display: "none" },
-      cancelProps: { display: "none" },
-    });
-  };
-
-  const openDeleteUserModal = (role: Role) => {
-    modals.openConfirmModal({
-      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Xóa vai trò</div>,
-      children: <DeleteView idItem={[role.id]} onSearch={fetchRoles} />,
-      confirmProps: { display: "none" },
-      cancelProps: { display: "none" },
-    });
-  };
-
-  // Clear filters + selected items
-  const clearFilters = () => {
-    setSelectedNames([]);
-    setSelectedRanks([]);
-    setSelectedItems([]);
-  };
-
   const selection = {
     selectable: () => true,
     onSelectionChange: (items: Role[]) => setSelectedItems(items),
@@ -273,7 +315,7 @@ const RoleTable = () => {
   return (
     <>
       <AppAction openModal={openModal} />
-      <Divider my="sm" labelPosition="center" />
+      <Divider my="sm" />
 
       {/* Search bar */}
       <AppSearch
@@ -282,7 +324,36 @@ const RoleTable = () => {
         onSearch={(val) => setSearchQuery(val)}
       />
 
-      {/* Filters + Clear button */}
+      {/* ✅ Hiển thị tiêu chí đã chọn */}
+      <div style={{ marginBottom: 12 }}>
+        <h2>
+          Lọc theo tiêu chí:
+          {selectedFilters.map((item) => (
+            <Pill
+              key={item}
+              withRemoveButton
+              onRemove={() => handleRemoveSelected(item)}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <IconFilterFilled size={12} />
+                <span>{item}</span>
+              </div>
+            </Pill>
+          ))}
+          {hasSelectedItems && (
+            <Pill
+              onClick={handleClearAll}
+              variant="outline"
+              color="red"
+              style={{ marginLeft: "8px" }}
+            >
+              Xóa tất cả
+            </Pill>
+          )}
+        </h2>
+      </div>
+
+      {/* Filters */}
       <EuiFlexGroup style={{ margin: "12px 0" }} alignItems="flexEnd" gutterSize="m">
         <EuiFlexItem grow={false}>
           <FilterItem
@@ -290,7 +361,7 @@ const RoleTable = () => {
             options={nameOptions}
             selected={selectedNames}
             setSelected={setSelectedNames}
-            iconType="filter"
+           
           />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
@@ -299,24 +370,8 @@ const RoleTable = () => {
             options={rankOptions}
             selected={selectedRanks}
             setSelected={setSelectedRanks}
-            iconType="filter"
+            
           />
-        </EuiFlexItem>
-        <EuiFlexItem grow={false}>
-         <Text
-  style={{
-    cursor: selectedNames.length || selectedRanks.length || selectedItems.length ? "pointer" : "not-allowed",
-    color: selectedNames.length || selectedRanks.length || selectedItems.length ? "#406c88" : "#aaa",
-    fontWeight: 500,
-  }}
-  onClick={() => {
-    if (selectedNames.length || selectedRanks.length || selectedItems.length) {
-      clearFilters();
-    }
-  }}
->
-  {selectedItems.length > 0 ? "Xóa đã chọn" : "Xóa filter"}
-</Text>
         </EuiFlexItem>
       </EuiFlexGroup>
 
@@ -331,7 +386,9 @@ const RoleTable = () => {
         itemId="id"
         selection={selection}
         rowHeader="description"
-        noItemsMessage={error ? error : loading ? "Đang tải dữ liệu..." : "Không có vai trò nào."}
+        noItemsMessage={
+          error ? error : loading ? "Đang tải dữ liệu..." : "Không có vai trò nào."
+        }
         pagination={{
           pageIndex: pagination.pageIndex,
           pageSize: pagination.pageSize,

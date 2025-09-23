@@ -241,85 +241,7 @@ export default function AllList({ projectId }: AllListProps) {
   const handleSortPrice = (value: "asc" | "desc") => {
     setSortPrice((prev) => (prev === value ? null : value));
   };
-  // ✅ Component FilterSortPrice
-  // const FilterSortPrice = () => {
-  //   const [opened, setOpened] = useState(false);
 
-  //   return (
-  //     <Menu shadow="md" width={150} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
-  //       <Menu.Target>
-  //         <Text
-  //           size="sm"
-  //           fw={500}
-  //           style={{
-  //             cursor: "pointer",
-  //             display: "flex",
-  //             alignItems: "center",
-  //             gap: 6,
-  //             color: sortPrice ? "#1E88E5" : "#555",
-  //           }}
-  //         >
-  //           {sortPrice === "asc" ? "Giá ↑" : sortPrice === "desc" ? "Giá ↓" : "Sắp xếp giá"}
-  //           {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
-  //         </Text>
-  //       </Menu.Target>
-  //       <Menu.Dropdown>
-  //         <Menu.Item onClick={() => setSortPrice("asc")}>
-  //           <Text c={sortPrice === "asc" ? "blue" : "black"} fw={sortPrice === "asc" ? 600 : 400}>
-  //             Giá tăng - Thấp
-  //           </Text>
-  //         </Menu.Item>
-  //         <Menu.Item onClick={() => setSortPrice("desc")}>
-  //           <Text c={sortPrice === "desc" ? "blue" : "black"} fw={sortPrice === "desc" ? 600 : 400}>
-  //             Giá giảm - Cao
-  //           </Text>
-  //         </Menu.Item>
-  //       </Menu.Dropdown>
-  //     </Menu>
-  //   );
-  // };
-
-  // // ✅ Component FilterSortZone
-  // const FilterSortZone = () => {
-  //   const [opened, setOpened] = useState(false);
-
-  //   return (
-  //     <Menu shadow="md" width={180} onOpen={() => setOpened(true)} onClose={() => setOpened(false)}>
-  //       <Menu.Target>
-  //         <Text
-  //           size="sm"
-  //           fw={500}
-  //           style={{
-  //             cursor: "pointer",
-  //             display: "flex",
-  //             alignItems: "center",
-  //             gap: 6,
-  //             color: sortZone ? "#1E88E5" : "#555",
-  //           }}
-  //         >
-  //           {sortZone === "asc"
-  //             ? "Phân khu ↑ (tăng dần)"
-  //             : sortZone === "desc"
-  //             ? "Phân khu ↓ (giảm dần)"
-  //             : "Sắp xếp phân khu"}
-  //           {opened ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
-  //         </Text>
-  //       </Menu.Target>
-  //       <Menu.Dropdown>
-  //         <Menu.Item onClick={() => setSortZone("asc")}>
-  //           <Text c={sortZone === "asc" ? "blue" : "black"} fw={sortZone === "asc" ? 600 : 400}>
-  //             Phân khu tăng - giảm
-  //           </Text>
-  //         </Menu.Item>
-  //         <Menu.Item onClick={() => setSortZone("desc")}>
-  //           <Text c={sortZone === "desc" ? "blue" : "black"} fw={sortZone === "desc" ? 600 : 400}>
-  //             Phân khu giảm - tăng
-  //           </Text>
-  //         </Menu.Item>
-  //       </Menu.Dropdown>
-  //     </Menu>
-  //   );
-  // };
 
   // Hàm để xóa giá trị đã chọn
   const handleRemoveSelected = (value: string) => {
@@ -350,7 +272,7 @@ export default function AllList({ projectId }: AllListProps) {
 
          <div style={{ marginBottom: 20 }}>
             <h2>
-              Chọn theo tiêu chí:
+              Lọc theo tiêu chí:
               {[...selectedZones, ...selectedBuildingTypes, ...selectedStatuses, ...selectedDirections].map((item) => (
                 <Pill key={item} withRemoveButton onRemove={() => handleRemoveSelected(item)}
                  
@@ -408,8 +330,9 @@ export default function AllList({ projectId }: AllListProps) {
            
             </Grid>
             <div style={{ marginTop: 12 }}>
+              <h2>Sắp xếp:</h2>
 
-      <Group gap="sm">
+   <Group gap="sm" mt={10}>
       <Button
         size="xs"
         variant={sortZone === "asc" ? "filled" : "outline"}
