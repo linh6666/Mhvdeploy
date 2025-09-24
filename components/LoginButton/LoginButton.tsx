@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { IconUser } from "@tabler/icons-react";
 import useAuth from "../../hook/useAuth";
+import ProfileModal from "./Profile/index"; // ✅ import modal riêng
+import Link from "next/link";
 
 interface LoginButtonProps {
   isMobile?: boolean;
@@ -12,13 +13,14 @@ interface LoginButtonProps {
 export default function LoginButton({ isMobile = false }: LoginButtonProps) {
   const { user, isLoggedIn, logout, error } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
   const handleLogout = async () => {
-    await logout(); // Gọi hàm logout từ useAuth
+    await logout();
     window.alert("Đăng xuất thành công");
-    window.location.href = "/"; // ✅ Điều hướng và reload lại trang
+    window.location.href = "/";
   };
 
   return (
@@ -32,7 +34,6 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
               isMobile ? "" : "hidden md:inline-flex"
             }`}
           >
-       
             <span style={{ fontSize: "14px" }}>{user.full_name}</span>
           </button>
 
@@ -40,12 +41,15 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
               <ul className="py-1 text-sm text-gray-700">
                 <li>
-                  <Link
-                    href="/profile"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                  >
-                    Hồ sơ cá nhân
-                  </Link>
+                <button
+  onClick={() => {
+    setIsProfileOpen(true); // mở modal
+    setIsOpen(false);       // đóng dropdown
+  }}
+  className="w-full text-left px-4 py-2 hover:bg-gray-100"
+>
+  Hồ sơ cá nhân
+</button>
                 </li>
                 <li>
                   <button
@@ -60,7 +64,7 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
           )}
         </div>
       ) : (
-        <Link href="/dang-nhap">
+       <Link href="/dang-nhap">
           <button
             type="button"
             className={
@@ -74,6 +78,12 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
         </Link>
       )}
 
+      {/* ✅ Dùng modal import */}
+     <ProfileModal
+  opened={isProfileOpen}
+  onClose={() => setIsProfileOpen(false)}
+/>
+
       {error && (
         <div className="text-red-500 text-sm mt-2">
           <p>{error}</p>
@@ -82,3 +92,4 @@ export default function LoginButton({ isMobile = false }: LoginButtonProps) {
     </>
   );
 }
+
