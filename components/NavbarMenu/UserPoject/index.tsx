@@ -145,9 +145,9 @@ const RoleTable = () => {
     setRoles(allRoles);
   };
 
-  const handleSearch = () => {
-    setSearchTerm(tempSearchTerm); // Cập nhật giá trị tìm kiếm chính thức khi nhấn nút
-  };
+  // const handleSearch = () => {
+  //   setSearchTerm(tempSearchTerm); // Cập nhật giá trị tìm kiếm chính thức khi nhấn nút
+  // };
 
   // Filter dropdown component
   const FilterItem = ({
@@ -295,11 +295,22 @@ const RoleTable = () => {
       <AppAction openModal={openModal} />
 
       <Divider my="sm" labelPosition="center" />
-      <AppSearch 
-        value={tempSearchTerm} 
-        onChange={(e) => setTempSearchTerm(e.target.value)} 
-        onSearch={handleSearch} 
-      />
+     <AppSearch
+  value={tempSearchTerm}
+  onChange={(e) => {
+    const val = e.target.value;
+    setTempSearchTerm(val);
+
+    if (val === "") {
+      // Nếu input trống -> reset searchTerm để hiển thị tất cả dữ liệu
+      setSearchTerm(""); 
+    }
+  }}
+  onSearch={() => {
+    // Khi nhấn nút Search
+    setSearchTerm(tempSearchTerm);
+  }}
+/>
 
       {/* Hiển thị Lọc theo tiêu chí */}
       <div style={{ marginBottom: 12 }}>

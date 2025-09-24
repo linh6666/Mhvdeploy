@@ -50,7 +50,7 @@ export default function ProfileModal({ opened, onClose }: ProfileModalProps) {
     <Modal
       opened={opened}
       onClose={onClose}
-    title={<h1 style={{ color: '#294b61' }}>Hồ sơ cá nhân</h1>} // ✅ đổi màu
+    title={<span style={{ color: '#294b61' }}>Hồ sơ cá nhân</span>} // ✅ đổi màu
       centered
       size="lg"
       overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}

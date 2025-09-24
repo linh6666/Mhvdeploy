@@ -283,8 +283,19 @@ const RoleTable = () => {
       <AppAction openModal={openModal} />
 
       <Divider my="sm" labelPosition="center" />
+<AppSearch
+  value={searchTerm}
+  onChange={(e) => {
+    const val = e.target.value;
+    setSearchTerm(val);
 
-      <AppSearch value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onSearch={val => setSearchValue(val)} />
+    if (val === "") {
+      // Nếu input trống -> reset searchValue để hiển thị tất cả dữ liệu
+      setSearchValue("");
+    }
+  }}
+  onSearch={(val) => setSearchValue(val)}
+/>
 
       {/* Lọc theo tiêu chí */}
       <div style={{ marginBottom: 12 }}>

@@ -288,12 +288,19 @@ const FilterItem = ({
       <AppAction openModal={openModal} />
       <Divider my="sm" labelPosition="center" />
 
-      <AppSearch
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onSearch={(val) => setSearchValue(val)}
-      />
+     <AppSearch
+  value={searchTerm}
+  onChange={(e) => {
+    const val = e.target.value;
+    setSearchTerm(val);
 
+    if (val === "") {
+      // Khi xóa hết input -> reset searchValue để hiển thị tất cả
+      setSearchValue("");
+    }
+  }}
+  onSearch={(val) => setSearchValue(val)}
+/>
       {/* 🔹 Hiển thị Lọc theo tiêu chí */}
       <div style={{ marginBottom: 12 }}>
         <h2>

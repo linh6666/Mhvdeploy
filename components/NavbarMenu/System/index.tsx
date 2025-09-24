@@ -318,11 +318,19 @@ const RoleTable = () => {
       <Divider my="sm" />
 
       {/* Search bar */}
-      <AppSearch
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-        onSearch={(val) => setSearchQuery(val)}
-      />
+    <AppSearch
+  value={searchInput}
+  onChange={(e) => {
+    const val = e.target.value;
+    setSearchInput(val);
+
+    if (val === "") {
+      // input trống -> reset searchQuery để hiển thị tất cả
+      setSearchQuery("");
+    }
+  }}
+  onSearch={(val) => setSearchQuery(val)}
+/>
 
       {/* ✅ Hiển thị tiêu chí đã chọn */}
       <div style={{ marginBottom: 12 }}>

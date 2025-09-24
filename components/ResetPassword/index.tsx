@@ -16,6 +16,7 @@ import { useState } from "react";
 import { api } from "../../library/axios";
 import { IconLock } from "@tabler/icons-react";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation"; 
 
 // 👇 định nghĩa kiểu response từ API reset password
 interface ResetPasswordResponse {
@@ -26,6 +27,7 @@ export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token"); // 👈 lấy token từ URL
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm({
     initialValues: { new_password: "" },
@@ -49,6 +51,7 @@ export default function ResetPasswordPage() {
 
       console.log("✅ Reset thành công:", response.data);
       alert("Đổi mật khẩu thành công!");
+         router.push("/dang-nhap"); 
     } catch (error: unknown) {
       const err = error as AxiosError<{ detail?: string }>;
       console.error("❌ Lỗi reset:", err.response?.data || err.message);
