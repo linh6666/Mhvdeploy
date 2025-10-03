@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Image } from "@mantine/core";
 
-
 import LoginButton from "../../components/LoginButton/LoginButton";
 import styles from "./Header.module.css";
 import useAuth from "../../hook/useAuth"; // ✅ import hook
@@ -13,13 +12,13 @@ import useAuth from "../../hook/useAuth"; // ✅ import hook
 // menu mặc định
 const baseLinks = [
   { label: "TRANG CHỦ", href: "/", highlight: true },
-    { label: "GIỚI THIỆU", href: "/gioi-thieu" },
+  { label: "GIỚI THIỆU", href: "/gioi-thieu" },
   { label: "TƯƠNG TÁC", href: "/Tuong-tac" },
-{ label: "QUẢN LÝ BÁN HÀNG", href: "/quan-ly-ban-hang" },
+  { label: "QUẢN LÝ BÁN HÀNG", href: "/quan-ly-ban-hang" },
   { label: "LIÊN HỆ", href: "/lien-he" },
-  
 ];
 
+const projectAdminLink = { label: "QUẢN TRỊ DỰ ÁN", href: "/quan-tri-du-an" };
 const adminLink = { label: "QUẢN TRỊ HỆ THỐNG", href: "/quan-tri-he-thong" };
 
 export default function Header() {
@@ -64,21 +63,44 @@ export default function Header() {
     return styles.navNormal;
   };
 
-  // ✅ nếu user có system_rank = 1 thì thêm ADMIN
-const navLinks = [...baseLinks];
-if (user && user.system_rank === 1) {
-  // tìm vị trí của "LIÊN HỆ"
-  const contactIndex = navLinks.findIndex(link => link.href === "/lien-he");
-  if (contactIndex !== -1) {
-    navLinks.splice(contactIndex, 0, adminLink); // chèn adminLink trước "LIÊN HỆ"
-  } else {
-    navLinks.push(adminLink); // fallback: nếu không có thì thêm cuối
+  // ✅ build navLinks
+  const navLinks = [...baseLinks];
+
+  let addedLinks = 0;
+
+  // ✅ nếu user có project_rank = 1 thì thêm "Quản trị dự án"
+  if (user && user.system_rank === 1) {
+    const contactIndex = navLinks.findIndex((link) => link.href === "/lien-he");
+    if (contactIndex !== -1) {
+      navLinks.splice(contactIndex, 0, projectAdminLink);
+    } else {
+      navLinks.push(projectAdminLink);
+    }
+    addedLinks++;
   }
-}
+
+  // ✅ nếu user có system_rank = 1 thì thêm "Quản trị hệ thống"
+  if (user && user.system_rank === 1) {
+    const contactIndex = navLinks.findIndex((link) => link.href === "/lien-he");
+    if (contactIndex !== -1) {
+      navLinks.splice(contactIndex, 0, adminLink);
+    } else {
+      navLinks.push(adminLink);
+    }
+    addedLinks++;
+  }
+
+  // ✅ Tùy chỉnh maxWidth theo số lượng link được thêm
+  let containerMaxWidth = "1000px";
+  if (addedLinks === 1) {
+    containerMaxWidth = "1100px";
+  } else if (addedLinks >= 2) {
+    containerMaxWidth = "1250px";
+  }
 
   return (
     <nav className={styles.navbar}>
-      <div className={styles.container}>
+      <div className={styles.container} style={{ maxWidth: containerMaxWidth }}>
         {/* Logo + Flags + Menu Icon */}
         <div className="flex items-center justify-between w-full md:w-auto">
           <div className="flex items-center gap-3">
@@ -89,43 +111,65 @@ if (user && user.system_rank === 1) {
             {/* Flags for mobile */}
             <div className={styles.mobileOnlyFlags}>
               <Link href="/">
-                <Image src="/images/vietnam.webp" alt="VN" width={20} height={14} />
+                <Image
+                  src="/images/vietnam.webp"
+                  alt="VN"
+                  width={20}
+                  height={14}
+                />
               </Link>
               <Link href="/en">
-                <Image src="/images/Australia.svg" alt="EN" width={20} height={14} />
+                <Image
+                  src="/images/Australia.svg"
+                  alt="EN"
+                  width={20}
+                  height={14}
+                />
               </Link>
             </div>
           </div>
 
           {/* Toggle Button (mobile only) */}
           <button
-            onClick={() => setIsMobileMenuOpen(prev => !prev)}
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
             className={styles.mobileToggle}
             aria-label="Toggle menu"
             aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             ) : (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             )}
           </button>
         </div>
 
-        {/* Right Section (Cart + Login + Flags) */}
+        {/* Right Section (Login + Flags) */}
         <div className="flex items-center gap-3 md:order-2">
-          {/* <div className="hidden md:block">
-            <Link href="/cart">
-              <button className={styles.cartButton} aria-label="Cart">
-                <IconShoppingCart size={16} />
-              </button>
-            </Link>
-          </div> */}
-
           <div className={`hidden md:flex ${styles.loginLangBlock}`}>
             <LoginButton />
           </div>
@@ -133,7 +177,11 @@ if (user && user.system_rank === 1) {
           {/* Flag Dropdown */}
           <div className={styles.flagWrapper} ref={dropdownRef}>
             <Image
-              src={currentFlag === "vn" ? "/images/vietnam.webp" : "/images/Australia.svg"}
+              src={
+                currentFlag === "vn"
+                  ? "/images/vietnam.webp"
+                  : "/images/Australia.svg"
+              }
               alt={currentFlag.toUpperCase()}
               width={30}
               height={20}
@@ -143,7 +191,11 @@ if (user && user.system_rank === 1) {
 
             {isFlagDropdownOpen && (
               <div className={styles.flagDropdown}>
-                <Link href="/en" onClick={() => setCurrentFlag("en")} className={styles.flagItem}>
+                <Link
+                  href="/en"
+                  onClick={() => setCurrentFlag("en")}
+                  className={styles.flagItem}
+                >
                   <Image
                     src="/images/Australia.svg"
                     alt="EN"
@@ -153,7 +205,11 @@ if (user && user.system_rank === 1) {
                   />
                   <span className={styles.langTextEn}>English</span>
                 </Link>
-                <Link href="/" onClick={() => setCurrentFlag("vn")} className={styles.flagItem}>
+                <Link
+                  href="/"
+                  onClick={() => setCurrentFlag("vn")}
+                  className={styles.flagItem}
+                >
                   <Image
                     src="/images/vietnam.webp"
                     alt="VN"
@@ -174,7 +230,9 @@ if (user && user.system_rank === 1) {
             {navLinks.map(({ label, href, highlight }) => (
               <li key={label}>
                 <Link href={href}>
-                  <span className={`${styles.navLink} ${isActive(href, highlight)}`}>
+                  <span
+                    className={`${styles.navLink} ${isActive(href, highlight)}`}
+                  >
                     {label}
                   </span>
                 </Link>
@@ -192,7 +250,12 @@ if (user && user.system_rank === 1) {
               {navLinks.map(({ label, href, highlight }) => (
                 <li key={label} className={styles.mobileMenuItem}>
                   <Link href={href} onClick={() => setIsMobileMenuOpen(false)}>
-                    <span className={`${styles.mobileLink} ${isActive(href, highlight)}`}>
+                    <span
+                      className={`${styles.mobileLink} ${isActive(
+                        href,
+                        highlight
+                      )}`}
+                    >
                       {label}
                     </span>
                   </Link>
@@ -200,13 +263,7 @@ if (user && user.system_rank === 1) {
               ))}
             </ul>
 
-            {/* Cart + Login in Mobile */}
             <div className="flex items-center justify-between pt-2">
-              {/* <Link href="/cart">
-                <button className={styles.cartButton} aria-label="Cart">
-                  <IconShoppingCart size={14} />
-                </button>
-              </Link> */}
               <LoginButton isMobile />
             </div>
           </div>

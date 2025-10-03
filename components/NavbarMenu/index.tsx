@@ -12,7 +12,8 @@ import Project from './Project';
 import System from './System'; 
 import Users from './Users'; 
 import ListProject from './ListProject'; 
-import UserProject from './UserPoject'; 
+import UserProject from './UserPoject';
+import HomeAdmin from '../HomeAdmin/index';  
 import ProjectManagere from './ProjectManagere'; 
 
 const mockdata = [
@@ -76,7 +77,7 @@ export function NavbarSimple() {
         return <UserProject />;
          
       default:
-        return <h2>Chào mừng bạn đến với trang quản trị !!!</h2>;
+        return <HomeAdmin/>;
     }
   };
 
