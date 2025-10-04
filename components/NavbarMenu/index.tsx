@@ -35,30 +35,12 @@ const mockdata = [
   },
 ];
 
-const footerData = [
-  {
-    label: 'Quản lý dự án',
-    icon: IconNotes,
-    initiallyOpened: true,
-    links: [
-      { label: 'Danh sách dự án', link: 'project-list' },
-      { label: 'Dự án Eco Retreat', link: 'project-1' },
-    ],
-  },
-  {
-    label: 'Phân quyền người dùng trong dự án',
-    icon: IconUser,
-    initiallyOpened: true,
-    links: [{ label: 'Quản lý vai trò người dùng dự án', link: 'user-list' },
-     
-    ],
-  },
-];
+
 
 export function NavbarSimple() {
   const [active, setActive] = useState<string>(''); // <-- thêm state để xử lý active
 
-  const combinedData = [...mockdata, ...footerData];
+  const combinedData = [...mockdata, ];
 
   // Hàm render nội dung tương ứng với menu
   const renderContent = () => {
@@ -110,10 +92,7 @@ export function NavbarSimple() {
             ))}
           </div>
 
-          <div className={classes.footer}>
-            <h1>QUẢN TRỊ DỰ ÁN</h1>
-          </div>
-
+    
           <div style={{ width: '100%' }}>
             {combinedData.slice(mockdata.length).map((item) => (
               <LinksGroup

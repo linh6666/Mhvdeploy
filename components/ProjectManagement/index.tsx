@@ -18,25 +18,7 @@ import ProjectManagere from './ProjectManagere';
 
 const mockdata = [
   { label: 'Trang chủ', icon: IconGauge, link: 'home' },
-  {
-    label: 'Cấu hình',
-    icon: IconNotes,
-    initiallyOpened: true,
-    links: [
-      { label: 'Định danh vai trò trong hệ thống', link: 'user-role-project' },
-      { label: 'Định danh vai trò trong dự án', link: 'project' },
-    ],
-  },
-  {
-    label: 'Phân quyền',
-    icon: IconUser,
-    initiallyOpened: true,
-    links: [{ label: 'Quản lý vai trò người dùng trong hệ thống', link: 'permission' }],
-  },
-];
-
-const footerData = [
-  {
+ {
     label: 'Quản lý dự án',
     icon: IconNotes,
     initiallyOpened: true,
@@ -55,10 +37,12 @@ const footerData = [
   },
 ];
 
+
+
 export function ProjectManagement() {
   const [active, setActive] = useState<string>(''); // <-- thêm state để xử lý active
 
-  const combinedData = [...mockdata, ...footerData];
+  const combinedData = [...mockdata, ];
 
   // Hàm render nội dung tương ứng với menu
   const renderContent = () => {
@@ -95,7 +79,7 @@ export function ProjectManagement() {
       {/* Sidebar */}
       <nav className={classes.navbar}>
         <div className={classes.header}>
-          <h1>QUẢN TRỊ HỆ THỐNG</h1>
+          <h1>QUẢN TRỊ DỰ ÁN</h1>
         </div>
 
         <ScrollArea className={classes.links}>
@@ -110,20 +94,7 @@ export function ProjectManagement() {
             ))}
           </div>
 
-          <div className={classes.footer}>
-            <h1>QUẢN TRỊ DỰ ÁN</h1>
-          </div>
-
-          <div style={{ width: '100%' }}>
-            {combinedData.slice(mockdata.length).map((item) => (
-              <LinksGroup
-                {...item}
-                key={item.label}
-                active={active}
-                onActiveChange={setActive}
-              />
-            ))}
-          </div>
+       
         </ScrollArea>
       </nav>
 
