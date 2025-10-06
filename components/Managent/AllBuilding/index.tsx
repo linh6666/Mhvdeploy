@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { apiarea } from "../../../library/axios";
 import { API_ROUTE } from "../../../const/apiRouter";
 import { useRouter } from "next/navigation";
-import { Pagination, Loader, Grid, Menu, Text, Pill, Button, Group } from "@mantine/core"; // Thêm Pill vào import
-import { IconChevronDown, IconChevronUp, IconFilterFilled } from "@tabler/icons-react";
+import { Pagination, Loader, Grid, Menu, Text, Pill, Button, Group, Table, ActionIcon } from "@mantine/core"; // Thêm Pill vào import
+import { IconChevronDown, IconChevronUp, IconFilterFilled, IconLayoutGrid, IconList } from "@tabler/icons-react";
 import styles from "./App.module.css";
 
 interface RecordItem {
@@ -41,8 +41,16 @@ export default function AllList({ projectId }: AllListProps) {
   // Sort states
    const [sortZone, setSortZone] = useState<"asc" | "desc" | null>(null);
   const [sortPrice, setSortPrice] = useState<"asc" | "desc" | null>(null);
+    // 👇 Thêm state cho chế độ hiển thị
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
 
   const router = useRouter();
+
+
+
+  
+
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -78,8 +86,12 @@ export default function AllList({ projectId }: AllListProps) {
     const encodedName = encodeURIComponent(buildingData.building_name);
     localStorage.setItem("building_data", JSON.stringify(buildingData));
     localStorage.setItem("project_id", projectId);
+      localStorage.setItem("view_mode", viewMode);
     router.push(`/apartment/${encodedName}`);
   };
+
+
+  
 
   // ✅ Filter data
   const filteredData = allData.filter((item) => {
@@ -368,61 +380,146 @@ export default function AllList({ projectId }: AllListProps) {
       >
         ↓ Giá cao - thấp
       </Button>
+        {/* 👇 Nút chuyển Grid / List */}
+        <h1>View:</h1>
+          <ActionIcon
+  variant={viewMode === "grid" ? "filled" : "outline"}
+  color={viewMode === "grid" ? "blue" : "gray"}
+  size="sm"
+  onClick={() => setViewMode("grid")}
+  aria-label="Chế độ lưới"
+>
+  <IconLayoutGrid size={16} />
+</ActionIcon>
+
+<ActionIcon
+  variant={viewMode === "list" ? "filled" : "outline"}
+  color={viewMode === "list" ? "blue" : "gray"}
+  size="sm"
+  onClick={() => setViewMode("list")}
+  aria-label="Chế độ danh sách"
+>
+  <IconList size={16} />
+</ActionIcon>
     </Group>
       </div>
           </div>
-      {loading ? (
+     {loading ? (
         <Loader />
       ) : sortedData.length > 0 ? (
         <>
-          {/* Hiển thị tiêu chí đã chọn */}
-       
-
-          {/* Cards */}
-          <div className={styles.gridContainer}>
-            {paginatedData.map((item) => (
-              <div
-                key={item.id}
-                className={styles.buildingCard}
-                onClick={() => handleGoToDetailPage(item)}
-                style={{ cursor: "pointer" }}
-              >
-                <div className={styles.buildingHeader}>
-                  <span className={styles.buildingName}>{item.zone_name}</span>
-                </div>
-                <div className={styles.buildingDetails}>
-                  <p style={{ fontSize: "14px" }}>Tên nhà: {item.building_name ?? "Chưa có"}</p>
-                  <p style={{ fontSize: "14px" }}>Phòng ngủ: {item.bedroom ?? "Chưa có"}</p>
-                  <p style={{ fontSize: "14px" }}>
-                    Giá:{" "}
-                    {item.price
-                      ? new Intl.NumberFormat("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        }).format(Number(item.price))
-                      : "Chưa có"}
-                  </p>
-                  <p style={{ fontSize: "14px" }}>Hướng: {item.direction ?? "Chưa có"}</p>
-                </div>
+          {viewMode === "grid" ? (
+            <div className={styles.gridContainer}>
+              {paginatedData.map((item) => (
                 <div
-                  className={styles.statusBadge}
-                  style={{
-                    backgroundColor:
-                      item.status === "Đang bán"
-                        ? "#4CAF50"
-                        : item.status === "Đã bán"
-                        ? "#F44336"
-                        : item.status === "Đã đặt cọc"
-                        ? "#FFC107"
-                        : "#000",
-                    color: "#fff",
-                  }}
+                  key={item.id}
+                  className={styles.buildingCard}
+                  onClick={() => handleGoToDetailPage(item)}
+                  style={{ cursor: "pointer" }}
                 >
-                  {item.status ?? "Không rõ"}
+                  <div className={styles.buildingHeader}>
+                    <span className={styles.buildingName}>{item.zone_name}</span>
+                  </div>
+                  <div className={styles.buildingDetails}>
+                    <p style={{ fontSize: "14px" }}>
+                      Tên nhà: {item.building_name ?? "Chưa có"}
+                    </p>
+                    <p style={{ fontSize: "14px" }}>
+                      Phòng ngủ: {item.bedroom ?? "Chưa có"}
+                    </p>
+                    <p style={{ fontSize: "14px" }}>
+                      Giá:{" "}
+                      {item.price
+                        ? new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(Number(item.price))
+                        : "Chưa có"}
+                    </p>
+                    <p style={{ fontSize: "14px" }}>
+                      Hướng: {item.direction ?? "Chưa có"}
+                    </p>
+                  </div>
+                  <div
+                    className={styles.statusBadge}
+                    style={{
+                      backgroundColor:
+                        item.status === "Đang bán"
+                          ? "#4CAF50"
+                          : item.status === "Đã bán"
+                          ? "#F44336"
+                          : item.status === "Đã đặt cọc"
+                          ? "#FFC107"
+                          : "#000",
+                      color: "#fff",
+                    }}
+                  >
+                    {item.status ?? "Không rõ"}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            // 📝 List View
+        <div className={styles.listContainer}>
+  <Table highlightOnHover withTableBorder withColumnBorders>
+    <Table.Thead>
+      <Table.Tr>
+        <Table.Th>Khu</Table.Th>
+        <Table.Th>Tên nhà</Table.Th>
+        <Table.Th>Loại</Table.Th>
+        <Table.Th>Phòng ngủ</Table.Th>
+        <Table.Th>Hướng</Table.Th>
+        <Table.Th>Giá</Table.Th>
+        <Table.Th>Trạng thái</Table.Th>
+      </Table.Tr>
+    </Table.Thead>
+
+    <Table.Tbody>
+      {paginatedData.map((item) => (
+        <Table.Tr
+          key={item.id}
+          onClick={() => handleGoToDetailPage(item)}
+          style={{ cursor: "pointer" }}
+        >
+          <Table.Td>{item.zone_name}</Table.Td>
+          <Table.Td>{item.building_name}</Table.Td>
+          <Table.Td>{item.building_type}</Table.Td>
+          <Table.Td>{item.bedroom ?? "Chưa có"}</Table.Td>
+          <Table.Td>{item.direction ?? "Chưa có"}</Table.Td>
+          <Table.Td>
+            {item.price
+              ? new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(Number(item.price))
+              : "Chưa có"}
+          </Table.Td>
+        <Table.Td>
+  <div
+    // className={styles.statusBadge}
+    style={{
+    color:
+      item.status === "Đang bán"
+        ? "#4CAF50"
+        : item.status === "Đã bán"
+        ? "#F44336"
+        : item.status === "Đã đặt cọc"
+        ? "#FFC107"
+        : "#000",
+  }}
+  >
+    {item.status ?? "Không rõ"}
+  </div>
+</Table.Td>
+        </Table.Tr>
+      ))}
+    </Table.Tbody>
+  </Table>
+</div>
+
+          )}
+
 
           {/* Pagination */}
           <div style={{ display: "flex", justifyContent: "center", marginTop: 20, gap: 20 }}>

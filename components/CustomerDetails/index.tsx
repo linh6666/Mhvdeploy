@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import styles from "./BuildingDetailPage.module.css";
-import { IconArrowLeft, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { IconArrowLeft, IconChevronLeft, IconChevronRight, IconHeart } from "@tabler/icons-react";
 import { apiarea } from "../../library/axios";
 import { API_ROUTE } from "../../const/apiRouter";
+import ContactModal from "./ModalContact/index";
 
 interface RecordItem {
   id: number;
@@ -20,12 +21,12 @@ interface RecordItem {
   status?: string;
   bedroom?: number | string;
   price?: number | string;
-  description:string;
+  description: string;
   port?: number;
 }
 
 interface ImageItem {
-  image_url: string; // Điều chỉnh theo cấu trúc thực tế của dữ liệu hình ảnh
+  image_url: string;
 }
 
 interface CustomerDetailsProps {
@@ -33,11 +34,14 @@ interface CustomerDetailsProps {
   projectId: string;
 }
 
-export default function CustomerDetails({ building, projectId }: CustomerDetailsProps) {
+export default function CustomerDetails({ building }: CustomerDetailsProps) {
   const [buildingData, setBuildingData] = useState<RecordItem[]>([]);
   const [imageUrls, setImageUrls] = useState<{ [port: number]: string[] }>({});
   const [selectedImagePerPort, setSelectedImagePerPort] = useState<{ [port: number]: string }>({});
   const buildingName = decodeURIComponent(building);
+  const [contactModalOpen, setContactModalOpen] = useState(false);
+   const [isHeartActive, setIsHeartActive] = useState(false); // 🆕
+  const router = useRouter();
 
   useEffect(() => {
     const dataStr = localStorage.getItem("building_data");
@@ -65,7 +69,6 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
       );
       setBuildingData(filtered);
 
-      // Gọi ảnh cho từng port (không trùng lặp)
       const uniquePorts = [...new Set(filtered.map((item) => item.port).filter(Boolean))];
 
       uniquePorts.forEach(async (port) => {
@@ -74,7 +77,7 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
             params: { port, lang: "vi" },
           });
 
-          const images = res.data?.items as ImageItem[] || [];
+          const images = (res.data?.items as ImageItem[]) || [];
           const urls = images.map((img: ImageItem) => img.image_url);
 
           if (urls.length > 0) {
@@ -84,7 +87,7 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
             }));
             setSelectedImagePerPort((prev) => ({
               ...prev,
-              [port!]: urls[0], // đặt ảnh đầu tiên là ảnh chính
+              [port!]: urls[0],
             }));
           }
         } catch (error) {
@@ -106,18 +109,14 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
     );
   };
 
-  // Xử lý Prev/Next an toàn
   const handlePrev = (port: number) => {
-    console.log(`Prev button clicked for port: ${port}`);
     const thumbnailsForPort = imageUrls[port] || [];
     if (thumbnailsForPort.length === 0) return;
 
     const current = selectedImagePerPort[port];
     const currentIndex = thumbnailsForPort.indexOf(current);
     const prevIndex =
-      currentIndex > 0
-        ? currentIndex - 1
-        : thumbnailsForPort.length - 1; // nếu currentIndex = -1 hoặc 0 -> chọn ảnh cuối cùng
+      currentIndex > 0 ? currentIndex - 1 : thumbnailsForPort.length - 1;
 
     setSelectedImagePerPort((prev) => ({
       ...prev,
@@ -134,7 +133,7 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
     const nextIndex =
       currentIndex >= 0 && currentIndex < thumbnailsForPort.length - 1
         ? currentIndex + 1
-        : 0; // nếu currentIndex = -1 hoặc cuối -> chọn ảnh đầu tiên
+        : 0;
 
     setSelectedImagePerPort((prev) => ({
       ...prev,
@@ -155,9 +154,17 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
 
         return (
           <div className={styles.container} key={index}>
-            <h1 style={{ marginBottom: "1rem" }}>
-            <strong> Chi tiết căn: {buildingName}</strong>  
+            <div className={styles.header}>
+  <h1 style={{ marginBottom: "1rem" }}>
+              <strong> Chi tiết căn: {buildingName}</strong>
             </h1>
+   <IconHeart
+                onClick={() => setIsHeartActive((prev) => !prev)} // Đổi trạng thái khi nhấp
+                style={{ color: isHeartActive ? 'red' : 'black' }} // Thay đổi màu sắc dựa trên trạng thái
+              />
+
+            </div>
+          
 
             <div className={styles.box}>
               <div className={styles.details}>
@@ -181,28 +188,42 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
                     <li><strong>Giá:</strong> {Number(item.price).toLocaleString()} VNĐ</li>
                   )}
                   {isValid(item.status) && (
-                    <li><strong>Trạng thái:</strong> {item.status}</li>
+                    <li>
+                      <strong>Trạng thái:</strong>{" "}
+                      <span
+                        style={{
+                          color:
+                            item.status === "Đang bán"
+                              ? "#4CAF50"
+                              : item.status === "Đã bán"
+                              ? "#F44336"
+                              : item.status === "Đã đặt cọc"
+                              ? "#FFC107"
+                              : "#000",
+                        }}
+                      >
+                        {item.status ?? "Không rõ"}
+                      </span>
+                    </li>
                   )}
-                    {isValid(item.description) && (
-              <li>
-  <strong>Ghi chú:</strong>{" "}
-  <span style={{ whiteSpace: "pre-line", display: "inline-block" }}>
-    {item.description}
-  </span>
-</li>
+                  {isValid(item.description) && (
+                    <li>
+                      <strong>Ghi chú:</strong>{" "}
+                      <span style={{ whiteSpace: "pre-line", display: "inline-block" }}>
+                        {item.description}
+                      </span>
+                    </li>
                   )}
                 </ul>
               </div>
 
-              {/* Hình ảnh chính với nút next/prev */}
+              {/* Hình ảnh chính */}
               <div className={styles.imageGallery}>
                 <div className={styles.mainImageContainer}>
-                  {/* Nút Previous */}
                   <button className={styles.navButton} onClick={() => handlePrev(port)}>
                     <IconChevronLeft size={24} />
                   </button>
 
-                  {/* Ảnh chính */}
                   <Image
                     src={selectedImage || "/THUMBNAIL/4-MH-CAO-TANG.jpg"}
                     alt={item.building_name}
@@ -211,13 +232,11 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
                     className={styles.image}
                   />
 
-                  {/* Nút Next */}
                   <button className={styles.navButton} onClick={() => handleNext(port)}>
                     <IconChevronRight size={24} />
                   </button>
                 </div>
 
-                {/* Thumbnails */}
                 {thumbnails.length > 1 && (
                   <div className={styles.thumbnailContainer}>
                     {thumbnails.map((url, idx) => (
@@ -243,14 +262,23 @@ export default function CustomerDetails({ building, projectId }: CustomerDetails
               </div>
             </div>
 
+            {/* 🆕 Nút MORE INFO + nút Back */}
             <div className={styles.backButtonContainer}>
-              <Link
-                href={`/chi-tiet-quan-ly?pageId=${encodeURIComponent(projectId)}`}
-                className={styles.backButton}
-              >
+           <button
+          className={styles.infoButton}
+          onClick={() => setContactModalOpen(true)} // Mở modal
+        >
+          Liên Hệ
+        </button>
+
+              <button onClick={() => router.back()} className={styles.backButton}>
                 <IconArrowLeft size={24} />
-              </Link>
+              </button>
             </div>
+              <ContactModal
+        opened={contactModalOpen}
+        onClose={() => setContactModalOpen(false)}
+      />
           </div>
         );
       })}

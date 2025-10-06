@@ -255,3 +255,36 @@
 .navButton:last-of-type {
   right: 5px;
 }
+
+
+/* Liên hệ */
+
+.infoButton {
+  background-color: #234b5e; /* màu nền xanh đậm */
+  color: #caa04b; /* màu chữ vàng đồng */
+  font-weight: bold;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 0 100%);
+  transition: background-color 0.3s;
+  margin-right: 10px;
+}
+
+.infoButton:hover {
+  background-color: #1a3b4a;
+}
+
+.backButtonContainer {
+      justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    display: flex
+;
+}
+.header{
+  display: flex
+;
+    justify-content: space-between;
+}
