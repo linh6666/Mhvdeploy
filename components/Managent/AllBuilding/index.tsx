@@ -47,7 +47,18 @@ export default function AllList({ projectId }: AllListProps) {
 
   const router = useRouter();
 
+  useEffect(() => {
+    // Load view mode from localStorage
+    const storedMode = localStorage.getItem('view_mode');
+    if (storedMode) {
+      setViewMode(storedMode as "grid" | "list");
+    }
+  }, []);
 
+  useEffect(() => {
+    // Save view mode to localStorage whenever it changes
+    localStorage.setItem('view_mode', viewMode);
+  }, [viewMode]);
 
   
 
